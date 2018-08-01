@@ -1,19 +1,20 @@
 const { ObjectID } = require('mongodb')
+const { getDb } = require('../db')
 
-const usersCollection = 'students'
+const studentsCollection = 'students'
 
-const getAll = (db, cb) => {
-  const collection = db.collection(usersCollection)
+const getAll = (cb) => {
+  const collection = getDb().collection(studentsCollection)
   collection.find({}).toArray((err, users) => {
     return cb(err, users)
   })
 };
 
-const getById = (db, id, cb) => {
-  const userId = new ObjectID(id) 
-  const collection = db.collection(usersCollection)
+const getById = (id, cb) => {
+  const collection = getDb().collection(studentsCollection)
+  const userId = new ObjectID(id)
   collection.findOne({ _id: userId }, (err, user) => {
-    if (err) { 
+    if (err) {
       return console.log(err)
     }
     return cb(err, user)

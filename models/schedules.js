@@ -1,9 +1,9 @@
-const { ObjectID } = require('mongodb')
+const { getDb } = require('../db')
 
 const scheduleCollection = 'schedules'
 
-const getAll = (db, cb) => {
-  const collection = db.collection(scheduleCollection)
+const getAll = (cb) => {
+  const collection = getDb().collection(scheduleCollection)
   collection.find({}).toArray((err, users) => {
     return cb(err, users)
   })
