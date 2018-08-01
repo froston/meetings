@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import Button from 'grommet/components/Button';
 
-class App extends Component {
+class Students extends Component {
   state = {
     students: []
   }
@@ -15,12 +16,16 @@ class App extends Component {
         <h1>Students</h1>
         <ul>
           {this.state.students.map(student =>
-            <li>{student.username}</li>
+            <li key={student._id}>{student.username}</li>
           )}
         </ul>
+        <Button
+          label='Label'
+          onClick={() => { }}
+        />
       </div>
     );
   }
 }
 
-export default App;
+export default Students;

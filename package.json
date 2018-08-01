@@ -10,8 +10,13 @@
     "nodemon": "^1.18.3"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js && cd client && npm start",
     "dev": "nodemon server.js",
     "heroku-postbuild": "cd client && npm && npm run build"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "client/src"
+    ]
   }
 }
