@@ -3,25 +3,32 @@ const { getDb } = require('../db')
 
 const studentsCollection = 'students'
 
-const getAll = (cb) => {
+exports.getAll = (cb) => {
   const collection = getDb().collection(studentsCollection)
-  collection.find({}).toArray((err, users) => {
-    return cb(err, users)
+  collection.find({}).toArray((err, students) => {
+    return cb(err, students)
   })
 };
 
-const getById = (id, cb) => {
+exports.getById = (id, cb) => {
   const collection = getDb().collection(studentsCollection)
-  const userId = new ObjectID(id)
-  collection.findOne({ _id: userId }, (err, user) => {
-    if (err) {
-      return console.log(err)
-    }
-    return cb(err, user)
-  })
+  const _id = new ObjectID(id)
+  collection.findOne({ _id }, cb)
 }
 
-module.exports = {
-  getAll,
-  getById
+exports.createStudent = (newStudent, cb) => {
+  const collection = getDb().collection(studentsCollection)
+  collection.insert(newStudent, cb);
+}
+
+exports.updateStudent = (id, studentToUpdate, cb) => {
+  const collection = getDb().collection(studentsCollection)
+  const _id = new ObjectID(id)
+  collection.updateOne({ _id }, { $set: studentToUpdate }, cb);
+}
+
+exports.removeStudent = (id, cb) => {
+  const collection = getDb().collection(studentsCollection)
+  const _id = new ObjectID(id)
+  collection.deleteOne({ _id }, cb);
 }

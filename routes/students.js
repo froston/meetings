@@ -4,25 +4,52 @@ const model = require('../models/students')
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  model.getAll((err, users) => {
+  model.getAll((err, students) => {
     if (err) {
       res.status(500).send(err)
     }
-    if (users || users.length) {
-      res.status(users.length ? 200 : 404).send(users)
-    } else {
-      res.status(404).end()
-    }
+    res.send(students)
   })
 })
 
 router.get('/:id', (req, res) => {
   const id = req.params.id
-  model.getById(id, (err, user) => {
+  model.getById(id, (err, student) => {
     if (err) {
-      throw err
+      res.status(500).send(err)
     }
-    res.send(user)
+    res.send(student)
+  })
+})
+
+router.post('/', (req, res) => {
+  const newUser = req.body
+  model.createStudent(newUser, (err, student) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(student.ops)
+  })
+})
+
+router.patch('/:id', (req, res) => {
+  const id = req.params.id
+  const userToUpdate = req.body
+  model.updateStudent(id, userToUpdate, (err, student) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(204).end()
+  })
+})
+
+router.delete('/:id', (req, res) => {
+  const id = req.params.id
+  model.removeStudent(id, (err) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(204).end()
   })
 })
 

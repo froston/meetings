@@ -2,22 +2,22 @@ import React, { Component } from 'react';
 
 class App extends Component {
   state = {
-    users: []
+    students: []
   }
   componentDidMount() {
-    fetch('/api/users')
-    .then(res => res.json())
-    .then(users => this.setState({users}))
+    fetch('/api/students')
+      .then(res => res.json())
+      .then(students => this.setState({ students }))
   }
   render() {
     return (
       <div>
-        <h1>Users</h1>
-      <ul>
-        {this.state.users.map(user => 
-          <li>{user.username}</li>
-        )}
-      </ul>
+        <h1>Students</h1>
+        <ul>
+          {this.state.students.map(student =>
+            <li>{student.username}</li>
+          )}
+        </ul>
       </div>
     );
   }

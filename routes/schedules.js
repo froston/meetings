@@ -8,11 +8,7 @@ router.get('/', (req, res) => {
     if (err) {
       res.status(500).send(err)
     }
-    if (schedules || schedules.length) {
-      res.status(schedules.length ? 200 : 404).send(schedules)
-    } else {
-      res.status(404).end()
-    }
+    res.send(schedules)
   })
 })
 
