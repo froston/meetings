@@ -1,0 +1,16 @@
+{
+  "name": "meeting",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongodb": "^3.1.1",
+    "nodemon": "^1.18.3"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "heroku-postbuild": "cd client && npm && npm run build"
+  }
+}
