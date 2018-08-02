@@ -1,40 +1,32 @@
-import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import App from 'grommet/components/App';
-import Sidebar from 'grommet/components/Sidebar';
-import Header from 'grommet/components/Header';
-import Title from 'grommet/components/Title';
 import Box from 'grommet/components/Box';
-import Menu from 'grommet/components/Menu';
-import Anchor from 'grommet/components/Anchor';
 import Article from 'grommet/components/Article';
 import Split from 'grommet/components/Split';
-import { Dashboard, Students } from './';
+import { Dashboard, Students, Schedules } from './';
+import { Nav } from '../components';
 
-class Layout extends Component {
+class Layout extends React.Component {
+  isActive = link => {
+    const { location } = this.props
+    if (location && location.pathname) {
+      return location.pathname === link ? "active" : null
+    }
+  }
   render() {
     return (
       <App centered={false}>
-        <Split flex="right">
+        <Split priority="left" flex="right">
           <Box colorIndex='neutral-1'>
-            <Sidebar>
-              <Header size="large" justify="between" pad={{ horizontal: 'medium' }}>
-                <Title onClick={this._onClose} a11yTitle="Close Menu">
-                  <span>Meetings</span>
-                </Title>
-              </Header>
-              <Box flex='grow' justify='start'>
-                <Menu primary={true}>
-                  <Anchor href='#' className='active'>First</Anchor>
-                </Menu>
-              </Box>
-            </Sidebar>
+            <Nav isActive={this.isActive} />
           </Box>
-          <Box colorIndex='light-2' flex='grow'>
+          <Box pad="medium">
             <Article>
               <Switch>
                 <Route exact path="/" component={Dashboard} />
                 <Route exact path="/students" component={Students} />
+                <Route exact path="/schedules" component={Schedules} />
               </Switch>
             </Article>
           </Box>
@@ -44,4 +36,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+export default withRouter(Layout);
