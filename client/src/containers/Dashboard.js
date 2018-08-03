@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import Section from 'grommet/components/Section';
-import Box from 'grommet/components/Box';
-import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter';
-import Distribution from 'grommet/components/Distribution';
-import Notification from 'grommet/components/Notification';
+import { Section, Box, AnnotatedMeter, Distribution, Notification } from 'grommet'
 import { api } from '../utils';
 
 class Dashboard extends Component {

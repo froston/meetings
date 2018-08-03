@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from 'react';
-import SVGIcon from 'grommet/components/SVGIcon';
+import React from 'react';
+import { SVGIcon } from 'grommet';
 
 const CLASS_ROOT = 'ferret-logo';
 
-class Logo extends Component {
+class Logo extends React.PureComponent {
   render() {
     const { busy, className, colorIndex, size, ...props } = this.props;
     let classes = [CLASS_ROOT];

@@ -1,12 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from 'grommet/components/Sidebar';
-import Header from 'grommet/components/Header';
-import Title from 'grommet/components/Title';
-import Box from 'grommet/components/Box';
-import Menu from 'grommet/components/Menu';
+import { Sidebar, Header, Title, Box, Menu } from 'grommet';
 
-class Nav extends React.Component {
+class Nav extends React.PureComponent {
   render() {
     return (
       <Sidebar>

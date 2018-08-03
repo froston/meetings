@@ -1,11 +1,11 @@
 import Nav from './Nav'
 import Logo from './Logo'
 import StudentForm from './StudentForm'
-import TalksForm from './TalksForm'
+import TaskForm from './TaskForm'
 
 export {
   Nav,
   Logo,
   StudentForm,
-  TalksForm
+  TaskForm
 }

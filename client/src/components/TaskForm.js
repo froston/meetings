@@ -1,23 +1,9 @@
 import React from 'react';
-import Layer from 'grommet/components/Layer';
-import Form from 'grommet/components/Form';
-import FormField from 'grommet/components/FormField';
-import Header from 'grommet/components/Header';
-import Footer from 'grommet/components/Footer';
-import Heading from 'grommet/components/Heading';
-import TextInput from 'grommet/components/TextInput';
-import NumberInput from 'grommet/components/NumberInput';
-import RadioButton from 'grommet/components/RadioButton';
-import Select from 'grommet/components/Select';
-import Button from 'grommet/components/Button';
-import Table from 'grommet/components/Table';
-import TableRow from 'grommet/components/TableRow';
+import { Layer, Header, Heading, Table, TableRow } from 'grommet'
 import CheckmarkIcon from 'grommet/components/icons/base/Checkmark'
 import CloseIcon from 'grommet/components/icons/base/Close'
 
-import moment from 'moment'
-
-class TalksForm extends React.Component {
+class TaskForm extends React.PureComponent {
   state = {
     tasks: []
   }
@@ -46,7 +32,7 @@ class TalksForm extends React.Component {
           hidden={hidden}
         >
           <Header size="medium">
-            <Heading margin="medium">Tasks</Heading>
+            <Heading tag="h2" margin="medium">Tasks</Heading>
           </Header>
           <Table style={{ minWidth: 750 }}>
             <thead>
@@ -61,7 +47,7 @@ class TalksForm extends React.Component {
               {tasks && tasks.map((task, index) =>
                 <TableRow key={index}>
                   <td>{task.task}</td>
-                  <td>{moment(task.date).format("DD/MM/YYYY")}</td>
+                  <td>{`${task.month}/${task.year}`}</td>
                   <td>{task.point}</td>
                   <td className='secondary'>{task.completed ? <CheckmarkIcon /> : <CloseIcon />}</td>
                 </TableRow>
@@ -74,4 +60,4 @@ class TalksForm extends React.Component {
   }
 }
 
-export default TalksForm;
+export default TaskForm;

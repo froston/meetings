@@ -1,9 +1,6 @@
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import App from 'grommet/components/App';
-import Box from 'grommet/components/Box';
-import Article from 'grommet/components/Article';
-import Split from 'grommet/components/Split';
+import { App, Box, Article, Split } from 'grommet'
 import { Dashboard, Students, Schedules } from './';
 import { Nav } from '../components';
 

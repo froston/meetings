@@ -1,21 +1,16 @@
 import React from 'react';
-import Section from 'grommet/components/Section';
-import Box from 'grommet/components/Box';
-import List from 'grommet/components/List';
-import ListItem from 'grommet/components/ListItem';
-import Toast from 'grommet/components/Toast';
-import Button from 'grommet/components/Button';
+import { Section, Box, Heading, List, ListItem, Toast, Button } from 'grommet'
 import AddIcon from 'grommet/components/icons/base/Add'
 import CatalogIcon from 'grommet/components/icons/base/Catalog'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
-import { StudentForm, TalksForm } from '../components'
+import { StudentForm, TaskForm } from '../components'
 import { api } from '../utils';
 
 class Students extends React.Component {
   state = {
     students: [],
     studentForm: true,
-    talksForm: true,
+    taskForm: true,
     student: {},
     showToast: false
   }
@@ -41,7 +36,7 @@ class Students extends React.Component {
   handleTasks = (e, student) => {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ talksForm: false, student })
+    this.setState({ taskForm: false, student })
   }
 
   handleRemove = (e, id) => {
@@ -75,7 +70,7 @@ class Students extends React.Component {
   render() {
     return (
       <Section>
-        <h1>Students</h1>
+        <Heading tag="h1" margin="medium">Tasks</Heading>
         <Box pad={{ vertical: 'small' }}>
           <p>Update, add or remove ministry school students here. You can see the history of tasks too.</p>
         </Box>
@@ -122,10 +117,10 @@ class Students extends React.Component {
           handleClose={() => this.handleForm('studentForm', true)}
           student={this.state.student}
         />
-        <TalksForm
-          hidden={this.state.talksForm}
+        <TaskForm
+          hidden={this.state.taskForm}
           student={this.state.student}
-          handleClose={() => this.handleForm('talksForm', true)}
+          handleClose={() => this.handleForm('taskForm', true)}
         />
         {
           this.state.showToast &&

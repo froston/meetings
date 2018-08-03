@@ -1,25 +1,16 @@
 import React from 'react';
-import Layer from 'grommet/components/Layer';
-import Form from 'grommet/components/Form';
-import FormField from 'grommet/components/FormField';
-import Header from 'grommet/components/Header';
-import Footer from 'grommet/components/Footer';
-import Heading from 'grommet/components/Heading';
-import TextInput from 'grommet/components/TextInput';
-import NumberInput from 'grommet/components/NumberInput';
-import RadioButton from 'grommet/components/RadioButton';
-import Select from 'grommet/components/Select';
-import Button from 'grommet/components/Button';
+import { Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, RadioButton, Select } from 'grommet';
+import { consts } from '../utils'
 
 const initState = {
   name: "",
   nextPoint: "1",
-  gender: "Female",
-  hall: "All",
+  gender: consts.GENDER_FEMALE,
+  hall: consts.HALLS_ALL,
   available: []
 }
 
-class StudentForm extends React.Component {
+class StudentForm extends React.PureComponent {
   state = initState
 
   componentDidUpdate(prevProps) {
@@ -39,7 +30,7 @@ class StudentForm extends React.Component {
       gender: student.gender,
       available: student.available,
       hall: student.hall,
-      nextPoint: student.nextPoint || 1,
+      nextPoint: student.nextPoint || "1",
     }
     this.setState({ ...state })
   }
@@ -89,16 +80,16 @@ class StudentForm extends React.Component {
             </FormField>
             <FormField label='Gender'>
               <RadioButton
-                id='Male'
-                label='Brother'
-                checked={this.state.gender === "Male"}
-                onChange={e => this.handleChange('gender', "Male")}
+                id={consts.GENDER_MALE}
+                label={consts.GENDER_MALE}
+                checked={this.state.gender === consts.GENDER_MALE}
+                onChange={e => this.handleChange('gender', consts.GENDER_MALE)}
               />
               <RadioButton
-                id='Female'
-                label='Sister'
-                checked={this.state.gender === "Female"}
-                onChange={e => this.handleChange('gender', "Female")}
+                id={consts.GENDER_FEMALE}
+                label={consts.GENDER_FEMALE}
+                checked={this.state.gender === consts.GENDER_FEMALE}
+                onChange={e => this.handleChange('gender', consts.GENDER_FEMALE)}
               />
             </FormField>
             <FormField label='Available'>
@@ -107,7 +98,7 @@ class StudentForm extends React.Component {
                 label='Available'
                 inline
                 multiple
-                options={['reading', 'initialCall', 'returnVisit', 'talk']}
+                options={consts.availableOptions}
                 value={available}
                 onChange={({ value }) => this.handleChange('available', value)}
                 style={{ margin: 0 }}
@@ -116,7 +107,7 @@ class StudentForm extends React.Component {
             <FormField label='Halls'>
               <Select
                 placeHolder='Halls'
-                options={['All', 'A', 'B']}
+                options={consts.hallsOptions}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)} />
             </FormField>
