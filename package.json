@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "dev": "npm start && cd client && npm start",
+    "dev": "nodemon server/index.js && cd client && npm start",
     "heroku-postbuild": "cd client && npm && npm run build"
   },
   "nodemonConfig": {

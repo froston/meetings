@@ -58,7 +58,7 @@ class TalksForm extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {tasks.length && tasks.map((task, index) =>
+              {tasks && tasks.map((task, index) =>
                 <TableRow key={index}>
                   <td>{task.task}</td>
                   <td>{moment(task.date).format("DD/MM/YYYY")}</td>

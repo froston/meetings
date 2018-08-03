@@ -3,9 +3,9 @@ const { getDb } = require('../db')
 
 const studentsCollection = 'students'
 
-exports.getAll = (cb) => {
+exports.getAll = (filter, cb) => {
   const collection = getDb().collection(studentsCollection)
-  collection.find({}).toArray((err, students) => {
+  collection.find(filter).toArray((err, students) => {
     return cb(err, students)
   })
 };

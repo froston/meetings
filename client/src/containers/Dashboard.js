@@ -4,11 +4,27 @@ import Box from 'grommet/components/Box';
 import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter';
 import Distribution from 'grommet/components/Distribution';
 import Notification from 'grommet/components/Notification';
+import { api } from '../utils';
 
 class Dashboard extends Component {
+  state = {
+    brothers: 0,
+    sisters: 0
+  }
+
+  componentDidMount() {
+    this.loadData()
+  }
+  loadData = () => {
+    api.get('/students?gender=Male').then(brothers => {
+      this.setState({ brothers: brothers.length })
+    })
+    api.get('/students?gender=Female').then(sisters => {
+      this.setState({ sisters: sisters.length })
+    })
+  }
   getWarning = () => {
     const date = new Date();
-    console.log(date.getMonth())
     const day = date.getDate()
     if (day > 1 && day < 15) {
       return (
@@ -25,6 +41,7 @@ class Dashboard extends Component {
     return null
   }
   render() {
+    const { brothers, sisters } = this.state
     return (
       <Section>
         <h1>Dashboard</h1>
@@ -36,8 +53,8 @@ class Dashboard extends Component {
           <h2>Distribution</h2>
           <Distribution
             series={[
-              { "label": "Brothers", "value": 30, "colorIndex": "graph-1" },
-              { "label": "Sisters", "value": 70, "colorIndex": "graph-2" }
+              { "label": "Brothers", "value": brothers, "colorIndex": "graph-1" },
+              { "label": "Sisters", "value": sisters, "colorIndex": "graph-2" }
             ]}
           />
         </Box>

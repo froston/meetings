@@ -1,4 +1,5 @@
 import React from 'react';
+import Section from 'grommet/components/Section';
 import Box from 'grommet/components/Box';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
@@ -64,7 +65,7 @@ class Students extends React.Component {
         this.loadData()
       })
     } else {
-      api.post('/students', id, data).then(() => {
+      api.post('/students', data).then(() => {
         this.setState({ studentForm: true, showToast: true })
         this.loadData()
       })
@@ -73,10 +74,10 @@ class Students extends React.Component {
 
   render() {
     return (
-      <div>
+      <Section>
         <h1>Students</h1>
         <Box pad={{ vertical: 'small' }}>
-          <p>Update or add new ministry school student here.</p>
+          <p>Update, add or remove ministry school students here. You can see the history of tasks too.</p>
         </Box>
         <Box pad={{ vertical: 'medium' }}>
           <Button
@@ -98,7 +99,7 @@ class Students extends React.Component {
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
-                <strong>{student.username}</strong>
+                <strong>{student.name}</strong>
               </Box>
               <Box direction="row">
                 <Button
@@ -135,7 +136,7 @@ class Students extends React.Component {
             Student information has been succesfully saved.
           </Toast>
         }
-      </div>
+      </Section>
     );
   }
 }

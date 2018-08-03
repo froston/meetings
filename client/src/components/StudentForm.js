@@ -12,7 +12,7 @@ import Select from 'grommet/components/Select';
 import Button from 'grommet/components/Button';
 
 const initState = {
-  username: "",
+  name: "",
   nextPoint: "1",
   gender: "Female",
   hall: "All",
@@ -35,7 +35,7 @@ class StudentForm extends React.Component {
   loadForm = () => {
     const { student } = this.props
     const state = {
-      username: student.username,
+      name: student.name,
       gender: student.gender,
       available: student.available,
       hall: student.hall,
@@ -45,15 +45,19 @@ class StudentForm extends React.Component {
   }
 
   handleChange = (name, value) => {
-    console.log(name, value)
     this.setState({ [name]: value })
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
     const { student } = this.props
-    const values = { ...this.state }
-    this.props.handleSubmit(student && student._id, values)
+    if (student && student._id) {
+      const values = { ...this.state }
+      this.props.handleSubmit(student && student._id, values)
+    } else {
+      const values = { ...this.state, tasks: [] }
+      this.props.handleSubmit(null, values)
+    }
   }
 
   handleClose = () => {
@@ -62,7 +66,7 @@ class StudentForm extends React.Component {
 
   render() {
     const { hidden, student } = this.props
-    const { username, nextPoint, available, hall } = this.state
+    const { name, nextPoint, available, hall } = this.state
     return (
       <div>
         <Layer
@@ -75,12 +79,12 @@ class StudentForm extends React.Component {
         >
           <Form pad='medium' onSubmit={this.handleSubmit}>
             <Header>
-              <Heading>{student ? student.username : "New Student"}</Heading>
+              <Heading>{student ? student.name : "New Student"}</Heading>
             </Header>
             <FormField label='Name and Surname'>
               <TextInput
-                value={username}
-                onDOMChange={e => this.handleChange('username', e.target.value)}
+                value={name}
+                onDOMChange={e => this.handleChange('name', e.target.value)}
               />
             </FormField>
             <FormField label='Gender'>

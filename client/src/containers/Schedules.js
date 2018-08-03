@@ -16,7 +16,7 @@ class Schedules extends React.Component {
         <h1>Schedules</h1>
         <ul>
           {this.state.schedules.map(schedule =>
-            <li key={schedule._id}>{schedule.username}</li>
+            <li key={schedule._id}>{schedule.name}</li>
           )}
         </ul>
         <Button
