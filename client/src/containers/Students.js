@@ -2,17 +2,19 @@ import React from 'react';
 import Box from 'grommet/components/Box';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
-import { StudentForm } from '../components'
 import Toast from 'grommet/components/Toast';
 import Button from 'grommet/components/Button';
 import AddIcon from 'grommet/components/icons/base/Add'
+import CatalogIcon from 'grommet/components/icons/base/Catalog'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
-import { announce, announcePageLoaded } from 'grommet/utils/Announcer';
+import { StudentForm, TalksForm } from '../components'
+import { api } from '../utils';
 
 class Students extends React.Component {
   state = {
     students: [],
-    hideForm: true,
+    studentForm: true,
+    talksForm: true,
     student: {},
     showToast: false
   }
@@ -22,43 +24,51 @@ class Students extends React.Component {
   }
 
   loadData = () => {
-    fetch('/api/students')
-      .then(res => res.json())
-      .then(students => this.setState({ students }))
-
-    announcePageLoaded('Dashboard was loaded');
+    api.get('/students').then(students =>
+      this.setState({ students })
+    )
   }
 
   handleSelect = (index) => {
-    this.setState({ hideForm: false, student: this.state.students[index] })
+    this.setState({ studentForm: false, student: this.state.students[index] })
+  }
+
+  handleAdd = () => {
+    this.setState({ studentForm: false, student: null })
+  }
+
+  handleTasks = (e, student) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.setState({ talksForm: false, student })
   }
 
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    fetch(`/api/students/${id}`, { method: 'DELETE', })
+    api.remove('/students', id)
       .then(() => {
         this.setState({ showToast: true })
         this.loadData()
       })
   }
 
-  handleForm = (hideForm) => {
-    this.setState({ hideForm })
+  handleForm = (formName, val) => {
+    this.setState({ [formName]: val })
   }
 
   handleSubmit = (id, data) => {
-    fetch(`/api/students/${id}`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'PATCH',
-      body: JSON.stringify({ ...data })
-    }).then(() => {
-      this.setState({ hideForm: true, showToast: true })
-      this.loadData()
-    })
+    if (id) {
+      api.patch('/students', id, data).then(() => {
+        this.setState({ studentForm: true, showToast: true })
+        this.loadData()
+      })
+    } else {
+      api.post('/students', id, data).then(() => {
+        this.setState({ studentForm: true, showToast: true })
+        this.loadData()
+      })
+    }
   }
 
   render() {
@@ -72,7 +82,7 @@ class Students extends React.Component {
           <Button
             icon={<AddIcon />}
             label='Add New Student'
-            onClick={this.addStudent}
+            onClick={this.handleAdd}
             href='#'
           />
         </Box>
@@ -87,22 +97,34 @@ class Students extends React.Component {
               onClick={this.handleSelect}
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
-              <Box >
+              <Box>
                 <strong>{student.username}</strong>
               </Box>
-              <Button
-                icon={<FormTrashIcon size="medium" type="logo" />}
-                onClick={e => this.handleRemove(e, student._id)}
-                a11yTitle='Remove Student'
-              />
+              <Box direction="row">
+                <Button
+                  icon={<CatalogIcon size="medium" />}
+                  onClick={e => this.handleTasks(e, student)}
+                  a11yTitle='See Tasks'
+                />
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={e => this.handleRemove(e, student._id)}
+                  a11yTitle='Remove Student'
+                />
+              </Box>
             </ListItem>
           )}
         </List>
         <StudentForm
-          hidden={this.state.hideForm}
+          hidden={this.state.studentForm}
           handleSubmit={this.handleSubmit}
-          handleClose={() => this.handleForm(true)}
+          handleClose={() => this.handleForm('studentForm', true)}
           student={this.state.student}
+        />
+        <TalksForm
+          hidden={this.state.talksForm}
+          student={this.state.student}
+          handleClose={() => this.handleForm('talksForm', true)}
         />
         {
           this.state.showToast &&

@@ -16,7 +16,7 @@ class Nav extends React.Component {
           </Title>
         </Header>
         <Box flex='grow' justify='start'>
-          <Menu fill={true} primary={true}>
+          <Menu fill={true} primary={true} size="large">
             <Link to="/" className={this.props.isActive('/')}>Dashboard</Link>
             <Link to="/students" className={this.props.isActive('/students')}>Students</Link>
             <Link to="/schedules" className={this.props.isActive('/schedules')}>Schedules</Link>
