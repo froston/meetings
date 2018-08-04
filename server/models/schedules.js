@@ -1,14 +1,32 @@
+const { ObjectID } = require('mongodb')
 const { getDb } = require('../db')
 
 const scheduleCollection = 'schedules'
 
-const getAll = (cb) => {
+exports.getAll = (filters, cb) => {
   const collection = getDb().collection(scheduleCollection)
-  collection.find({}).toArray((err, users) => {
-    return cb(err, users)
-  })
+  collection.find(filters).toArray(cb)
 };
 
-module.exports = {
-  getAll
+exports.getById = (id, cb) => {
+  const collection = getDb().collection(scheduleCollection)
+  const _id = new ObjectID(id)
+  collection.findOne({ _id }, cb)
+}
+
+exports.createSchedule = (newSchedule, cb) => {
+  const collection = getDb().collection(scheduleCollection)
+  collection.insert(newSchedule, cb);
+}
+
+exports.updateSchedule = (id, scheduleToUpdate, cb) => {
+  const collection = getDb().collection(scheduleCollection)
+  const _id = new ObjectID(id)
+  collection.updateOne({ _id }, { $set: scheduleToUpdate }, cb);
+}
+
+exports.removeSchedule = (id, cb) => {
+  const collection = getDb().collection(scheduleCollection)
+  const _id = new ObjectID(id)
+  collection.deleteOne({ _id }, cb);
 }

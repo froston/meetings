@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Section, Box, AnnotatedMeter, Distribution, Notification } from 'grommet'
-import { api } from '../utils';
+import { Section, Box, Distribution, Notification } from 'grommet'
+import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter';
+import { api, consts } from '../utils';
 
 class Dashboard extends Component {
   state = {
@@ -12,10 +13,10 @@ class Dashboard extends Component {
     this.loadData()
   }
   loadData = () => {
-    api.get('/students?gender=Male').then(brothers => {
+    api.get(`/students?gender=${consts.GENDER_MALE}`).then(brothers => {
       this.setState({ brothers: brothers.length })
     })
-    api.get('/students?gender=Female').then(sisters => {
+    api.get(`/students?gender=${consts.GENDER_FEMALE}`).then(sisters => {
       this.setState({ sisters: sisters.length })
     })
   }

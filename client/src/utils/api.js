@@ -1,5 +1,5 @@
 export const get = (url) => {
-  return fetch(`api${url}`)
+  return fetch(`/api${url}`)
     .then(res => res.json())
 }
 

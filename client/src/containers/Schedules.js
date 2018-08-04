@@ -1,29 +1,94 @@
 import React from 'react';
-import { Button } from 'grommet'
+import { Section, Box, Heading, List, ListItem, Button } from 'grommet'
+import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
+import ScheduleIcon from 'grommet/components/icons/base/Schedule';
+import { ScheduleForm } from '../components'
+import { api } from '../utils'
 
 class Schedules extends React.Component {
   state = {
-    schedules: []
+    schedules: [],
+    scheduleForm: true
   }
+
   componentDidMount() {
-    fetch('/api/schedules')
-      .then(res => res.json())
+    this.loadData()
+  }
+
+  loadData = () => {
+    api.get('/schedules')
       .then(schedules => this.setState({ schedules }))
   }
+
+  handleAdd = () => {
+    this.handleForm()
+  }
+
+  handleRemove = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    api.remove('/schedules', id)
+      .then(() => {
+        this.loadData()
+      })
+  }
+
+  handleForm = () => {
+    this.setState({ scheduleForm: !this.state.scheduleForm })
+  }
+
+  handleSubmit = (data) => {
+    api.post('/schedules', data).then(() => {
+      this.setState({ scheduleForm: true })
+      this.loadData()
+    })
+  }
+
   render() {
     return (
-      <div>
-        <h1>Schedules</h1>
-        <ul>
-          {this.state.schedules.map(schedule =>
-            <li key={schedule._id}>{schedule.name}</li>
+      <Section>
+        <Heading tag="h1" margin="medium">Schedules</Heading>
+        <Box pad={{ vertical: 'small' }}>
+          <p>Generate, update and remove schedules.</p>
+        </Box>
+        <Box pad={{ vertical: 'medium' }}>
+          <Button
+            icon={<ScheduleIcon />}
+            label='Generate New Schedule'
+            onClick={this.handleAdd}
+            href='#'
+          />
+        </Box>
+        <List selectable={true} onSelect={this.handleSelect}>
+          {this.state.schedules.map((schedule, index) =>
+            <ListItem
+              key={schedule._id}
+              pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
+              justify="between"
+              align="center"
+              responsive={false}
+              onClick={this.handleSelect}
+              separator={index === 0 ? 'horizontal' : 'bottom'}
+            >
+              <Box>
+                <strong>{`${schedule.month} / ${schedule.year}`}</strong>
+              </Box>
+              <Box direction="row">
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={e => this.handleRemove(e, schedule._id)}
+                  a11yTitle='Remove Schedule'
+                />
+              </Box>
+            </ListItem>
           )}
-        </ul>
-        <Button
-          label='Label'
-          onClick={() => { }}
+        </List>
+        <ScheduleForm
+          hidden={this.state.scheduleForm}
+          handleSubmit={this.handleSubmit}
+          handleClose={this.handleForm}
         />
-      </div>
+      </Section>
     );
   }
 }

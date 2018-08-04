@@ -70,7 +70,7 @@ class Students extends React.Component {
   render() {
     return (
       <Section>
-        <Heading tag="h1" margin="medium">Tasks</Heading>
+        <Heading tag="h1" margin="medium">Students</Heading>
         <Box pad={{ vertical: 'small' }}>
           <p>Update, add or remove ministry school students here. You can see the history of tasks too.</p>
         </Box>
