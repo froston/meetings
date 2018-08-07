@@ -35,8 +35,8 @@ router.post('/', (req, res) => {
 
 router.patch('/:id', (req, res) => {
   const id = req.params.id
-  const userToUpdate = req.body
-  model.updateStudent(id, userToUpdate, (err, student) => {
+  const studentToUpdate = req.body
+  model.updateStudent(id, studentToUpdate, (err, student) => {
     if (err) {
       res.status(500).send(err)
     }

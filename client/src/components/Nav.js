@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { Sidebar, Header, Title, Box, Menu } from 'grommet';
 
 class Nav extends React.PureComponent {
+  isActive = link => {
+    const { location } = this.props
+    if (location && location.pathname) {
+      return location.pathname === link ? "active" : null
+    }
+  }
   render() {
     return (
       <Sidebar>
@@ -13,9 +19,9 @@ class Nav extends React.PureComponent {
         </Header>
         <Box flex='grow' justify='start'>
           <Menu fill primary>
-            <Link to="/" className={this.props.isActive('/')}>Dashboard</Link>
-            <Link to="/students" className={this.props.isActive('/students')}>Students</Link>
-            <Link to="/schedules" className={this.props.isActive('/schedules')}>Schedules</Link>
+            <Link to="/" className={this.isActive('/')}>Dashboard</Link>
+            <Link to="/students" className={this.isActive('/students')}>Students</Link>
+            <Link to="/schedules" className={this.isActive('/schedules')}>Schedules</Link>
           </Menu>
         </Box>
       </Sidebar>

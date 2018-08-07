@@ -6,7 +6,7 @@ import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import { StudentForm, TaskForm } from '../components'
 import { api } from '../utils';
 
-class Students extends React.Component {
+class StudentList extends React.Component {
   state = {
     students: [],
     studentForm: true,
@@ -67,6 +67,13 @@ class Students extends React.Component {
     }
   }
 
+  handleNewTask = (id, newTask) => {
+    api.post(`/students/${id}/tasks`, newTask)
+      .then(() => {
+        this.loadData()
+      })
+  }
+
   render() {
     return (
       <Section>
@@ -82,7 +89,7 @@ class Students extends React.Component {
             href='#'
           />
         </Box>
-        <List selectable={true} onSelect={this.handleSelect}>
+        <List selectable onSelect={this.handleSelect}>
           {this.state.students.map((student, index) =>
             <ListItem
               key={student._id}
@@ -121,6 +128,7 @@ class Students extends React.Component {
           hidden={this.state.taskForm}
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
+          handleNewTask={this.handleNewTask}
         />
         {
           this.state.showToast &&
@@ -136,4 +144,4 @@ class Students extends React.Component {
   }
 }
 
-export default Students;
+export default StudentList;

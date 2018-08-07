@@ -5,10 +5,10 @@ import { consts } from '../utils'
 
 const initState = {
   month: {
-    "value": moment().month(),
+    "value": String(moment().month()),
     "label": moment().format("MMMM")
   },
-  year: moment().year()
+  year: String(moment().year())
 }
 
 class ScheduleForm extends React.PureComponent {
@@ -35,6 +35,7 @@ class ScheduleForm extends React.PureComponent {
   render() {
     const { hidden } = this.props
     const { month, year } = this.state
+    console.log(this.state.schedule)
     return (
       <div>
         <Layer
@@ -56,7 +57,6 @@ class ScheduleForm extends React.PureComponent {
                 options={consts.monthsOptions}
                 value={month}
                 onChange={({ value }) => this.handleChange('month', value)}
-                style={{ margin: 0 }}
               />
             </FormField>
             <FormField label='Year'>

@@ -13,7 +13,7 @@ const initDb = (callback) => {
       callback(err);
     } else {
       _db = client.db(config.dbName);
-      console.log(`DB connected to '${config.dbHost.split("@")[1]}' - DB Name: '${config.dbName}'`)
+      console.log(`DB connected - '${config.dbName}'`)
       callback(null, _db)
     }
   })

@@ -1,5 +1,6 @@
 const { ObjectID } = require('mongodb')
 const { getDb } = require('../db')
+const tasksModel = require('./tasks')
 
 const scheduleCollection = 'schedules'
 
@@ -9,9 +10,16 @@ exports.getAll = (filters, cb) => {
 };
 
 exports.getById = (id, cb) => {
-  const collection = getDb().collection(scheduleCollection)
+  const db = getDb()
+  const collection = db.collection(scheduleCollection)
   const _id = new ObjectID(id)
-  collection.findOne({ _id }, cb)
+  collection.findOne({ _id }, (err, schedule) => {
+    if (err) throw err
+    tasksModel.getTasksBySchedule(schedule.month, schedule.year, (err, tasks) => {
+      schedule.tasks = tasks
+      cb(err, schedule)
+    })
+  })
 }
 
 exports.createSchedule = (newSchedule, cb) => {

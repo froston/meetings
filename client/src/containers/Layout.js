@@ -1,29 +1,24 @@
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { App, Box, Article, Split } from 'grommet'
-import { Dashboard, Students, Schedules } from './';
+import { Dashboard, StudentList, ScheduleList, Schedule } from './';
 import { Nav } from '../components';
 
-class Layout extends React.Component {
-  isActive = link => {
-    const { location } = this.props
-    if (location && location.pathname) {
-      return location.pathname === link ? "active" : null
-    }
-  }
+class Layout extends React.PureComponent {
   render() {
     return (
       <App centered={false}>
         <Split priority="left" flex="right">
           <Box colorIndex='neutral-1'>
-            <Nav isActive={this.isActive} />
+            <Nav location={this.props.location} />
           </Box>
           <Box pad="medium">
             <Article>
               <Switch>
                 <Route exact path="/" component={Dashboard} />
-                <Route exact path="/students" component={Students} />
-                <Route exact path="/schedules" component={Schedules} />
+                <Route exact path="/students" component={StudentList} />
+                <Route exact path="/schedules" component={ScheduleList} />
+                <Route exact path="/schedules/:id" component={Schedule} />
               </Switch>
             </Article>
           </Box>

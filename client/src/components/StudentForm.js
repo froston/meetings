@@ -101,7 +101,6 @@ class StudentForm extends React.PureComponent {
                 options={consts.availableOptions}
                 value={available}
                 onChange={({ value }) => this.handleChange('available', value)}
-                style={{ margin: 0 }}
               />
             </FormField>
             <FormField label='Halls'>

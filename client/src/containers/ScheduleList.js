@@ -1,11 +1,12 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import { Section, Box, Heading, List, ListItem, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import ScheduleIcon from 'grommet/components/icons/base/Schedule';
 import { ScheduleForm } from '../components'
 import { api } from '../utils'
 
-class Schedules extends React.Component {
+class ScheduleList extends React.Component {
   state = {
     schedules: [],
     scheduleForm: true
@@ -22,6 +23,11 @@ class Schedules extends React.Component {
 
   handleAdd = () => {
     this.handleForm()
+  }
+
+  handleSelect = (e, id) => {
+    e.preventDefault()
+    this.props.history.push(`/schedules/${id}`)
   }
 
   handleRemove = (e, id) => {
@@ -59,7 +65,7 @@ class Schedules extends React.Component {
             href='#'
           />
         </Box>
-        <List selectable={true} onSelect={this.handleSelect}>
+        <List selectable>
           {this.state.schedules.map((schedule, index) =>
             <ListItem
               key={schedule._id}
@@ -67,7 +73,7 @@ class Schedules extends React.Component {
               justify="between"
               align="center"
               responsive={false}
-              onClick={this.handleSelect}
+              onClick={e => this.handleSelect(e, schedule._id)}
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
@@ -93,4 +99,4 @@ class Schedules extends React.Component {
   }
 }
 
-export default Schedules;
+export default withRouter(ScheduleList);
