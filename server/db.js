@@ -1,27 +1,25 @@
-const { MongoClient } = require('mongodb')
+const mysql = require('mysql');
 const config = require("./config");
 
-let _db;
+let connection;
 
-const initDb = (callback) => {
-  if (_db) {
-    console.warn("Trying to init DB again!");
-    return callback(null, _db);
-  }
-  MongoClient.connect(config.dbHost, { useNewUrlParser: true }, (err, client) => {
-    if (err) {
-      callback(err);
-    } else {
-      _db = client.db(config.dbName);
-      console.log(`DB connected - '${config.dbName}'`)
-      callback(null, _db)
-    }
-  })
+const initDb = (cb) => {
+  connection = mysql.createConnection({
+    host: config.host,
+    user: config.dbUser,
+    password: config.dbPassword,
+    database: config.dbName
+  });
+  connection.connect((err, packet) => {
+    if (err) throw err
+    console.log("DB connected")
+    cb(err, packet)
+  });
 }
 
 const getDb = () => {
-  if (_db) {
-    return _db
+  if (connection) {
+    return connection
   } else {
     console.error("DB not connected. Call `initDb()` first.")
   }

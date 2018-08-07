@@ -4,7 +4,7 @@ import { consts } from '../utils'
 
 const initState = {
   name: "",
-  nextPoint: "1",
+  nextPoint: 1,
   gender: consts.GENDER_FEMALE,
   hall: consts.HALLS_ALL,
   available: []
@@ -30,7 +30,7 @@ class StudentForm extends React.PureComponent {
       gender: student.gender,
       available: student.available,
       hall: student.hall,
-      nextPoint: student.nextPoint || "1",
+      nextPoint: student.nextPoint || 1,
     }
     this.setState({ ...state })
   }
@@ -42,11 +42,11 @@ class StudentForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     const { student } = this.props
-    if (student && student._id) {
+    if (student && student.id) {
       const values = { ...this.state }
-      this.props.handleSubmit(student && student._id, values)
+      this.props.handleSubmit(student && student.id, values)
     } else {
-      const values = { ...this.state, tasks: [] }
+      const values = { ...this.state }
       this.props.handleSubmit(null, values)
     }
   }
@@ -81,13 +81,13 @@ class StudentForm extends React.PureComponent {
             <FormField label='Gender'>
               <RadioButton
                 id={consts.GENDER_MALE}
-                label={consts.GENDER_MALE}
+                label="Brother"
                 checked={this.state.gender === consts.GENDER_MALE}
                 onChange={e => this.handleChange('gender', consts.GENDER_MALE)}
               />
               <RadioButton
                 id={consts.GENDER_FEMALE}
-                label={consts.GENDER_FEMALE}
+                label="Sister"
                 checked={this.state.gender === consts.GENDER_FEMALE}
                 onChange={e => this.handleChange('gender', consts.GENDER_FEMALE)}
               />

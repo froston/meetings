@@ -24,12 +24,12 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const newUser = req.body
-  model.createStudent(newUser, (err, student) => {
+  const newStudent = req.body
+  model.createStudent(newStudent, (err, student) => {
     if (err) {
       res.status(500).send(err)
     }
-    res.send(student.ops)
+    res.send(student)
   })
 })
 
@@ -40,7 +40,7 @@ router.patch('/:id', (req, res) => {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(204).end()
+    res.send(student)
   })
 })
 

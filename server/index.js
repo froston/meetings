@@ -12,14 +12,10 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 initDb(err => {
-  if (err) {
-    throw err;
-  }
+  if (err) throw err
   const port = process.env.PORT || config.port;
   app.listen(port, err => {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err
     console.log(`Server listening on ${port}`)
   })
 })

@@ -8,8 +8,8 @@ export const HALLS_ALL = "All"
 export const HALLS_A = "A"
 export const HALLS_B = "B"
 
-export const GENDER_MALE = "Brother"
-export const GENDER_FEMALE = "Sister"
+export const GENDER_MALE = "B"
+export const GENDER_FEMALE = "S"
 
 export const availableOptions = [AVAILABLE_READING, AVAILABLE_INITIAL_CALL, AVAILABLE_RETURN_VISIT, AVAILABLE_BIBLE_STUDY, AVAILABLE_TALK]
 export const hallsOptions = [HALLS_ALL, HALLS_A, HALLS_B]

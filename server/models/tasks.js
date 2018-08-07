@@ -1,30 +1,34 @@
-const { ObjectID } = require('mongodb')
 const { getDb } = require('../db')
 
 const studentsCollection = 'students'
 
-exports.getTasksBySchedule = (month, year, cb) => {
-  const collection = getDb().collection(studentsCollection)
-  let tasks = []
-  collection.find({
-    "tasks": {
-      $elemMatch: { month: month, year: year }
-    }
-  }).toArray((err, students) => {
-    if (err) throw err
-    students.forEach(student => {
-      student.tasks.forEach(task => {
-        if (task.month == month && task.year == year) {
-          tasks.push({ studentId: student._id, name: student.name, ...task })
-        }
-      })
-    })
-    cb(err, tasks)
-  })
+exports.getByStudentId = (id, cb) => {
+  getDb().query('SELECT * FROM tasks WHERE student_id = ?', id, cb);
 }
 
-exports.addTask = (studentId, newTask, cb) => {
-  const collection = getDb().collection(studentsCollection)
-  const _id = new ObjectID(studentId)
-  collection.update({ _id }, { $push: { tasks: newTask } }, cb);
+exports.getBySchedule = (month, year, cb) => {
+  getDb().query('SELECT * FROM tasks WHERE month = ? AND year = ?', [month, year], cb);
 }
+
+exports.createTask = (task, cb) => {
+  const studentToInsert = {
+    student_id: task.studentId,
+    task: task.task,
+    week: task.week,
+    month: task.month,
+    year: task.year,
+    point: task.point,
+    completed: task.completed
+  }
+  getDb().query('INSERT INTO tasks SET ?', studentToInsert, cb);
+}
+
+exports.removeTask = (id, cb) => {
+  getDb().query('DELETE FROM tasks WHERE id = ?', id, cb);
+}
+
+exports.removeBySchedule = (month, year, cb) => {
+  getDb().query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year], cb);
+}
+
+

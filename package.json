@@ -8,12 +8,25 @@
     "express": "^4.15.3",
     "moment": "^2.22.2",
     "mongodb": "^3.1.1",
+    "mysql": "^2.16.0",
     "nodemon": "^1.18.3"
+  },
+  "devDependencies": {
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.0",
+    "prettier": "1.14.0"
   },
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js && cd client && npm start",
+    "pre-commit": "lint-staged",
     "heroku-postbuild": "cd client && npm && npm run build"
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write --no-semi --single-quote",
+      "git add"
+    ]
   },
   "nodemonConfig": {
     "ignore": [

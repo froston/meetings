@@ -3,7 +3,8 @@ import { Section, Box, Heading, List, ListItem, Toast, Button } from 'grommet'
 import AddIcon from 'grommet/components/icons/base/Add'
 import CatalogIcon from 'grommet/components/icons/base/Catalog'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
-import { StudentForm, TaskForm } from '../components'
+import { TaskList } from './'
+import { StudentForm } from '../components'
 import { api } from '../utils';
 
 class StudentList extends React.Component {
@@ -67,13 +68,6 @@ class StudentList extends React.Component {
     }
   }
 
-  handleNewTask = (id, newTask) => {
-    api.post(`/students/${id}/tasks`, newTask)
-      .then(() => {
-        this.loadData()
-      })
-  }
-
   render() {
     return (
       <Section>
@@ -92,7 +86,7 @@ class StudentList extends React.Component {
         <List selectable onSelect={this.handleSelect}>
           {this.state.students.map((student, index) =>
             <ListItem
-              key={student._id}
+              key={student.id}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
               justify="between"
               align="center"
@@ -111,7 +105,7 @@ class StudentList extends React.Component {
                 />
                 <Button
                   icon={<FormTrashIcon size="medium" />}
-                  onClick={e => this.handleRemove(e, student._id)}
+                  onClick={e => this.handleRemove(e, student.id)}
                   a11yTitle='Remove Student'
                 />
               </Box>
@@ -124,11 +118,10 @@ class StudentList extends React.Component {
           handleClose={() => this.handleForm('studentForm', true)}
           student={this.state.student}
         />
-        <TaskForm
+        <TaskList
           hidden={this.state.taskForm}
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
-          handleNewTask={this.handleNewTask}
         />
         {
           this.state.showToast &&

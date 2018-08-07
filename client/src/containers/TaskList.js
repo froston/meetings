@@ -6,7 +6,7 @@ import CloseIcon from 'grommet/components/icons/base/Close'
 import moment from 'moment'
 import { api, consts } from '../utils'
 
-class TaskForm extends React.PureComponent {
+class TaskList extends React.PureComponent {
   state = {
     tasks: [],
     task: "",
@@ -17,12 +17,14 @@ class TaskForm extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.hidden !== this.props.hidden) {
-      if (this.props.student) {
-        this.setState({ tasks: this.props.student.tasks })
-      } else {
-        this.setState({ tasks: [] })
-      }
+      this.loadData()
     }
+  }
+
+  loadData = () => {
+    api.get(`/tasks/${this.props.student.id}`).then(tasks => {
+      this.setState({ tasks })
+    })
   }
 
   handleChange = (name, value) => {
@@ -41,15 +43,18 @@ class TaskForm extends React.PureComponent {
 
   handleSubmit = e => {
     e.preventDefault()
-    const id = this.props.student._id
+    const id = this.props.student.id
     const newTask = {
+      studentId: id,
       ...this.getTaskDate(this.state.date),
       task: this.state.task,
       hall: this.state.hall,
       point: this.state.point,
     }
-    this.props.handleNewTask(id, newTask)
-    this.props.handleClose()
+    api.post(`/tasks`, newTask)
+      .then(() => {
+        this.loadData()
+      })
   }
 
   render() {
@@ -132,4 +137,4 @@ class TaskForm extends React.PureComponent {
   }
 }
 
-export default TaskForm;
+export default TaskList;

@@ -68,12 +68,12 @@ class ScheduleList extends React.Component {
         <List selectable>
           {this.state.schedules.map((schedule, index) =>
             <ListItem
-              key={schedule._id}
+              key={schedule.id}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
               justify="between"
               align="center"
               responsive={false}
-              onClick={e => this.handleSelect(e, schedule._id)}
+              onClick={e => this.handleSelect(e, schedule.id)}
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
@@ -82,7 +82,7 @@ class ScheduleList extends React.Component {
               <Box direction="row">
                 <Button
                   icon={<FormTrashIcon size="medium" />}
-                  onClick={e => this.handleRemove(e, schedule._id)}
+                  onClick={e => this.handleRemove(e, schedule.id)}
                   a11yTitle='Remove Schedule'
                 />
               </Box>
