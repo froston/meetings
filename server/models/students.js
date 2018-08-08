@@ -44,6 +44,16 @@ exports.removeStudent = (id, cb) => {
   getDb().query('DELETE FROM students WHERE id = ?', id, cb)
 }
 
+exports.asyncGetAvailableStudents = (taskName, hall, gender = null) => {
+  return new Promise((resolve, reject) => {
+    console.log(getAvailableName(taskName))
+    getDb().query(`SELECT * FROM students WHERE ${getAvailableName(taskName)} IS TRUE AND (hall = "All" OR hall = "${hall}")`, (err, res) => {
+      if (err) reject(err)
+      resolve(res)
+    })
+  })
+}
+
 // helpers
 getAvailable = (student) => {
   return [
@@ -62,4 +72,26 @@ setAvailable = (available) => {
     study: available.find(a => a === "Bible Study") ? true : false,
     talk: available.find(a => a === "Talk") ? true : false,
   }
+}
+
+getAvailableName = (taskName) => {
+  let task = ""
+  switch (taskName) {
+    case "Reading":
+      task = 'reading'
+      break
+    case "Initial Call":
+      task = 'initialCall'
+      break
+    case "Return Visit":
+      task = 'returnVisit'
+      break
+    case "Bible Study":
+      task = 'study'
+      break
+    case "Talk":
+      task = 'talk'
+      break
+  }
+  return task
 }

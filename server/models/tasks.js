@@ -14,6 +14,7 @@ exports.createTask = (task, cb) => {
   const studentToInsert = {
     student_id: task.studentId,
     task: task.task,
+    hall: task.hall,
     week: task.week,
     month: task.month,
     year: task.year,
@@ -29,6 +30,26 @@ exports.removeTask = (id, cb) => {
 
 exports.removeBySchedule = (month, year, cb) => {
   getDb().query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year], cb);
+}
+
+exports.asyncCreateTask = (task) => {
+  return new Promise(function (resolve, reject) {
+    const studentToInsert = {
+      student_id: task.student_id,
+      schedule_id: task.schedule_id,
+      task: task.task,
+      hall: task.hall,
+      week: task.week,
+      month: task.month,
+      year: task.year,
+      point: task.point,
+      completed: task.completed
+    }
+    getDb().query('INSERT INTO tasks SET ?', studentToInsert, (err, res) => {
+      if (err) reject(err)
+      resolve(res)
+    })
+  })
 }
 
 
