@@ -19,8 +19,12 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js && cd client && npm start",
-    "pre-commit": "lint-staged",
     "heroku-postbuild": "cd client && npm && npm run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.{js,json,css,md}": [

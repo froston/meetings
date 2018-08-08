@@ -1,7 +1,5 @@
 const { getDb } = require('../db')
 
-const studentsCollection = 'students'
-
 exports.getByStudentId = (id, cb) => {
   getDb().query('SELECT * FROM tasks WHERE student_id = ?', id, cb);
 }

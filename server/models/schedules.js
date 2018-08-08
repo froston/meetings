@@ -26,36 +26,31 @@ const createSchedule = (newSchedule, cb) => {
     // generate all selected weeks
     for (let week = 1; week <= newSchedule.weeks; week++) {
       weekTasks.length && weekTasks[week].forEach(async taskName => {
-        const task = {
+        // get final selected student
+        const finalStudent = await studentModel.asyncGetFinalStudent(5, taskName, hall)
+        // and find a helper for him
+        const helperStudent = await studentModel.asyncGetFinalStudent(10, taskName, hall, true, finalStudent.gender)
+        // create and save tasks
+        const studentTask = {
+          student_id: finalStudent.id,
+          point: finalStudent.nextPoint + 1,
           schedule_id: scheduleId,
           task: taskName,
           week: Number(week),
           month: Number(newSchedule.month),
           year: Number(newSchedule.year),
           hall: hall,
-          completed: false
+          completed: false,
+          helper: false
         }
-        // load all available students
-        const availableStudents = await studentModel.asyncGetAvailableStudents(taskName, hall)
-        console.log(availableStudents.length)
-        if (availableStudents.length === 1) {
-          const finalStudent = availableStudents[0]
-          const newTask = {
-            student_id: finalStudent.id,
-            point: finalStudent.nextPoint + 1,
-            ...task
-          }
-          await taskModel.asyncCreateTask(newTask)
-        } else {
-          //const finalStudent = await studentModel.asyncGetFinalUser(availableStudents)
-          const finalStudent = { id: 999, nextPoint: 1 }
-          const newTask = {
-            student_id: finalStudent.id,
-            point: finalStudent.nextPoint + 1,
-            ...task
-          }
-          await taskModel.asyncCreateTask(newTask)
+        const helperTask = {
+          student_id: helperStudent.id,
+          point: null,
+          helper: true,
+          ...studentTask,
         }
+        await taskModel.asyncCreateTask(studentTask)
+        await taskModel.asyncCreateTask(helperTask)
       })
     }
     cb(err, res)

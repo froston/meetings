@@ -1,4 +1,5 @@
 const { getDb } = require('../db')
+const taskModel = require('./tasks')
 
 exports.getAll = (filter, cb) => {
   getDb().query('SELECT * FROM students', (err, results) => {
@@ -44,12 +45,49 @@ exports.removeStudent = (id, cb) => {
   getDb().query('DELETE FROM students WHERE id = ?', id, cb)
 }
 
-exports.asyncGetAvailableStudents = (taskName, hall, gender = null) => {
+exports.getAvailableStudents = (limit, taskName, hall, gender = null, helper, cb) => {
+  const genderSql = gender && ` AND gender = ${gender}`
+  const helperSql = helper && ` AND helper IS TRUE`
+  getDb().query(`
+    SELECT TOP ${limit} * FROM students 
+    WHERE ${getAvailableName(taskName)} IS TRUE AND 
+    (hall = "All" OR hall = "${hall}") 
+    ${genderSql} 
+    ${helperSql} 
+    INNER JOIN tasks ON students.id = tasks.student_id ORDER BY year DESC, month DESC, week DESC
+  `, (err, res) => {
+      if (err) throw err
+      cb(res)
+    })
+}
+
+exports.asyncGetFinalStudent = (limit, taskName, hall, helper = false, gender = null) => {
   return new Promise((resolve, reject) => {
-    console.log(getAvailableName(taskName))
-    getDb().query(`SELECT * FROM students WHERE ${getAvailableName(taskName)} IS TRUE AND (hall = "All" OR hall = "${hall}")`, (err, res) => {
+    getAvailableStudents(limit, taskName, hall, helper, gender, (err, students) => {
       if (err) reject(err)
-      resolve(res)
+      let finalStudent = {}
+      const studentsCount = students.length
+      if (studentsCount === 1) {
+        finalStudent = students[0]
+      } else {
+        // sort students according to last task
+        students.sort(async (a, b) => {
+          const aLastTask = a.tasks[0]
+          const bLastTask = b.tasks[0]
+          const aSum = aLastTask.week + aLastTask.month + aLastTask.year
+          const bSum = bLastTask.week + bLastTask.month + bLastTask.year
+          if (aSum > bSum) {
+            return 1
+          }
+          if (aSum < bSum) {
+            return -1
+          }
+          return 0;
+        })
+        const flhsIndex = Math.floor(Math.random() * studentsCount);
+        finalStudent = students[flhsIndex]
+      }
+      resolve(finalStudent)
     })
   })
 }
