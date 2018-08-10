@@ -3,5 +3,6 @@ module.exports = {
   port: 5000,
   dbName: 'meeting',
   dbUser: 'root',
-  dbPassword: 'root'
+  dbPassword: 'root',
+  limit: 3
 }

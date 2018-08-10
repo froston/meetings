@@ -1,9 +1,10 @@
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
 const utils = require('../utils')
+const config = require('../config')
 
 exports.getAll = (filter, cb) => {
-  getDb().query('SELECT * FROM students', (err, results) => {
+  getDb().query('SELECT * FROM students ORDER BY name', (err, results) => {
     if (err) throw err
     results.forEach(student => {
       student.available = utils.getAvailable(student)
@@ -48,69 +49,44 @@ exports.removeStudent = (id, cb) => {
   })
 }
 
-const getAvailableStudents = (taskName, hall, gender = null, cb) => {
-  const genderSql = gender ? ` AND gender = ${gender}` : ''
-  getDb().query(
-    `
+const getAvailableStudents = (taskName, hall) => {
+  return new Promise((resolve, reject) => {
+    getDb().query(
+      `
     SELECT * FROM students 
     WHERE ${utils.getAvailableName(taskName)} IS TRUE AND 
     (hall = "All" OR hall = ?)
-    ${genderSql} 
   `,
-    [hall],
-    cb
-  )
+      [hall],
+      async (err, students) => {
+        if (err) reject(err)
+        await Promise.all(
+          students.map(async student => {
+            student.tasks = await taskModel.asyncGetTasks(student.id, hall)
+            return student
+          })
+        ).then(students => {
+          console.log('FIND STUDENT', students)
+          resolve(students)
+        })
+      }
+    )
+  })
 }
 
-exports.asyncGetFinalStudent = (
-  limit,
-  taskName,
-  hall,
-  helper = false,
-  gender = null
-) => {
-  return new Promise((resolve, reject) => {
-    getAvailableStudents(taskName, hall, gender, (err, students) => {
-      if (err) reject(err)
-      let finalStudent = {}
-      const studentsCount = students.length
-      if (studentsCount === 1) {
-        finalStudent = students[0]
-      } else {
-        // sort students according to last task
-        students.sort(async (a, b) => {
-          const aLastTask = await taskModel.asyncGetLastTask(
-            a.id,
-            taskName,
-            hall,
-            helper
-          )
-          const bLastTask = await taskModel.asyncGetLastTask(
-            b.id,
-            taskName,
-            hall,
-            helper
-          )
-          if (aLastTask && !bLastTask) {
-            return -1
-          }
-          if (!aLastTask && bLastTask) {
-            return 1
-          }
-          const aSum = aLastTask.week + aLastTask.month + aLastTask.year
-          const bSum = bLastTask.week + bLastTask.month + bLastTask.year
-          if (aSum > bSum) {
-            return -1
-          }
-          if (aSum < bSum) {
-            return 1
-          }
-          return 0
-        })
-        const flhsIndex = Math.floor(Math.random() * studentsCount - 1)
-        finalStudent = students[flhsIndex]
-      }
-      resolve(finalStudent)
-    })
+exports.asyncGetFinalStudent = (taskName, hall) => {
+  return new Promise(async resolve => {
+    const students = await getAvailableStudents(taskName, hall)
+    let finalStudent = {}
+    const studentsCount = students.length
+    if (studentsCount === 1) {
+      finalStudent = students[0]
+    } else {
+      await students.sort(utils.sortStudents(taskName))
+      const limit = studentsCount > 5 ? config.limit : studentsCount
+      const flhsIndex = Math.floor(Math.random() * limit)
+      finalStudent = students[flhsIndex]
+    }
+    resolve(finalStudent)
   })
 }

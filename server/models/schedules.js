@@ -47,40 +47,41 @@ const createSchedule = (newSchedule, cb) => {
   // create new schedule
   getDb().query('INSERT INTO schedules SET ?', scheduleToInsert, (err, res) => {
     const scheduleId = res.insertId
-    const hall = 'A' // TODO
     // generate all selected weeks
     for (let week = 1; week <= newSchedule.weeks; week++) {
       weekTasks.length &&
-        weekTasks[week].forEach(async taskName => {
-          // get final selected student
-          const finalStudent = await studentModel.asyncGetFinalStudent(
-            5,
-            taskName,
-            hall
-          )
-          // and find a helper for him
-          //const helperStudent = await studentModel.asyncGetFinalStudent(10, taskName, hall, true, finalStudent.gender)
-          // create and save tasks
-          const studentTask = {
-            student_id: finalStudent.id,
-            point: finalStudent.nextPoint + 1,
-            schedule_id: scheduleId,
-            task: taskName,
-            week: Number(week),
-            month: Number(newSchedule.month),
-            year: Number(newSchedule.year),
-            hall: hall,
-            completed: false,
-            helper: false
-          }
-          /* const helperTask = {
-          student_id: helperStudent.id,
-          point: null,
-          helper: true,
-          ...studentTask,
-        } */
-          await taskModel.asyncCreateTask(studentTask)
-          //await taskModel.asyncCreateTask(helperTask)
+        weekTasks[week].forEach(taskName => {
+          ;['A', 'B'].forEach(async hall => {
+            // get final selected student
+            const finalStudent = await studentModel.asyncGetFinalStudent(
+              taskName,
+              hall
+            )
+
+            // and find a helper for him
+            //const helperStudent = await studentModel.asyncGetFinalStudent(10, taskName, hall, true, finalStudent.gender)
+            // create and save tasks
+            const studentTask = {
+              student_id: finalStudent.id,
+              point: finalStudent.nextPoint + 1,
+              schedule_id: scheduleId,
+              task: taskName,
+              week: Number(week),
+              month: Number(newSchedule.month),
+              year: Number(newSchedule.year),
+              hall: hall,
+              completed: false,
+              helper: false
+            }
+            /* const helperTask = {
+            student_id: helperStudent.id,
+            point: null,
+            helper: true,
+            ...studentTask,
+          } */
+            await taskModel.asyncCreateTask(studentTask)
+            //await taskModel.asyncCreateTask(helperTask)
+          })
         })
     }
     cb(err, res)

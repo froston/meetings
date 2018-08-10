@@ -1,7 +1,11 @@
 const { getDb } = require('../db')
 
 exports.getByStudentId = (id, cb) => {
-  getDb().query('SELECT * FROM tasks WHERE student_id = ?', id, cb)
+  getDb().query(
+    'SELECT * FROM tasks WHERE student_id = ? ORDER BY year DESC, month DESC, week DESC',
+    id,
+    cb
+  )
 }
 
 exports.getBySchedule = (month, year, cb) => {
@@ -39,7 +43,7 @@ exports.removeBySchedule = (month, year, cb) => {
 }
 
 exports.asyncCreateTask = task => {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     const studentToInsert = {
       student_id: task.student_id,
       schedule_id: task.schedule_id,
@@ -58,29 +62,20 @@ exports.asyncCreateTask = task => {
   })
 }
 
-exports.asyncGetLastTask = (
-  studentId,
-  taskName,
-  hall,
-  gender = null,
-  helper,
-  cb
-) => {
-  return new Promise(function(resolve, reject) {
-    const helperSql = helper ? ` AND helper IS TRUE` : ''
+exports.asyncGetTasks = (studentId, hall) => {
+  return new Promise((resolve, reject) => {
     getDb().query(
       `
-    SELECT * FROM tasks 
-    WHERE student_id = ? AND
-    task = ? AND 
-    hall = ?
-    ${helperSql}
-    ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-  `,
-      [studentId, taskName, hall],
+      SELECT * FROM tasks 
+      WHERE student_id = ? AND
+      hall = ?
+      ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
+    `,
+      [studentId, hall],
       (err, res) => {
         if (err) reject(err)
-        resolve(res && res[0])
+        console.log('GETTING TASKS')
+        resolve(res)
       }
     )
   })
