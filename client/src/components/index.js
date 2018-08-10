@@ -3,5 +3,7 @@ import Logo from './Logo'
 import StudentForm from './StudentForm'
 import ScheduleForm from './ScheduleForm'
 import TaskForm from './TaskForm'
+import WeekTab from './WeekTab'
+import Available from './Available'
 
-export { Nav, Logo, StudentForm, ScheduleForm, TaskForm }
+export { Nav, Logo, StudentForm, ScheduleForm, TaskForm, WeekTab, Available }

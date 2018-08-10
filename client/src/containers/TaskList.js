@@ -39,27 +39,23 @@ class TaskList extends React.PureComponent {
   }
 
   render() {
-    const { hidden } = this.props
+    const { hidden, student, handleClose } = this.props
     const { tasks } = this.state
     return (
       <div>
         <Layer
-          closer={true}
-          flush={false}
+          closer
+          overlayClose
           align="center"
-          overlayClose={true}
-          onClose={this.props.handleClose}
+          onClose={handleClose}
           hidden={hidden}
         >
           <Header size="medium">
             <Heading tag="h2" margin="medium">
-              Tasks
+              Tasks: {student && student.name}
             </Heading>
           </Header>
-          <TaskForm
-            student={this.props.student}
-            handleSubmit={this.handleSubmit}
-          />
+          <TaskForm student={student} handleSubmit={this.handleSubmit} />
           <Table style={{ minWidth: 750 }}>
             <thead>
               <tr>

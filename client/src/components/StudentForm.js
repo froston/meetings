@@ -1,9 +1,21 @@
-import React from 'react';
-import { Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, RadioButton, Select } from 'grommet';
+import React from 'react'
+import {
+  Layer,
+  Form,
+  FormField,
+  Header,
+  Heading,
+  Footer,
+  Button,
+  TextInput,
+  NumberInput,
+  RadioButton,
+  Select
+} from 'grommet'
 import { consts } from '../utils'
 
 const initState = {
-  name: "",
+  name: '',
   nextPoint: 1,
   gender: consts.GENDER_FEMALE,
   hall: consts.HALLS_ALL,
@@ -30,7 +42,7 @@ class StudentForm extends React.PureComponent {
       gender: student.gender,
       available: student.available,
       hall: student.hall,
-      nextPoint: student.nextPoint || 1,
+      nextPoint: student.nextPoint || 1
     }
     this.setState({ ...state })
   }
@@ -39,7 +51,7 @@ class StudentForm extends React.PureComponent {
     this.setState({ [name]: value })
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault()
     const { student } = this.props
     if (student && student.id) {
@@ -61,24 +73,23 @@ class StudentForm extends React.PureComponent {
     return (
       <div>
         <Layer
-          closer={true}
-          flush={false}
-          align='right'
-          overlayClose={true}
+          closer
+          overlayClose
+          align="right"
           onClose={this.handleClose}
           hidden={hidden}
         >
-          <Form pad='medium' onSubmit={this.handleSubmit}>
+          <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
-              <Heading>{student ? student.name : "New Student"}</Heading>
+              <Heading>{student ? student.name : 'New Student'}</Heading>
             </Header>
-            <FormField label='Name and Surname'>
+            <FormField label="Name and Surname">
               <TextInput
                 value={name}
                 onDOMChange={e => this.handleChange('name', e.target.value)}
               />
             </FormField>
-            <FormField label='Gender'>
+            <FormField label="Gender">
               <RadioButton
                 id={consts.GENDER_MALE}
                 label="Brother"
@@ -89,13 +100,15 @@ class StudentForm extends React.PureComponent {
                 id={consts.GENDER_FEMALE}
                 label="Sister"
                 checked={this.state.gender === consts.GENDER_FEMALE}
-                onChange={e => this.handleChange('gender', consts.GENDER_FEMALE)}
+                onChange={e =>
+                  this.handleChange('gender', consts.GENDER_FEMALE)
+                }
               />
             </FormField>
-            <FormField label='Available'>
+            <FormField label="Available">
               <Select
-                id='Available'
-                label='Available'
+                id="Available"
+                label="Available"
                 inline
                 multiple
                 options={consts.availableOptions}
@@ -103,31 +116,28 @@ class StudentForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('available', value)}
               />
             </FormField>
-            <FormField label='Halls'>
+            <FormField label="Halls">
               <Select
-                placeHolder='Halls'
+                placeHolder="Halls"
                 options={consts.hallsOptions}
                 value={hall}
-                onChange={({ value }) => this.handleChange('hall', value)} />
+                onChange={({ value }) => this.handleChange('hall', value)}
+              />
             </FormField>
-            <FormField label='Next Point'>
+            <FormField label="Next Point">
               <NumberInput
                 value={nextPoint}
                 onChange={e => this.handleChange('nextPoint', e.target.value)}
               />
             </FormField>
-            <Footer pad={{ "vertical": "medium" }}>
-              <Button
-                label='Submit'
-                type='submit'
-                primary={true}
-              />
+            <Footer pad={{ vertical: 'medium' }}>
+              <Button label="Submit" type="submit" primary={true} />
             </Footer>
           </Form>
         </Layer>
       </div>
-    );
+    )
   }
 }
 
-export default StudentForm;
+export default StudentForm

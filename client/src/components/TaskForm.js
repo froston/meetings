@@ -79,7 +79,7 @@ class TaskForm extends React.PureComponent {
             />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
-            <Button label="Add Task" type="submit" primary={true} />
+            <Button label="Add Task" type="submit" primary />
           </Footer>
         </Form>
       </div>
