@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import { Section, Box, Heading, List, ListItem, Toast, Button } from 'grommet'
 import AddIcon from 'grommet/components/icons/base/Add'
 import CatalogIcon from 'grommet/components/icons/base/Catalog'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import { TaskList } from './'
 import { StudentForm } from '../components'
-import { api } from '../utils';
+import { api } from '../utils'
 
 class StudentList extends React.Component {
   state = {
@@ -21,12 +21,10 @@ class StudentList extends React.Component {
   }
 
   loadData = () => {
-    api.get('/students').then(students =>
-      this.setState({ students })
-    )
+    api.get('/students').then(students => this.setState({ students }))
   }
 
-  handleSelect = (index) => {
+  handleSelect = index => {
     this.setState({ studentForm: false, student: this.state.students[index] })
   }
 
@@ -43,11 +41,10 @@ class StudentList extends React.Component {
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    api.remove('/students', id)
-      .then(() => {
-        this.setState({ showToast: true })
-        this.loadData()
-      })
+    api.remove('/students', id).then(() => {
+      this.setState({ showToast: true })
+      this.loadData()
+    })
   }
 
   handleForm = (formName, val) => {
@@ -71,20 +68,25 @@ class StudentList extends React.Component {
   render() {
     return (
       <Section>
-        <Heading tag="h1" margin="medium">Students</Heading>
+        <Heading tag="h1" margin="small">
+          Students
+        </Heading>
         <Box pad={{ vertical: 'small' }}>
-          <p>Update, add or remove ministry school students here. You can see the history of tasks too.</p>
+          <p>
+            Update, add or remove ministry school students here. You can see the
+            history of tasks too.
+          </p>
         </Box>
         <Box pad={{ vertical: 'medium' }}>
           <Button
             icon={<AddIcon />}
-            label='Add New Student'
+            label="Add New Student"
             onClick={this.handleAdd}
-            href='#'
+            href="#"
           />
         </Box>
         <List selectable onSelect={this.handleSelect}>
-          {this.state.students.map((student, index) =>
+          {this.state.students.map((student, index) => (
             <ListItem
               key={student.id}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
@@ -101,16 +103,16 @@ class StudentList extends React.Component {
                 <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={e => this.handleTasks(e, student)}
-                  a11yTitle='See Tasks'
+                  a11yTitle="See Tasks"
                 />
                 <Button
                   icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, student.id)}
-                  a11yTitle='Remove Student'
+                  a11yTitle="Remove Student"
                 />
               </Box>
             </ListItem>
-          )}
+          ))}
         </List>
         <StudentForm
           hidden={this.state.studentForm}
@@ -123,18 +125,17 @@ class StudentList extends React.Component {
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
         />
-        {
-          this.state.showToast &&
+        {this.state.showToast && (
           <Toast
-            status='ok'
+            status="ok"
             onClose={() => this.setState({ showToast: false })}
           >
             Student information has been succesfully saved.
           </Toast>
-        }
+        )}
       </Section>
-    );
+    )
   }
 }
 
-export default StudentList;
+export default StudentList

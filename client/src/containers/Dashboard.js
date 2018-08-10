@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Section, Box, Distribution, Notification } from 'grommet'
-import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
+import { Section, Box, Heading, Distribution, Notification } from 'grommet'
 import { api, consts } from '../utils'
 
 class Dashboard extends Component {
@@ -12,14 +11,19 @@ class Dashboard extends Component {
   componentDidMount() {
     this.loadData()
   }
+
   loadData = () => {
-    api.get(`/students?gender=${consts.GENDER_MALE}`).then(brothers => {
-      this.setState({ brothers: brothers.length })
-    })
-    api.get(`/students?gender=${consts.GENDER_FEMALE}`).then(sisters => {
-      this.setState({ sisters: sisters.length })
+    api.get(`/students`).then(students => {
+      const brothers = students.filter(
+        student => student.gender === consts.GENDER_MALE
+      )
+      const sisters = students.filter(
+        student => student.gender === consts.GENDER_FEMALE
+      )
+      this.setState({ brothers: brothers.length, sisters: sisters.length })
     })
   }
+
   getWarning = () => {
     const date = new Date()
     const day = date.getDate()
@@ -38,11 +42,14 @@ class Dashboard extends Component {
     }
     return null
   }
+
   render() {
     const { brothers, sisters } = this.state
     return (
       <Section>
-        <h1>Dashboard</h1>
+        <Heading tag="h1" margin="small">
+          Dashboard
+        </Heading>
         <Box pad={{ vertical: 'small' }}>
           <p>
             Welcome to ministry school dashboard. Here you can manage your
@@ -50,7 +57,7 @@ class Dashboard extends Component {
           </p>
         </Box>
         {this.getWarning()}
-        <Box pad={{ vertical: 'medium' }}>
+        <Box pad={{ vertical: 'small' }}>
           <h2>Distribution</h2>
           <Distribution
             series={[

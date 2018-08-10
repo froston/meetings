@@ -1,18 +1,12 @@
-import React from 'react';
-import { Layer, Header, Heading, Table, TableRow } from 'grommet'
-import { Form, FormField, Footer, Button, Select, NumberInput, DateTime } from 'grommet';
-import CheckmarkIcon from 'grommet/components/icons/base/Checkmark'
-import CloseIcon from 'grommet/components/icons/base/Close'
-import moment from 'moment'
-import { api, consts } from '../utils'
+import React from 'react'
+import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
+import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
+import { api } from '../utils'
+import { TaskForm } from '../components'
 
 class TaskList extends React.PureComponent {
   state = {
-    tasks: [],
-    task: "",
-    hall: "",
-    date: "",
-    point: 1
+    tasks: []
   }
 
   componentDidUpdate(prevProps) {
@@ -31,84 +25,41 @@ class TaskList extends React.PureComponent {
     this.setState({ [name]: value })
   }
 
-  getTaskDate = (date) => {
-    const dateObj = moment(date)
-    return {
-      week: String(Math.ceil(dateObj.date() / 7)),
-      month: dateObj.format('M'),
-      year: dateObj.format('Y')
-    }
+  handleSubmit = newTask => {
+    api.post(`/tasks`, newTask).then(() => {
+      this.loadData()
+    })
   }
 
-
-  handleSubmit = e => {
+  handleRemove = (e, id) => {
     e.preventDefault()
-    const id = this.props.student.id
-    const newTask = {
-      studentId: id,
-      ...this.getTaskDate(this.state.date),
-      task: this.state.task,
-      hall: this.state.hall,
-      point: this.state.point,
-    }
-    api.post(`/tasks`, newTask)
-      .then(() => {
-        this.loadData()
-      })
+    api.remove(`/tasks`, id).then(() => {
+      this.loadData()
+    })
   }
 
   render() {
     const { hidden } = this.props
-    const { tasks, task, hall, point, date } = this.state;
+    const { tasks } = this.state
     return (
       <div>
         <Layer
           closer={true}
           flush={false}
-          align='center'
+          align="center"
           overlayClose={true}
           onClose={this.props.handleClose}
           hidden={hidden}
         >
           <Header size="medium">
-            <Heading tag="h2" margin="medium">Tasks</Heading>
+            <Heading tag="h2" margin="medium">
+              Tasks
+            </Heading>
           </Header>
-          <Form pad='medium' onSubmit={this.handleSubmit}>
-            <FormField label="Date">
-              <DateTime
-                format='M/D/YYYY'
-                value={date}
-                onChange={value => this.handleChange('date', value)}
-              />
-            </FormField>
-            <FormField label='Talk'>
-              <Select
-                options={consts.availableOptions}
-                value={task}
-                onChange={({ value }) => this.handleChange('task', value)}
-              />
-            </FormField>
-            <FormField label='Halls'>
-              <Select
-                placeHolder='Halls'
-                options={[consts.HALLS_A, consts.HALLS_B]}
-                value={hall}
-                onChange={({ value }) => this.handleChange('hall', value)} />
-            </FormField>
-            <FormField label='Point'>
-              <NumberInput
-                value={point}
-                onChange={e => this.handleChange('point', e.target.value)}
-              />
-            </FormField>
-            <Footer pad={{ "vertical": "medium" }}>
-              <Button
-                label='Add Task'
-                type='submit'
-                primary={true}
-              />
-            </Footer>
-          </Form>
+          <TaskForm
+            student={this.props.student}
+            handleSubmit={this.handleSubmit}
+          />
           <Table style={{ minWidth: 750 }}>
             <thead>
               <tr>
@@ -116,25 +67,34 @@ class TaskList extends React.PureComponent {
                 <th>Date</th>
                 <th>Hall</th>
                 <th>Point</th>
-                <th>Completed</th>
+                <th />
               </tr>
             </thead>
             <tbody>
-              {tasks && tasks.map((task, index) =>
-                <TableRow key={index}>
-                  <td>{task.task}</td>
-                  <td>{`${task.month}/${task.year}`}</td>
-                  <td>{task.hall}</td>
-                  <td>{task.point}</td>
-                  <td className='secondary'>{task.completed ? <CheckmarkIcon /> : <CloseIcon />}</td>
-                </TableRow>
-              )}
+              {tasks &&
+                tasks.map((task, index) => (
+                  <TableRow key={index}>
+                    <td>{task.task}</td>
+                    <td>{`${task.month}/${task.year}`}</td>
+                    <td>{task.hall}</td>
+                    <td>{task.point}</td>
+                    <td>
+                      <Box direction="row">
+                        <Button
+                          icon={<FormTrashIcon size="medium" />}
+                          onClick={e => this.handleRemove(e, task.id)}
+                          a11yTitle="Remove Schedule"
+                        />
+                      </Box>
+                    </td>
+                  </TableRow>
+                ))}
             </tbody>
           </Table>
         </Layer>
       </div>
-    );
+    )
   }
 }
 
-export default TaskList;
+export default TaskList

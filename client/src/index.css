@@ -1,3 +1,18 @@
 .grommetux-select__options {
   margin: 24px 0 24px 0px;
 }
+
+@media screen and (min-width: 45em) {
+  .grommetux-sidebar {
+    animation: sidebarSlide 0.2s;
+  }
+}
+
+@keyframes sidebarSlide {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 336px;
+  }
+}
