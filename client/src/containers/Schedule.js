@@ -18,6 +18,7 @@ class Schedule extends React.Component {
   loadData = () => {
     const id = this.props.match.params.id
     api.get(`/schedules/${id}`).then(schedule => {
+      console.log(schedule)
       this.setState({ schedule })
     })
   }
@@ -45,11 +46,15 @@ class Schedule extends React.Component {
   }
 
   renderWeeks = () => {
-    const { schedule } = this.state.schedule
+    const { schedule } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
-      const tasksA = schedule.tasks.filter(a => a.hall === consts.HALLS_A)
-      const tasksB = schedule.tasks.filter(a => a.hall === consts.HALLS_B)
+      const tasksA = schedule.tasks.filter(
+        a => a.week === week && a.hall === consts.HALLS_A
+      )
+      const tasksB = schedule.tasks.filter(
+        a => a.week === week && a.hall === consts.HALLS_B
+      )
       weeks.push(
         <Tab key={week} title={`Week ${week}`}>
           <Accordion openMulti={true}>

@@ -31,38 +31,52 @@ class WeekTab extends React.PureComponent {
   }
   render() {
     const { tasks, handleChangeTask } = this.props
+    let rvIndex = 0
     return (
       <Box margin="small" direction="row" wrap>
-        {consts.availableOptions.map(taskName => {
-          const mainTask = tasks.find(
-            task => task.task === taskName && task.helper === false
-          )
-          const helperTask = tasks.find(
-            task => task.task === taskName && task.helper === true
-          )
-          return (
-            <Box key={mainTask.id} margin="small">
-              <Card
-                thumbnail={this.getImage(mainTask.task)}
-                label={mainTask.task}
-                heading={mainTask.name}
-                textSize="small"
-                link={
-                  <Button
-                    label="Change Task"
-                    primary
-                    onClick={() => handleChangeTask(mainTask)}
-                  />
-                }
-                description={
-                  <div>
-                    <span>Helper: {helperTask.name}</span>
-                    <span>Point: {mainTask.point}</span>
-                  </div>
-                }
-              />
-            </Box>
-          )
+        {consts.scheduleOptions.map(taskFullName => {
+          const taskName = taskFullName.includes('Return Visit')
+            ? taskFullName.substring(3)
+            : taskFullName
+          let mainTask
+          let helperTask
+          if (taskName === consts.AVAILABLE_RETURN_VISIT) {
+            mainTask = tasks.filter(t => t.task === taskName && !t.helper)[
+              rvIndex
+            ]
+            helperTask = tasks.filter(t => t.task === taskName && t.helper)[
+              rvIndex
+            ]
+            rvIndex++
+          } else {
+            mainTask = tasks.find(t => t.task === taskName && !t.helper)
+            helperTask = tasks.find(t => t.task === taskName && t.helper)
+          }
+          if (mainTask) {
+            return (
+              <Box key={mainTask.id} margin="small">
+                <Card
+                  thumbnail={this.getImage(mainTask.task)}
+                  label={mainTask.task}
+                  heading={mainTask.name}
+                  textSize="small"
+                  link={
+                    <Button
+                      label="Change Task"
+                      primary
+                      onClick={() => handleChangeTask(mainTask)}
+                    />
+                  }
+                  description={
+                    <div>
+                      {helperTask && <span>Helper: {helperTask.name}</span>}
+                      <span>Point: {mainTask.point}</span>
+                    </div>
+                  }
+                />
+              </Box>
+            )
+          }
         })}
       </Box>
     )

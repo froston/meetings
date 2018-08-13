@@ -23,7 +23,8 @@ const initState = {
   },
   year: String(moment().year()),
   weeks: 1,
-  tasks: []
+  tasks: [],
+  hall: consts.HALLS_ALL
 }
 
 class ScheduleForm extends React.PureComponent {
@@ -40,7 +41,14 @@ class ScheduleForm extends React.PureComponent {
 
   handleSubmit = e => {
     e.preventDefault()
-    const values = { ...this.state, month: this.state.month.value }
+    // convert return visits
+    const tasks = this.state.tasks.map(task =>
+      task.map(
+        taskName =>
+          taskName.includes('Return Visit') ? taskName.substring(3) : taskName
+      )
+    )
+    const values = { ...this.state, tasks, month: this.state.month.value }
     this.props.handleSubmit(values)
   }
 
@@ -57,13 +65,13 @@ class ScheduleForm extends React.PureComponent {
     const weeks = []
     for (let weekNum = 1; weekNum <= this.state.weeks; weekNum++) {
       weeks.push(
-        <AccordionPanel heading={`Week ${weekNum}`}>
+        <AccordionPanel key={weekNum} heading={`Week ${weekNum}`}>
           <Select
             id="Tasks"
             label="Tasks"
             inline
             multiple
-            options={consts.availableOptions}
+            options={consts.scheduleOptions}
             value={this.state.tasks[weekNum]}
             onChange={({ value }) => this.handleWeekChange(weekNum, value)}
           />
@@ -74,7 +82,7 @@ class ScheduleForm extends React.PureComponent {
   }
   render() {
     const { hidden, handleClose } = this.props
-    const { month, year, weeks } = this.state
+    const { month, year, weeks, hall } = this.state
     return (
       <div>
         <Layer
@@ -107,6 +115,14 @@ class ScheduleForm extends React.PureComponent {
               <TextInput
                 value={year}
                 onDOMChange={e => this.handleChange('year', e.target.value)}
+              />
+            </FormField>
+            <FormField label="Halls">
+              <Select
+                placeHolder="Halls"
+                options={consts.hallsOptions}
+                value={hall}
+                onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
             <FormField label="Week Number">

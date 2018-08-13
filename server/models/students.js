@@ -1,3 +1,4 @@
+const async = require('async')
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
 const utils = require('../utils')
@@ -49,44 +50,27 @@ exports.removeStudent = (id, cb) => {
   })
 }
 
-const getAvailableStudents = (taskName, hall) => {
-  return new Promise((resolve, reject) => {
-    getDb().query(
-      `
+exports.getAvailableStudents = (taskName, hall, cb) => {
+  getDb().query(
+    `
     SELECT * FROM students 
     WHERE ${utils.getAvailableName(taskName)} IS TRUE AND 
     (hall = "All" OR hall = ?)
   `,
-      [hall],
-      async (err, students) => {
-        if (err) reject(err)
-        await Promise.all(
-          students.map(async student => {
-            student.tasks = await taskModel.asyncGetTasks(student.id, hall)
-            return student
+    [hall],
+    (err, students) => {
+      async.map(
+        students,
+        (student, callback) => {
+          taskModel.getTasks(student.id, hall, (err, tasks) => {
+            student.tasks = tasks
+            callback()
           })
-        ).then(students => {
-          console.log('FIND STUDENT', students)
-          resolve(students)
-        })
-      }
-    )
-  })
-}
-
-exports.asyncGetFinalStudent = (taskName, hall) => {
-  return new Promise(async resolve => {
-    const students = await getAvailableStudents(taskName, hall)
-    let finalStudent = {}
-    const studentsCount = students.length
-    if (studentsCount === 1) {
-      finalStudent = students[0]
-    } else {
-      await students.sort(utils.sortStudents(taskName))
-      const limit = studentsCount > 5 ? config.limit : studentsCount
-      const flhsIndex = Math.floor(Math.random() * limit)
-      finalStudent = students[flhsIndex]
+        },
+        err => {
+          cb(err, students)
+        }
+      )
     }
-    resolve(finalStudent)
-  })
+  )
 }

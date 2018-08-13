@@ -16,18 +16,32 @@ exports.getBySchedule = (month, year, cb) => {
   )
 }
 
+exports.getTasks = (studentId, hall, cb) => {
+  getDb().query(
+    `
+    SELECT * FROM tasks 
+    WHERE student_id = ? AND hall = ?
+    ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
+  `,
+    [studentId, hall],
+    cb
+  )
+}
+
 exports.createTask = (task, cb) => {
-  const studentToInsert = {
-    student_id: task.studentId,
+  const taskToInsert = {
+    student_id: task.student_id,
+    schedule_id: task.schedule_id,
     task: task.task,
     hall: task.hall,
     week: task.week,
     month: task.month,
     year: task.year,
     point: task.point,
-    completed: task.completed
+    completed: task.completed,
+    helper: task.helper
   }
-  getDb().query('INSERT INTO tasks SET ?', studentToInsert, cb)
+  getDb().query('INSERT INTO tasks SET ?', taskToInsert, cb)
 }
 
 exports.removeTask = (id, cb) => {
@@ -44,7 +58,7 @@ exports.removeBySchedule = (month, year, cb) => {
 
 exports.asyncCreateTask = task => {
   return new Promise((resolve, reject) => {
-    const studentToInsert = {
+    const taskToInsert = {
       student_id: task.student_id,
       schedule_id: task.schedule_id,
       task: task.task,
@@ -55,28 +69,11 @@ exports.asyncCreateTask = task => {
       point: task.point,
       completed: task.completed
     }
-    getDb().query('INSERT INTO tasks SET ?', studentToInsert, (err, res) => {
+    getDb().query('INSERT INTO tasks SET ?', taskToInsert, err => {
       if (err) reject(err)
-      resolve(res)
-    })
-  })
-}
+      console.log('CREATING TASK')
 
-exports.asyncGetTasks = (studentId, hall) => {
-  return new Promise((resolve, reject) => {
-    getDb().query(
-      `
-      SELECT * FROM tasks 
-      WHERE student_id = ? AND
-      hall = ?
-      ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-    `,
-      [studentId, hall],
-      (err, res) => {
-        if (err) reject(err)
-        console.log('GETTING TASKS')
-        resolve(res)
-      }
-    )
+      resolve(taskToInsert)
+    })
   })
 }

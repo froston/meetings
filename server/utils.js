@@ -29,6 +29,9 @@ exports.getAvailableName = taskName => {
       task = 'initial_call'
       break
     case 'Return Visit':
+    case '1. Return Visit':
+    case '2. Return Visit':
+    case '3. Return Visit':
       task = 'return_visit'
       break
     case 'Bible Study':
@@ -41,40 +44,49 @@ exports.getAvailableName = taskName => {
   return task
 }
 
-exports.sortStudents = taskName => {
+exports.sortStudents = (taskName, hall) => {
   return (a, b) => {
     const aTasks = a.tasks
     const bTasks = b.tasks
     const aTasksFiltered = aTasks.filter(task => task.task == taskName)
     const bTasksFiltered = bTasks.filter(task => task.task == taskName)
     // LAST TASKS FROM ALL
-    const aLastTaskAll = aTasks.sort((a, b) => b.week - a.week)[0]
-    const bLastLastAll = aTasks.sort((a, b) => b.week - a.week)[0]
-    const aLastTaskAllSum =
-      aLastTaskAll.week + aLastTaskAll.month + aLastTaskAll.year
-    const bLastTaskAllSum =
-      bLastLastAll.week + bLastLastAll.month + bLastLastAll.year
+    const aLastTaskAll = aTasks[0]
+    const bLastLastAll = bTasks[0]
+    const aLastTaskAllSum = aLastTaskAll
+      ? aLastTaskAll.week + aLastTaskAll.month + aLastTaskAll.year
+      : 0
+    const bLastTaskAllSum = bLastLastAll
+      ? bLastLastAll.week + bLastLastAll.month + bLastLastAll.year
+      : 0
     // LAST TASK BY POINT
-    const aLastTaskPoint = aTasksFiltered.sort((a, b) => b.week - a.week)[0]
-    const bLastTaskPoint = bTasksFiltered.sort((a, b) => b.week - a.week)[0]
-    const aLastTaskPointSum =
-      aLastTaskPoint.week + aLastTaskPoint.month + aLastTaskPoint.year
-    const bLastTaskPointSum =
-      bLastTaskPoint.week + bLastTaskPoint.month + bLastTaskPoint.year
+    const aLastTaskPoint = aTasksFiltered[0]
+    const bLastTaskPoint = bTasksFiltered[0]
+    const aLastTaskPointSum = aLastTaskPoint
+      ? aLastTaskPoint.week + aLastTaskPoint.month + aLastTaskPoint.year
+      : 0
+    const bLastTaskPointSum = bLastTaskPoint
+      ? bLastTaskPoint.week + bLastTaskPoint.month + bLastTaskPoint.year
+      : 0
     /* 
-      HAVE WORKED ON THIS POINT ALREADY 
+      LAST TASK DATE GIVEN EVER
     */
-    if (aTasksFiltered.length && !bTasksFiltered.length) {
-      console.log('NEVER WORKED')
+    if (aLastTaskAllSum > bLastTaskAllSum) {
       return 1
     }
-    if (!aTasksFiltered.length && bTasksFiltered.length) {
-      console.log('HAD WORKED')
+    if (bLastTaskAllSum > aLastTaskAllSum) {
       return -1
     }
-    if (!aTasksFiltered.length && !bTasksFiltered.length) {
-      console.log('BOTH NEVER WORKED')
-      return 0
+    /* 
+      LAST HALL TASK IN
+    */
+    if (aLastTaskAll && bLastLastAll) {
+      if (aLastTaskAll.hall === hall && bLastLastAll.hall !== hall) {
+        return 1
+      }
+      if (aLastTaskAll.hall !== hall && bLastLastAll.hall === hall) {
+        return -1
+      }
     }
     /* 
       LATEST TASK AND POINT DATE
@@ -83,61 +95,52 @@ exports.sortStudents = taskName => {
       aLastTaskAllSum > bLastTaskAllSum &&
       aLastTaskPointSum > bLastTaskPointSum
     ) {
-      console.log('LATEST TASKS')
       return 1
     }
     if (
       bLastTaskAllSum > aLastTaskAllSum &&
       bLastTaskPointSum > aLastTaskPointSum
     ) {
-      console.log('SOONER TASKS')
       return -1
     }
     /* 
       AMOUNT OF TASKS GIVEN IN TOTAL
     */
     if (aTasks.length > bTasks.length) {
-      console.log('LESS TOTAL TASKS')
       return 1
     }
     if (bTasks.length > aTasks.length) {
-      console.log('MORE TOTAL TASKS')
+      return -1
+    }
+    /* 
+      HAVE WORKED ON THIS POINT ALREADY 
+    */
+    if (aTasksFiltered.length && !bTasksFiltered.length) {
+      return 1
+    }
+    if (!aTasksFiltered.length && bTasksFiltered.length) {
+      return -1
+    }
+    /* 
+    AMOUNT OF TASKS GIVEN BY POINT
+  */
+    if (aTasksFiltered.length > bTasksFiltered.length) {
+      return 1
+    }
+    if (bTasksFiltered.length > aTasksFiltered.length) {
       return -1
     }
     /* 
       LAST TIME TASK GIVEN BY POINT
     */
     if (aLastTaskPointSum > bLastTaskPointSum) {
-      console.log('LATEST TASKS')
       return 1
     }
     if (bLastTaskPointSum > aLastTaskPointSum) {
-      console.log('SOONER TASKS')
       return -1
     }
-    /* 
-      AMOUNT OF TASKS GIVEN BY POINT
-    */
-    if (aTasksFiltered.length > bTasksFiltered.length) {
-      console.log('LESS TASKS')
-      return 1
-    }
-    if (bTasksFiltered.length > aTasksFiltered.length) {
-      console.log('MORE TASKS')
-      return -1
-    }
-    /* 
-      LAST TASK DATE GIVEN EVER
-    */
-    if (aLastTaskAllSum > bLastTaskAllSum) {
-      console.log('LATEST TASKS ALL')
-      return 1
-    }
-    if (bLastTaskAllSum > aLastTaskAllSum) {
-      console.log('SOONER TASKS ALL')
-      return -1
-    }
-    console.log('EMPATE')
+
+    // WELL ...
     return 0
   }
 }
