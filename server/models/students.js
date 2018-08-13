@@ -62,9 +62,9 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
       async.map(
         students,
         (student, callback) => {
-          taskModel.getTasks(student.id, hall, (err, tasks) => {
+          taskModel.getTasks(student.id, (err, tasks) => {
             student.tasks = tasks
-            callback()
+            callback(err)
           })
         },
         err => {

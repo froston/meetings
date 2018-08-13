@@ -16,14 +16,14 @@ exports.getBySchedule = (month, year, cb) => {
   )
 }
 
-exports.getTasks = (studentId, hall, cb) => {
+exports.getTasks = (studentId, cb) => {
   getDb().query(
     `
     SELECT * FROM tasks 
-    WHERE student_id = ? AND hall = ?
+    WHERE student_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
-    [studentId, hall],
+    [studentId],
     cb
   )
 }
