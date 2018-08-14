@@ -1,18 +1,15 @@
 import React from 'react'
-import { Layer, Box, List, ListItem } from 'grommet'
+import { Layer, Box, Heading, List, ListItem } from 'grommet'
 
 class Available extends React.PureComponent {
   render() {
     const { availables, hidden, handleSelect, handleClose } = this.props
     return (
-      <Layer
-        closer
-        overlayClose
-        align="right"
-        onClose={handleClose}
-        hidden={hidden}
-      >
-        <List selectable>
+      <Layer closer overlayClose align="right" onClose={handleClose} hidden={hidden}>
+        <Heading tag="h2" margin="medium">
+          Available Students
+        </Heading>
+        <List selectable style={{ minWidth: 550 }}>
           {availables.map((student, index) => (
             <ListItem
               key={student.id}

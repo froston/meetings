@@ -44,6 +44,10 @@ exports.updateStudent = (id, student, cb) => {
   getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)
 }
 
+exports.updateStudentPoint = (id, point, cb) => {
+  getDb().query('UPDATE students SET nextPoint = ? WHERE id = ?', [point, id], cb)
+}
+
 exports.removeStudent = (id, cb) => {
   getDb().query('DELETE FROM students WHERE id = ?', id, () => {
     getDb().query('DELETE FROM tasks WHERE student_id = ?', id, cb)
@@ -59,6 +63,7 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
   `,
     [hall],
     (err, students) => {
+      if (err) throw err
       async.map(
         students,
         (student, callback) => {
@@ -73,4 +78,22 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
       )
     }
   )
+}
+
+exports.getAvailableHelpers = (gender, cb) => {
+  getDb().query(`SELECT * FROM students WHERE gender = ?`, [gender], (err, students) => {
+    if (err) throw err
+    async.map(
+      students,
+      (student, callback) => {
+        taskModel.getAllTasks(student.id, (err, tasks) => {
+          student.tasks = tasks
+          callback(err)
+        })
+      },
+      err => {
+        cb(err, students)
+      }
+    )
+  })
 }

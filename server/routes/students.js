@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require('express')
 const model = require('../models/students')
 
-const router = express.Router();
+const router = express.Router()
 
 router.get('/', (req, res) => {
-  const filter = req.query || {};
+  const filter = req.query || {}
   model.getAll(filter, (err, students) => {
     if (err) {
       res.status(500).send(err)
@@ -20,6 +20,18 @@ router.get('/:id', (req, res) => {
       res.status(500).send(err)
     }
     res.send(student)
+  })
+})
+
+router.get('/:id/available', (req, res) => {
+  // const id = req.params.id // TODO: get all but this id
+  const taskName = req.query.taskName
+  const hall = req.query.hall
+  model.getAvailableStudents(taskName, hall, (err, students) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(students)
   })
 })
 
@@ -46,7 +58,7 @@ router.patch('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const id = req.params.id
-  model.removeStudent(id, (err) => {
+  model.removeStudent(id, err => {
     if (err) {
       res.status(500).send(err)
     }
@@ -54,4 +66,4 @@ router.delete('/:id', (req, res) => {
   })
 })
 
-module.exports = router;
+module.exports = router

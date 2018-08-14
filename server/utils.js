@@ -91,16 +91,10 @@ exports.sortStudents = (taskName, hall) => {
     /* 
       LATEST TASK AND POINT DATE
     */
-    if (
-      aLastTaskAllSum > bLastTaskAllSum &&
-      aLastTaskPointSum > bLastTaskPointSum
-    ) {
+    if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
       return 1
     }
-    if (
-      bLastTaskAllSum > aLastTaskAllSum &&
-      bLastTaskPointSum > aLastTaskPointSum
-    ) {
+    if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
       return -1
     }
     /* 
@@ -137,6 +131,58 @@ exports.sortStudents = (taskName, hall) => {
       return 1
     }
     if (bLastTaskPointSum > aLastTaskPointSum) {
+      return -1
+    }
+
+    // WELL ...
+    return 0
+  }
+}
+exports.sortHelpers = taskName => {
+  return (a, b) => {
+    const aTasks = a.tasks
+    const bTasks = b.tasks
+    const aTasksFiltered = aTasks.filter(task => task.task == taskName && task.helper)
+    const bTasksFiltered = bTasks.filter(task => task.task == taskName && task.helper)
+    // LAST TASKS FROM ALL
+    const aLastTaskAll = aTasks[0]
+    const bLastLastAll = bTasks[0]
+    const aLastTaskAllSum = aLastTaskAll
+      ? aLastTaskAll.week + aLastTaskAll.month + aLastTaskAll.year
+      : 0
+    const bLastTaskAllSum = bLastLastAll
+      ? bLastLastAll.week + bLastLastAll.month + bLastLastAll.year
+      : 0
+    // LAST TIME HELPER
+    const aLastHelper = aTasksFiltered[0]
+    const bLastHelper = bTasksFiltered[0]
+    const aLastHelperSum = aLastHelper ? aLastHelper.week + aLastHelper.month + aLastHelper.year : 0
+    const bLastHelperSum = bLastHelper ? bLastHelper.week + bLastHelper.month + bLastHelper.year : 0
+    /* 
+      LAST TASK DATE GIVEN EVER
+    */
+    if (aLastTaskAllSum > bLastTaskAllSum) {
+      return 1
+    }
+    if (bLastTaskAllSum > aLastTaskAllSum) {
+      return -1
+    }
+    /* 
+      LAST TIME HELPER
+    */
+    if (aLastHelperSum > bLastHelperSum) {
+      return 1
+    }
+    if (bLastHelperSum > aLastHelperSum) {
+      return -1
+    }
+    /* 
+      AMOUNT OF TASKS GIVEN IN TOTAL
+    */
+    if (aTasksFiltered.length > bTasksFiltered.length) {
+      return 1
+    }
+    if (bTasksFiltered.length > aTasksFiltered.length) {
       return -1
     }
 

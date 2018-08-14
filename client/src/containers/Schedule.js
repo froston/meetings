@@ -24,7 +24,19 @@ class Schedule extends React.Component {
   }
 
   handleChangeTask = taskToChange => {
-    api.get(`/students?taskName="Reading"&hall="A"`).then(availables => {
+    api
+      .get(
+        `/students/${taskToChange.student_id}/available?taskName=${taskToChange.task}&hall=${
+          taskToChange.hall
+        }`
+      )
+      .then(availables => {
+        this.setState({ availables, taskToChange, availableList: false })
+      })
+  }
+
+  handleChangeHelper = taskToChange => {
+    api.get(`/students`).then(availables => {
       this.setState({ availables, taskToChange, availableList: false })
     })
   }
@@ -32,10 +44,17 @@ class Schedule extends React.Component {
   handleSelectNew = student => {
     const { taskToChange } = this.state
     const task = {
-      studentId: student.id,
-      point: student.point,
-      ...taskToChange
+      student_id: student.id,
+      point: taskToChange.helper ? null : student.nextPoint
     }
+    api.patch(`/tasks`, taskToChange.id, task).then(() => {
+      this.setState({ availableList: true })
+      this.loadData()
+    })
+  }
+
+  handleChangePoint = (point, taskToChange) => {
+    const task = { point: point || 0 }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
       this.loadData()
     })
@@ -49,20 +68,18 @@ class Schedule extends React.Component {
     const { schedule } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
-      const tasksA = schedule.tasks.filter(
-        a => a.week === week && a.hall === consts.HALLS_A
-      )
-      const tasksB = schedule.tasks.filter(
-        a => a.week === week && a.hall === consts.HALLS_B
-      )
+      const tasksA = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_A)
+      const tasksB = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_B)
       weeks.push(
         <Tab key={week} title={`Week ${week}`}>
-          <Accordion openMulti={true}>
-            {tasksB.length && (
+          <Accordion openMulti={true} active={0}>
+            {tasksA.length && (
               <AccordionPanel heading={`Hall ${consts.HALLS_A}`}>
                 <WeekTab
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
+                  handleChangeHelper={this.handleChangeHelper}
+                  handleChangePoint={this.handleChangePoint}
                 />
               </AccordionPanel>
             )}
@@ -71,6 +88,8 @@ class Schedule extends React.Component {
                 <WeekTab
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}
+                  handleChangeHelper={this.handleChangeHelper}
+                  handleChangePoint={this.handleChangePoint}
                 />
               </AccordionPanel>
             )}

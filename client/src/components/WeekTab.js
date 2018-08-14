@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Card, Button } from 'grommet'
+import { Box, Card, Button, TextInput } from 'grommet'
 import { consts } from '../utils'
 
 class WeekTab extends React.PureComponent {
@@ -30,7 +30,7 @@ class WeekTab extends React.PureComponent {
     return image
   }
   render() {
-    const { tasks, handleChangeTask } = this.props
+    const { tasks, handleChangeTask, handleChangeHelper, handleChangePoint } = this.props
     let rvIndex = 0
     return (
       <Box margin="small" direction="row" wrap>
@@ -41,12 +41,8 @@ class WeekTab extends React.PureComponent {
           let mainTask
           let helperTask
           if (taskName === consts.AVAILABLE_RETURN_VISIT) {
-            mainTask = tasks.filter(t => t.task === taskName && !t.helper)[
-              rvIndex
-            ]
-            helperTask = tasks.filter(t => t.task === taskName && t.helper)[
-              rvIndex
-            ]
+            mainTask = tasks.filter(t => t.task === taskName && !t.helper)[rvIndex]
+            helperTask = tasks.filter(t => t.task === taskName && t.helper)[rvIndex]
             rvIndex++
           } else {
             mainTask = tasks.find(t => t.task === taskName && !t.helper)
@@ -68,9 +64,21 @@ class WeekTab extends React.PureComponent {
                     />
                   }
                   description={
-                    <div>
-                      {helperTask && <span>Helper: {helperTask.name}</span>}
-                      <span>Point: {mainTask.point}</span>
+                    <div style={{ margin: '10px 0' }}>
+                      {helperTask && (
+                        <span>
+                          <b>Helper:</b>{' '}
+                          <a onClick={() => handleChangeHelper(helperTask)}>{helperTask.name}</a>
+                          <br />
+                        </span>
+                      )}
+                      <span>
+                        <b>Point: </b>
+                        <TextInput
+                          value={mainTask.point}
+                          onDOMChange={e => handleChangePoint(e.target.value, mainTask)}
+                        />{' '}
+                      </span>
                     </div>
                   }
                 />

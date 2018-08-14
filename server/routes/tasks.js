@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require('express')
 const model = require('../models/tasks')
 
-const router = express.Router();
+const router = express.Router()
 
 router.get('/:studentId', (req, res) => {
   const studentId = req.params.studentId
@@ -23,10 +23,20 @@ router.post('/', (req, res) => {
   })
 })
 
+router.patch('/:id', (req, res) => {
+  const taskId = req.params.id
+  const newTask = req.body
+  model.updateTask(taskId, newTask, (err, task) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(task)
+  })
+})
 
 router.delete('/:id', (req, res) => {
   const id = req.params.id
-  model.removeTask(id, (err) => {
+  model.removeTask(id, err => {
     if (err) {
       res.status(500).send(err)
     }
@@ -34,4 +44,4 @@ router.delete('/:id', (req, res) => {
   })
 })
 
-module.exports = router;
+module.exports = router

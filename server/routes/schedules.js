@@ -1,11 +1,10 @@
-const express = require('express');
+const express = require('express')
 const model = require('../models/schedules')
 
-const router = express.Router();
+const router = express.Router()
 
 router.get('/', (req, res) => {
-  const filter = req.query || {};
-  model.getAll(filter, (err, schedules) => {
+  model.getAll((err, schedules) => {
     if (err) {
       res.status(500).send(err)
     }
@@ -35,7 +34,7 @@ router.post('/', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const id = req.params.id
-  model.removeSchedule(id, (err) => {
+  model.removeSchedule(id, err => {
     if (err) {
       res.status(500).send(err)
     }
@@ -43,4 +42,4 @@ router.delete('/:id', (req, res) => {
   })
 })
 
-module.exports = router;
+module.exports = router

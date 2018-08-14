@@ -5,21 +5,18 @@ const studentModel = require('./students')
 const utils = require('../utils')
 const config = require('../config')
 
-const getAll = (filters, cb) => {
-  getDb().query('SELECT * FROM schedules', cb)
+const getAll = cb => {
+  getDb().query('SELECT * FROM schedules ORDER BY month DESC, year DESC', cb)
 }
 
 const getById = (id, cb) => {
-  getDb().query(
-    'SELECT * FROM schedules WHERE id = ?',
-    id,
-    (err, schedules) => {
-      if (err) throw err
-      let schedule = schedules[0]
-      getDb().query(
-        `
+  getDb().query('SELECT * FROM schedules WHERE id = ?', id, (err, schedules) => {
+    if (err) throw err
+    let schedule = schedules[0]
+    getDb().query(
+      `
       SELECT 
-        students.name,
+        tasks.id,
         tasks.hall,
         tasks.task,
         tasks.week,
@@ -27,19 +24,20 @@ const getById = (id, cb) => {
         tasks.year,
         tasks.point,
         tasks.completed,
-        tasks.helper
+        tasks.helper,
+        students.name,
+        students.id AS student_id
       FROM tasks 
       JOIN students ON students.id = tasks.student_id 
       WHERE schedule_id = ?`,
-        schedule.id,
-        (err, tasks) => {
-          if (err) throw err
-          schedule.tasks = tasks
-          cb(err, schedule)
-        }
-      )
-    }
-  )
+      schedule.id,
+      (err, tasks) => {
+        if (err) throw err
+        schedule.tasks = tasks
+        cb(err, schedule)
+      }
+    )
+  })
 }
 
 const createSchedule = function(newSchedule, mainCB) {
@@ -48,13 +46,9 @@ const createSchedule = function(newSchedule, mainCB) {
     year: Number(newSchedule.year),
     weeks: Number(newSchedule.weeks)
   }
-  const scheduleWeeks = Array.from(
-    { length: newSchedule.weeks },
-    (v, i) => i + 1
-  )
+  const scheduleWeeks = Array.from({ length: newSchedule.weeks }, (v, i) => i + 1)
   const scheduleTasks = newSchedule.tasks
-  const scheduleHalls =
-    newSchedule.hall === 'All' ? ['A', 'B'] : [newSchedule.hall]
+  const scheduleHalls = newSchedule.hall === 'All' ? ['A', 'B'] : [newSchedule.hall]
   // create new schedule
   getDb().query('INSERT INTO schedules SET ?', scheduleToInsert, (err, res) => {
     newSchedule.id = res.insertId
@@ -73,24 +67,50 @@ const createSchedule = function(newSchedule, mainCB) {
               (hall, hallCB) => {
                 async.waterfall(
                   [
-                    callbackStudents => {
-                      studentModel.getAvailableStudents(
-                        taskName,
-                        hall,
-                        (err, students) => {
-                          if (students && students.length) {
-                            // sort all students
-                            students.sort(utils.sortStudents(taskName, hall))
+                    callbackFinal => {
+                      studentModel.getAvailableStudents(taskName, hall, (err, students) => {
+                        if (students && students.length) {
+                          // sort all students
+                          students.sort(utils.sortStudents(taskName, hall))
+                          const limit =
+                            students.length > config.limit ? config.limit : students.length
+                          const flhsIndex = Math.floor(Math.random() * limit)
+                          const finalStudent = students[flhsIndex]
+                          // assign task
+                          const studentTask = {
+                            student_id: finalStudent.id,
+                            point: finalStudent.nextPoint + 1,
+                            schedule_id: newSchedule.id,
+                            task: taskName,
+                            week: Number(week),
+                            month: Number(newSchedule.month),
+                            year: Number(newSchedule.year),
+                            hall: hall,
+                            completed: false,
+                            helper: false
+                          }
+                          taskModel.createTask(studentTask, err => {
+                            callbackFinal(err, finalStudent.gender)
+                          })
+                        } else {
+                          callbackFinal('No students!')
+                        }
+                      })
+                    },
+                    (gender, callbackHelper) => {
+                      if (taskName !== 'Reading' && taskName !== 'Talk') {
+                        studentModel.getAvailableHelpers(gender, (err, helpers) => {
+                          if (helpers && helpers.length) {
+                            // sort all helpers
+                            helpers.sort(utils.sortHelpers(taskName))
                             const limit =
-                              students.length > config.limit
-                                ? config.limit
-                                : students.length
+                              helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
-                            const finalStudent = students[flhsIndex]
+                            const finalHelper = helpers[flhsIndex]
                             // assign task
-                            const studentTask = {
-                              student_id: finalStudent.id,
-                              point: finalStudent.nextPoint + 1,
+                            const helperTask = {
+                              student_id: finalHelper.id,
+                              point: null,
                               schedule_id: newSchedule.id,
                               task: taskName,
                               week: Number(week),
@@ -98,19 +118,18 @@ const createSchedule = function(newSchedule, mainCB) {
                               year: Number(newSchedule.year),
                               hall: hall,
                               completed: false,
-                              helper: false
+                              helper: true
                             }
-                            callbackStudents(err, studentTask)
+                            taskModel.createTask(helperTask, err => {
+                              callbackHelper(err)
+                            })
                           } else {
-                            callbackStudents('No students!')
+                            callbackHelper('No helpers!')
                           }
-                        }
-                      )
-                    },
-                    (studentTask, callbackTask) => {
-                      taskModel.createTask(studentTask, err => {
-                        callbackTask(err)
-                      })
+                        })
+                      } else {
+                        callbackHelper(null)
+                      }
                     }
                   ],
                   hallCB
