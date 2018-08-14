@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Card, Button, TextInput } from 'grommet'
 import { consts } from '../utils'
 
@@ -89,6 +90,13 @@ class WeekTab extends React.PureComponent {
       </Box>
     )
   }
+}
+
+WeekTab.propTypes = {
+  tasks: PropTypes.array,
+  handleChangeTask: PropTypes.func,
+  handleChangeHelper: PropTypes.func,
+  handleChangePoint: PropTypes.func
 }
 
 export default WeekTab

@@ -51,6 +51,7 @@ const createSchedule = function(newSchedule, mainCB) {
   const scheduleHalls = newSchedule.hall === 'All' ? ['A', 'B'] : [newSchedule.hall]
   // create new schedule
   getDb().query('INSERT INTO schedules SET ?', scheduleToInsert, (err, res) => {
+    if (err) throw err
     newSchedule.id = res.insertId
     // generate tasks for all weeks, tasks and halls
     async.eachLimit(
@@ -69,6 +70,7 @@ const createSchedule = function(newSchedule, mainCB) {
                   [
                     callbackFinal => {
                       studentModel.getAvailableStudents(taskName, hall, (err, students) => {
+                        if (err) throw err
                         if (students && students.length) {
                           // sort all students
                           students.sort(utils.sortStudents(taskName, hall))
@@ -148,8 +150,6 @@ const createSchedule = function(newSchedule, mainCB) {
   })
 }
 
-const updateSchedule = (id, schedule, cb) => {}
-
 const removeSchedule = (id, cb) => {
   getById(id, (err, res) => {
     const schedule = res
@@ -169,6 +169,5 @@ module.exports = {
   getAll,
   getById,
   createSchedule,
-  updateSchedule,
   removeSchedule
 }

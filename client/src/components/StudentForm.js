@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   Layer,
   Form,
@@ -17,7 +18,7 @@ import { consts } from '../utils'
 const initState = {
   name: '',
   nextPoint: 1,
-  gender: consts.GENDER_FEMALE,
+  gender: consts.GENDER_SISTER,
   hall: consts.HALLS_ALL,
   available: []
 }
@@ -72,13 +73,7 @@ class StudentForm extends React.PureComponent {
     const { name, nextPoint, available, hall } = this.state
     return (
       <div>
-        <Layer
-          closer
-          overlayClose
-          align="right"
-          onClose={this.handleClose}
-          hidden={hidden}
-        >
+        <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
               <Heading>{student ? student.name : 'New Student'}</Heading>
@@ -91,18 +86,16 @@ class StudentForm extends React.PureComponent {
             </FormField>
             <FormField label="Gender">
               <RadioButton
-                id={consts.GENDER_MALE}
+                id={consts.GENDER_BROTHER}
                 label="Brother"
-                checked={this.state.gender === consts.GENDER_MALE}
-                onChange={e => this.handleChange('gender', consts.GENDER_MALE)}
+                checked={this.state.gender === consts.GENDER_BROTHER}
+                onChange={e => this.handleChange('gender', consts.GENDER_BROTHER)}
               />
               <RadioButton
-                id={consts.GENDER_FEMALE}
+                id={consts.GENDER_SISTER}
                 label="Sister"
-                checked={this.state.gender === consts.GENDER_FEMALE}
-                onChange={e =>
-                  this.handleChange('gender', consts.GENDER_FEMALE)
-                }
+                checked={this.state.gender === consts.GENDER_SISTER}
+                onChange={e => this.handleChange('gender', consts.GENDER_SISTER)}
               />
             </FormField>
             <FormField label="Available">
@@ -138,6 +131,13 @@ class StudentForm extends React.PureComponent {
       </div>
     )
   }
+}
+
+StudentForm.propTypes = {
+  hidden: PropTypes.bool,
+  student: PropTypes.object,
+  handleSubmit: PropTypes.func,
+  handleClose: PropTypes.func
 }
 
 export default StudentForm

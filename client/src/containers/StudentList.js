@@ -1,11 +1,9 @@
 import React from 'react'
-import { Section, Box, Heading, List, ListItem, Toast, Button } from 'grommet'
-import AddIcon from 'grommet/components/icons/base/Add'
-import CatalogIcon from 'grommet/components/icons/base/Catalog'
-import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
+import { Section, Box, Heading, Paragraph, List, ListItem, Toast, Button, Search } from 'grommet'
+import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { TaskList } from './'
 import { StudentForm } from '../components'
-import { api } from '../utils'
+import { api, consts } from '../utils'
 
 class StudentList extends React.Component {
   state = {
@@ -13,15 +11,25 @@ class StudentList extends React.Component {
     studentForm: true,
     taskForm: true,
     student: {},
-    showToast: false
+    showToast: false,
+    searchTerm: ''
   }
 
   componentDidMount() {
     this.loadData()
   }
 
-  loadData = () => {
-    api.get('/students').then(students => this.setState({ students }))
+  loadData = searchTerm => {
+    const filter = searchTerm ? `?name=${searchTerm}` : ''
+    api.get(`/students${filter}`).then(students => {
+      this.setState({ students: students || [] })
+    })
+  }
+
+  handleSearch = e => {
+    const searchTerm = e.target.value
+    this.setState({ searchTerm })
+    this.loadData(searchTerm)
   }
 
   handleSelect = index => {
@@ -66,23 +74,26 @@ class StudentList extends React.Component {
   }
 
   render() {
+    const { searchTerm } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
           Students
         </Heading>
-        <Box pad={{ vertical: 'small' }}>
-          <p>
-            Update, add or remove ministry school students here. You can see the
-            history of tasks too.
-          </p>
+        <Paragraph margin="small">
+          Create, update or remove ministry school students here. <br />
+          You can create, remove and see the history of tasks.
+        </Paragraph>
+        <Box pad={{ vertical: 'medium' }}>
+          <Button icon={<AddIcon />} label="Add New Student" onClick={this.handleAdd} href="#" />
         </Box>
         <Box pad={{ vertical: 'medium' }}>
-          <Button
-            icon={<AddIcon />}
-            label="Add New Student"
-            onClick={this.handleAdd}
-            href="#"
+          <Search
+            placeHolder="Search Student"
+            inline={true}
+            iconAlign="start"
+            value={searchTerm}
+            onDOMChange={this.handleSearch}
           />
         </Box>
         <List selectable onSelect={this.handleSelect}>
@@ -97,7 +108,13 @@ class StudentList extends React.Component {
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
-                <strong>{student.name}</strong>
+                <div>
+                  <StopFillIcon
+                    size="xsmall"
+                    colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
+                  />
+                  <strong> {student.name}</strong>
+                </div>
               </Box>
               <Box direction="row">
                 <Button
@@ -126,10 +143,7 @@ class StudentList extends React.Component {
           handleClose={() => this.handleForm('taskForm', true)}
         />
         {this.state.showToast && (
-          <Toast
-            status="ok"
-            onClose={() => this.setState({ showToast: false })}
-          >
+          <Toast status="ok" onClose={() => this.setState({ showToast: false })}>
             Student information has been succesfully saved.
           </Toast>
         )}

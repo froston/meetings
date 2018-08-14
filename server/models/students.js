@@ -2,10 +2,10 @@ const async = require('async')
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
 const utils = require('../utils')
-const config = require('../config')
 
-exports.getAll = (filter, cb) => {
-  getDb().query('SELECT * FROM students ORDER BY name', (err, results) => {
+exports.getAll = (name, cb) => {
+  const like = name ? `WHERE name LIKE "%${name}%"` : ``
+  getDb().query(`SELECT * FROM students ${like} ORDER BY name`, (err, results) => {
     if (err) throw err
     results.forEach(student => {
       student.available = utils.getAvailable(student)
@@ -68,7 +68,8 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
         students,
         (student, callback) => {
           taskModel.getTasks(student.id, (err, tasks) => {
-            student.tasks = tasks
+            student.tasks = tasks.filter(t => !t.helper)
+            student.helpTasks = tasks.filter(t => t.helper)
             callback(err)
           })
         },
@@ -86,8 +87,9 @@ exports.getAvailableHelpers = (gender, cb) => {
     async.map(
       students,
       (student, callback) => {
-        taskModel.getAllTasks(student.id, (err, tasks) => {
-          student.tasks = tasks
+        taskModel.getTasks(student.id, (err, tasks) => {
+          student.tasks = tasks.filter(t => !t.helper)
+          student.helpTasks = tasks.filter(t => t.helper)
           callback(err)
         })
       },

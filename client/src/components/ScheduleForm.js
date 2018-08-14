@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   Layer,
   Header,
@@ -43,10 +44,7 @@ class ScheduleForm extends React.PureComponent {
     e.preventDefault()
     // convert return visits
     const tasks = this.state.tasks.map(task =>
-      task.map(
-        taskName =>
-          taskName.includes('Return Visit') ? taskName.substring(3) : taskName
-      )
+      task.map(taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName))
     )
     const values = { ...this.state, tasks, month: this.state.month.value }
     this.props.handleSubmit(values)
@@ -85,23 +83,13 @@ class ScheduleForm extends React.PureComponent {
     const { month, year, weeks, hall } = this.state
     return (
       <div>
-        <Layer
-          closer
-          overlayClose
-          align="center"
-          onClose={handleClose}
-          hidden={hidden}
-        >
+        <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
               New Schedule
             </Heading>
           </Header>
-          <Form
-            pad="medium"
-            onSubmit={this.handleSubmit}
-            style={{ minWidth: 1200 }}
-          >
+          <Form pad="medium" onSubmit={this.handleSubmit} style={{ minWidth: 1200 }}>
             <FormField label="Month">
               <Select
                 id="Month"
@@ -140,6 +128,12 @@ class ScheduleForm extends React.PureComponent {
       </div>
     )
   }
+}
+
+ScheduleForm.propTypes = {
+  hidden: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  handleClose: PropTypes.func
 }
 
 export default ScheduleForm

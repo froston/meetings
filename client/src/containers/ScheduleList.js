@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { Section, Box, Heading, List, ListItem, Button } from 'grommet'
+import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import ScheduleIcon from 'grommet/components/icons/base/Schedule'
 import { ScheduleForm } from '../components'
@@ -17,7 +17,11 @@ class ScheduleList extends React.Component {
   }
 
   loadData = () => {
-    api.get('/schedules').then(schedules => this.setState({ schedules }))
+    api.get('/schedules').then(schedules => {
+      this.setState({
+        schedules: schedules || []
+      })
+    })
   }
 
   handleAdd = () => {
@@ -49,14 +53,13 @@ class ScheduleList extends React.Component {
   }
 
   render() {
+    const { schedules } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
           Schedules
         </Heading>
-        <Box pad={{ vertical: 'small' }}>
-          <p>Generate, update and remove schedules.</p>
-        </Box>
+        <Paragraph margin="small">Generate, update and remove schedules.</Paragraph>
         <Box pad={{ vertical: 'medium' }}>
           <Button
             icon={<ScheduleIcon />}
@@ -66,7 +69,7 @@ class ScheduleList extends React.Component {
           />
         </Box>
         <List selectable>
-          {this.state.schedules.map((schedule, index) => (
+          {schedules.map((schedule, index) => (
             <ListItem
               key={schedule.id}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}

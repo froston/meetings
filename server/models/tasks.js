@@ -16,18 +16,6 @@ exports.getTasks = (studentId, cb) => {
   getDb().query(
     `
     SELECT * FROM tasks 
-    WHERE student_id = ? AND helper = 0
-    ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-  `,
-    [studentId],
-    cb
-  )
-}
-
-exports.getAllTasks = (studentId, cb) => {
-  getDb().query(
-    `
-    SELECT * FROM tasks 
     WHERE student_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,

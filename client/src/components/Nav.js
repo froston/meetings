@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Sidebar, Header, Title, Box, Menu, Button } from 'grommet'
 import CloseIcon from 'grommet/components/icons/base/Close'
@@ -40,6 +41,10 @@ class Nav extends React.PureComponent {
       </Sidebar>
     )
   }
+}
+
+Nav.propTypes = {
+  location: PropTypes.object
 }
 
 export default Nav

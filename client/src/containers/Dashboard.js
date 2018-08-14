@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Section, Box, Heading, Distribution, Notification } from 'grommet'
+import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import { api, consts } from '../utils'
 
 class Dashboard extends Component {
@@ -13,13 +13,10 @@ class Dashboard extends Component {
   }
 
   loadData = () => {
-    api.get(`/students`).then(students => {
-      const brothers = students.filter(
-        student => student.gender === consts.GENDER_MALE
-      )
-      const sisters = students.filter(
-        student => student.gender === consts.GENDER_FEMALE
-      )
+    api.get(`/students`).then(res => {
+      const students = res || []
+      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER)
+      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER)
       this.setState({ brothers: brothers.length, sisters: sisters.length })
     })
   }
@@ -50,12 +47,11 @@ class Dashboard extends Component {
         <Heading tag="h1" margin="small">
           Dashboard
         </Heading>
-        <Box pad={{ vertical: 'small' }}>
-          <p>
-            Welcome to ministry school dashboard. Here you can manage your
-            students and monthly schedules.
-          </p>
-        </Box>
+        <Paragraph margin="small">
+          Welcome to ministry school dashboard.
+          <br />
+          Here you can manage the students and monthly schedules.
+        </Paragraph>
         {this.getWarning()}
         <Box pad={{ vertical: 'small' }}>
           <h2>Distribution</h2>

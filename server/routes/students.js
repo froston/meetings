@@ -4,8 +4,8 @@ const model = require('../models/students')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  const filter = req.query || {}
-  model.getAll(filter, (err, students) => {
+  const name = req.query.name
+  model.getAll(name, (err, students) => {
     if (err) {
       res.status(500).send(err)
     }

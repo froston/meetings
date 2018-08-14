@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Layer, Box, Heading, List, ListItem } from 'grommet'
 
 class Available extends React.PureComponent {
@@ -29,6 +30,13 @@ class Available extends React.PureComponent {
       </Layer>
     )
   }
+}
+
+Available.propTypes = {
+  availables: PropTypes.array,
+  hidden: PropTypes.bool,
+  handleSelect: PropTypes.func,
+  handleClose: PropTypes.func
 }
 
 export default Available

@@ -44,30 +44,29 @@ exports.getAvailableName = taskName => {
   return task
 }
 
+const sumTask = task => (task ? task.week + task.month + task.year : 0)
+
 exports.sortStudents = (taskName, hall) => {
   return (a, b) => {
+    // ALL MAIN TASKS
     const aTasks = a.tasks
     const bTasks = b.tasks
+    // TASKS FILTERED BY TASK NAME
     const aTasksFiltered = aTasks.filter(task => task.task == taskName)
     const bTasksFiltered = bTasks.filter(task => task.task == taskName)
-    // LAST TASKS FROM ALL
+    // HELPER TASK SUM
+    const aHelpTaskSum = sumTask(a.helpTasks)
+    const bHelpTaskSum = sumTask(b.helpTasks)
+    // TASKS EVER SUM
     const aLastTaskAll = aTasks[0]
     const bLastLastAll = bTasks[0]
-    const aLastTaskAllSum = aLastTaskAll
-      ? aLastTaskAll.week + aLastTaskAll.month + aLastTaskAll.year
-      : 0
-    const bLastTaskAllSum = bLastLastAll
-      ? bLastLastAll.week + bLastLastAll.month + bLastLastAll.year
-      : 0
-    // LAST TASK BY POINT
+    const aLastTaskAllSum = sumTask(aLastTaskAll)
+    const bLastTaskAllSum = sumTask(bLastLastAll)
+    // TASK BY POINT SUM
     const aLastTaskPoint = aTasksFiltered[0]
     const bLastTaskPoint = bTasksFiltered[0]
-    const aLastTaskPointSum = aLastTaskPoint
-      ? aLastTaskPoint.week + aLastTaskPoint.month + aLastTaskPoint.year
-      : 0
-    const bLastTaskPointSum = bLastTaskPoint
-      ? bLastTaskPoint.week + bLastTaskPoint.month + bLastTaskPoint.year
-      : 0
+    const aLastTaskPointSum = sumTask(aLastTaskPoint)
+    const bLastTaskPointSum = sumTask(bLastTaskPoint)
     /* 
       LAST TASK DATE GIVEN EVER
     */
@@ -95,6 +94,15 @@ exports.sortStudents = (taskName, hall) => {
       return 1
     }
     if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
+      return -1
+    }
+    /* 
+      LAST HELPER TASK DATE GIVEN
+    */
+    if (aHelpTaskSum > bHelpTaskSum) {
+      return 1
+    }
+    if (bHelpTaskSum > aHelpTaskSum) {
       return -1
     }
     /* 
@@ -140,31 +148,41 @@ exports.sortStudents = (taskName, hall) => {
 }
 exports.sortHelpers = taskName => {
   return (a, b) => {
-    const aTasks = a.tasks
-    const bTasks = b.tasks
-    const aTasksFiltered = aTasks.filter(task => task.task == taskName && task.helper)
-    const bTasksFiltered = bTasks.filter(task => task.task == taskName && task.helper)
+    // MAIN TASKS SUM
+    const aTasksSum = sumTask(a.tasks[0])
+    const bTasksSum = sumTask(b.tasks[0])
+    // ALL HELP TASKS
+    const aHelpTasks = a.helpTasks
+    const bHelpTasks = b.helpTasks
+    // HELP TASKS FILTERED BY TASK NAME
+    const aTasksFiltered = aHelpTasks.filter(task => task.task == taskName)
+    const bTasksFiltered = bHelpTasks.filter(task => task.task == taskName)
     // LAST TASKS FROM ALL
-    const aLastTaskAll = aTasks[0]
-    const bLastLastAll = bTasks[0]
-    const aLastTaskAllSum = aLastTaskAll
-      ? aLastTaskAll.week + aLastTaskAll.month + aLastTaskAll.year
-      : 0
-    const bLastTaskAllSum = bLastLastAll
-      ? bLastLastAll.week + bLastLastAll.month + bLastLastAll.year
-      : 0
+    const aLastTaskAll = aHelpTasks[0]
+    const bLastLastAll = bHelpTasks[0]
+    const aLastTaskAllSum = sumTask(aLastTaskAll)
+    const bLastTaskAllSum = sumTask(bLastLastAll)
     // LAST TIME HELPER
     const aLastHelper = aTasksFiltered[0]
     const bLastHelper = bTasksFiltered[0]
-    const aLastHelperSum = aLastHelper ? aLastHelper.week + aLastHelper.month + aLastHelper.year : 0
-    const bLastHelperSum = bLastHelper ? bLastHelper.week + bLastHelper.month + bLastHelper.year : 0
+    const aLastHelperSum = sumTask(aLastHelper)
+    const bLastHelperSum = sumTask(bLastHelper)
     /* 
-      LAST TASK DATE GIVEN EVER
+      LAST HELP TASK DATE GIVEN EVER
     */
     if (aLastTaskAllSum > bLastTaskAllSum) {
       return 1
     }
     if (bLastTaskAllSum > aLastTaskAllSum) {
+      return -1
+    }
+    /* 
+      LAST TASK DATE GIVEN EVER
+    */
+    if (aTasksSum > bTasksSum) {
+      return 1
+    }
+    if (bTasksSum > aTasksSum) {
       return -1
     }
     /* 
@@ -177,7 +195,7 @@ exports.sortHelpers = taskName => {
       return -1
     }
     /* 
-      AMOUNT OF TASKS GIVEN IN TOTAL
+      AMOUNT OF HELP TASKS GIVEN IN TOTAL
     */
     if (aTasksFiltered.length > bTasksFiltered.length) {
       return 1

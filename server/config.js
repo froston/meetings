@@ -1,7 +1,7 @@
 module.exports = {
   host: 'localhost',
   port: 5000,
-  dbName: 'meeting',
+  dbName: 'test',
   dbUser: 'root',
   dbPassword: 'root',
   limit: 3

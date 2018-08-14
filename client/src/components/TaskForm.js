@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  Form,
-  FormField,
-  Footer,
-  Button,
-  Select,
-  NumberInput,
-  DateTime
-} from 'grommet'
+import PropTypes from 'prop-types'
+import { Form, FormField, Footer, Button, Select, NumberInput, DateTime } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -73,10 +66,7 @@ class TaskForm extends React.PureComponent {
             />
           </FormField>
           <FormField label="Point">
-            <NumberInput
-              value={point}
-              onChange={e => this.handleChange('point', e.target.value)}
-            />
+            <NumberInput value={point} onChange={e => this.handleChange('point', e.target.value)} />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
             <Button label="Add Task" type="submit" primary />
@@ -85,6 +75,11 @@ class TaskForm extends React.PureComponent {
       </div>
     )
   }
+}
+
+TaskForm.propTypes = {
+  student: PropTypes.object,
+  handleSubmit: PropTypes.func
 }
 
 export default TaskForm

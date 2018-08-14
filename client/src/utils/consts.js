@@ -11,8 +11,8 @@ export const HALLS_ALL = 'All'
 export const HALLS_A = 'A'
 export const HALLS_B = 'B'
 
-export const GENDER_MALE = 'B'
-export const GENDER_FEMALE = 'S'
+export const GENDER_BROTHER = 'B'
+export const GENDER_SISTER = 'S'
 
 export const availableOptions = [
   AVAILABLE_READING,
