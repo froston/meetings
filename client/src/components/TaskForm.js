@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, FormField, Footer, Button, Select, NumberInput, DateTime } from 'grommet'
+import { Form, FormField, Footer, Button, Select, NumberInput, DateTime, CheckBox } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -9,7 +9,8 @@ class TaskForm extends React.PureComponent {
     task: '',
     hall: '',
     date: '',
-    point: 1
+    point: 1,
+    helper: false
   }
 
   getTaskDate = date => {
@@ -22,6 +23,7 @@ class TaskForm extends React.PureComponent {
   }
 
   handleChange = (name, value) => {
+    console.log(value)
     this.setState({ [name]: value })
   }
 
@@ -29,17 +31,19 @@ class TaskForm extends React.PureComponent {
     e.preventDefault()
     const id = this.props.student.id
     const newTask = {
-      studentId: id,
+      student_id: id,
       ...this.getTaskDate(this.state.date),
       task: this.state.task,
       hall: this.state.hall,
-      point: this.state.point
+      point: this.state.point,
+      helper: this.state.helper,
+      completed: true
     }
     this.props.handleSubmit(newTask)
   }
 
   render() {
-    const { task, hall, point, date } = this.state
+    const { task, hall, point, helper, date } = this.state
     return (
       <div>
         <Form pad="medium" onSubmit={this.handleSubmit}>
@@ -67,6 +71,9 @@ class TaskForm extends React.PureComponent {
           </FormField>
           <FormField label="Point">
             <NumberInput value={point} onChange={e => this.handleChange('point', e.target.value)} />
+          </FormField>
+          <FormField label="Helper">
+            <CheckBox checked={helper} onChange={e => this.handleChange('helper', !helper)} />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
             <Button label="Add Task" type="submit" primary />

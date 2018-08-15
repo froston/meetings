@@ -27,6 +27,9 @@ class WeekTab extends React.PureComponent {
         image =
           'https://assetsnffrgf-a.akamaihd.net/assets/m/502012476/univ/art/502012476_univ_sqr_lg.jpg'
         break
+      default:
+        image =
+          'https://assetsnffrgf-a.akamaihd.net/assets/m/1011208/univ/art/1011208_univ_pns_lg.jpg'
     }
     return image
   }
@@ -85,6 +88,8 @@ class WeekTab extends React.PureComponent {
                 />
               </Box>
             )
+          } else {
+            return null
           }
         })}
       </Box>

@@ -43,13 +43,7 @@ class TaskList extends React.PureComponent {
     const { tasks } = this.state
     return (
       <div>
-        <Layer
-          closer
-          overlayClose
-          align="center"
-          onClose={handleClose}
-          hidden={hidden}
-        >
+        <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
               Tasks: {student && student.name}
@@ -70,10 +64,10 @@ class TaskList extends React.PureComponent {
               {tasks &&
                 tasks.map((task, index) => (
                   <TableRow key={index}>
-                    <td>{task.task}</td>
+                    <td>{task.helper ? 'Helper' : <b>{task.task}</b>}</td>
                     <td>{`${task.month}/${task.year}`}</td>
                     <td>{task.hall}</td>
-                    <td>{task.point}</td>
+                    <td>{task.helper ? null : task.point}</td>
                     <td>
                       <Box direction="row">
                         <Button

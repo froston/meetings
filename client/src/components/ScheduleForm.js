@@ -19,8 +19,12 @@ import { consts } from '../utils'
 
 const initState = {
   month: {
-    value: moment().format('M'),
-    label: moment().format('MMMM')
+    value: moment()
+      .add(1, 'M')
+      .format('M'),
+    label: moment()
+      .add(1, 'M')
+      .format('MMMM')
   },
   year: String(moment().year()),
   weeks: 1,
