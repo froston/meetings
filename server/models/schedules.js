@@ -5,8 +5,12 @@ const studentModel = require('./students')
 const utils = require('../utils')
 const config = require('../config')
 
-const getAll = cb => {
-  getDb().query('SELECT * FROM schedules ORDER BY month DESC, year DESC', cb)
+const getAll = (query, cb) => {
+  let where = ''
+  if (query.month > 0 && query.year > 0) {
+    where = `WHERE month = ${query.month} AND year = ${query.year}`
+  }
+  getDb().query(`SELECT * FROM schedules ${where} ORDER BY month DESC, year DESC`, cb)
 }
 
 const getById = (id, cb) => {

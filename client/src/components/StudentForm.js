@@ -20,7 +20,8 @@ const initState = {
   nextPoint: 1,
   gender: consts.GENDER_SISTER,
   hall: consts.HALLS_ALL,
-  available: []
+  available: [],
+  errors: {}
 }
 
 class StudentForm extends React.PureComponent {
@@ -33,6 +34,17 @@ class StudentForm extends React.PureComponent {
       } else {
         this.setState({ ...initState })
       }
+    }
+  }
+
+  validate = cb => {
+    const { name } = this.state
+    let errors = {}
+    !name ? (errors.name = 'Required') : undefined
+    if (Object.keys(errors).length) {
+      this.setState({ errors: Object.assign({}, this.state.errors, errors) })
+    } else {
+      cb()
     }
   }
 
@@ -49,19 +61,21 @@ class StudentForm extends React.PureComponent {
   }
 
   handleChange = (name, value) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value, errors: {} })
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    const { student } = this.props
-    if (student && student.id) {
-      const values = { ...this.state }
-      this.props.handleSubmit(student && student.id, values)
-    } else {
-      const values = { ...this.state }
-      this.props.handleSubmit(null, values)
-    }
+    this.validate(() => {
+      const { student } = this.props
+      if (student && student.id) {
+        const values = { ...this.state }
+        this.props.handleSubmit(student && student.id, values)
+      } else {
+        const values = { ...this.state }
+        this.props.handleSubmit(null, values)
+      }
+    })
   }
 
   handleClose = () => {
@@ -70,7 +84,7 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { hidden, student } = this.props
-    const { name, nextPoint, available, hall } = this.state
+    const { name, nextPoint, available, hall, errors } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -78,7 +92,7 @@ class StudentForm extends React.PureComponent {
             <Header>
               <Heading>{student ? student.name : 'New Student'}</Heading>
             </Header>
-            <FormField label="Name and Surname">
+            <FormField label="Name and Surname" error={errors.name}>
               <TextInput
                 value={name}
                 onDOMChange={e => this.handleChange('name', e.target.value)}

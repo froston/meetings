@@ -14,6 +14,7 @@ import {
   Accordion,
   AccordionPanel
 } from 'grommet'
+import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -29,7 +30,9 @@ const initState = {
   year: String(moment().year()),
   weeks: 1,
   tasks: [],
-  hall: consts.HALLS_ALL
+  hall: consts.HALLS_ALL,
+  submitting: false,
+  errors: {}
 }
 
 class ScheduleForm extends React.PureComponent {
@@ -40,23 +43,53 @@ class ScheduleForm extends React.PureComponent {
       this.setState({ ...initState })
     }
   }
+
+  validate = cb => {
+    const { weeks, month, year, hall } = this.state
+    let errors = {}
+    this.props.checkScheduleExists(month.value, year, exists => {
+      !weeks ? (errors.weeks = 'Required') : undefined
+      !month.value ? (errors.month = 'Required') : undefined
+      !year ? (errors.year = 'Required') : undefined
+      !hall ? (errors.hall = 'Required') : undefined
+      if (exists) {
+        errors.month = 'Schedule already exists'
+        errors.year = 'Schedule already exists'
+      }
+      if (Object.keys(errors).length || exists) {
+        this.setState({
+          errors: Object.assign({}, this.state.errors, errors),
+          submitting: false
+        })
+      } else {
+        cb()
+      }
+    })
+  }
+
   handleChange = (name, value) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value, errors: {} })
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    // convert return visits
-    const tasks = this.state.tasks.map(task =>
-      task.map(taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName))
-    )
-    const values = { ...this.state, tasks, month: this.state.month.value }
-    this.props.handleSubmit(values)
+    this.setState({ submitting: true })
+    this.validate(() => {
+      // convert return visits
+      const tasks = this.state.tasks.map(task =>
+        task.map(taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName))
+      )
+      const values = { ...this.state, tasks, month: this.state.month.value }
+      this.props.handleSubmit(values, () => {
+        this.setState({ ...initState })
+      })
+    })
   }
 
   handleClose = () => {
     this.props.handleClose()
   }
+
   handleWeekChange = (weekNum, val) => {
     const tasks = Object.assign([], this.state.tasks)
     tasks[weekNum] = val
@@ -84,7 +117,7 @@ class ScheduleForm extends React.PureComponent {
   }
   render() {
     const { hidden, handleClose } = this.props
-    const { month, year, weeks, hall } = this.state
+    const { month, year, weeks, hall, errors, submitting } = this.state
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
@@ -93,8 +126,8 @@ class ScheduleForm extends React.PureComponent {
               New Schedule
             </Heading>
           </Header>
-          <Form pad="medium" onSubmit={this.handleSubmit} style={{ minWidth: 1200 }}>
-            <FormField label="Month">
+          <Form pad="medium" onSubmit={this.handleSubmit}>
+            <FormField label="Month" error={errors.month}>
               <Select
                 id="Month"
                 label="Month"
@@ -103,13 +136,13 @@ class ScheduleForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('month', value)}
               />
             </FormField>
-            <FormField label="Year">
+            <FormField label="Year" error={errors.year}>
               <TextInput
                 value={year}
                 onDOMChange={e => this.handleChange('year', e.target.value)}
               />
             </FormField>
-            <FormField label="Halls">
+            <FormField label="Halls" error={errors.hall}>
               <Select
                 placeHolder="Halls"
                 options={consts.hallsOptions}
@@ -117,7 +150,7 @@ class ScheduleForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
-            <FormField label="Week Number">
+            <FormField label="Week Number" error={errors.weeks}>
               <NumberInput
                 value={weeks}
                 onChange={e => this.handleChange('weeks', e.target.value)}
@@ -125,7 +158,7 @@ class ScheduleForm extends React.PureComponent {
             </FormField>
             <Accordion active={0}>{this.renderWeeks()}</Accordion>
             <Footer pad={{ vertical: 'medium' }}>
-              <Button label="Submit" type="submit" primary={true} />
+              {submitting ? <Spinning /> : <Button label="Generate" type="submit" primary />}
             </Footer>
           </Form>
         </Layer>
