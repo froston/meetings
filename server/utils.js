@@ -68,8 +68,8 @@ exports.sortStudents = (taskName, hall) => {
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
     /* 
-    LATEST TASK AND POINT DATE
-  */
+      LATEST TASK AND POINT DATE
+    */
     if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
       return 1
     }

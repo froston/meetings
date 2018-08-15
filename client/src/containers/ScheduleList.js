@@ -9,7 +9,8 @@ import { api } from '../utils'
 class ScheduleList extends React.Component {
   state = {
     schedules: [],
-    scheduleForm: true
+    scheduleForm: true,
+    submitting: false
   }
 
   componentDidMount() {
@@ -36,9 +37,11 @@ class ScheduleList extends React.Component {
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    api.remove('/schedules', id).then(() => {
-      this.loadData()
-    })
+    if (window.confirm('Sure to remove the schedule?')) {
+      api.remove('/schedules', id).then(() => {
+        this.loadData()
+      })
+    }
   }
 
   handleForm = () => {
@@ -46,14 +49,16 @@ class ScheduleList extends React.Component {
   }
 
   handleSubmit = data => {
+    this.setState({ submitting: true })
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
       this.loadData()
+      this.setState({ submitting: false })
     })
   }
 
   render() {
-    const { schedules } = this.state
+    const { schedules, scheduleForm, submitting } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -93,9 +98,10 @@ class ScheduleList extends React.Component {
           ))}
         </List>
         <ScheduleForm
-          hidden={this.state.scheduleForm}
+          hidden={scheduleForm}
           handleSubmit={this.handleSubmit}
           handleClose={this.handleForm}
+          submitting={submitting}
         />
       </Section>
     )

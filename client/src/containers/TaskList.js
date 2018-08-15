@@ -33,9 +33,11 @@ class TaskList extends React.PureComponent {
 
   handleRemove = (e, id) => {
     e.preventDefault()
-    api.remove(`/tasks`, id).then(() => {
-      this.loadData()
-    })
+    if (window.confirm('Sure to remove the task?')) {
+      api.remove(`/tasks`, id).then(() => {
+        this.loadData()
+      })
+    }
   }
 
   render() {
@@ -50,7 +52,7 @@ class TaskList extends React.PureComponent {
             </Heading>
           </Header>
           <TaskForm student={student} handleSubmit={this.handleSubmit} />
-          <Table style={{ minWidth: 750 }}>
+          <Table responsive={false} scrollable>
             <thead>
               <tr>
                 <th>Task</th>

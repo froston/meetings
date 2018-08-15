@@ -49,10 +49,12 @@ class StudentList extends React.Component {
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    api.remove('/students', id).then(() => {
-      this.setState({ showToast: true })
-      this.loadData()
-    })
+    if (window.confirm('Sure to remove the student?')) {
+      api.remove('/students', id).then(() => {
+        this.setState({ showToast: true })
+        this.loadData()
+      })
+    }
   }
 
   handleForm = (formName, val) => {

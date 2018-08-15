@@ -123,7 +123,7 @@ class ScheduleForm extends React.PureComponent {
                 onChange={e => this.handleChange('weeks', e.target.value)}
               />
             </FormField>
-            <Accordion>{this.renderWeeks()}</Accordion>
+            <Accordion active={0}>{this.renderWeeks()}</Accordion>
             <Footer pad={{ vertical: 'medium' }}>
               <Button label="Submit" type="submit" primary={true} />
             </Footer>

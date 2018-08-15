@@ -27,13 +27,21 @@ class Nav extends React.PureComponent {
         </Header>
         <Box flex="grow" justify="start">
           <Menu fill primary>
-            <Link to="/" className={this.isActive('/')}>
+            <Link to="/" className={this.isActive('/')} onClick={this.props.handleClose}>
               Dashboard
             </Link>
-            <Link to="/students" className={this.isActive('/students')}>
+            <Link
+              to="/students"
+              className={this.isActive('/students')}
+              onClick={this.props.handleClose}
+            >
               Students
             </Link>
-            <Link to="/schedules" className={this.isActive('/schedules')}>
+            <Link
+              to="/schedules"
+              className={this.isActive('/schedules')}
+              onClick={this.props.handleClose}
+            >
               Schedules
             </Link>
           </Menu>
