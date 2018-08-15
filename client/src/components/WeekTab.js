@@ -1,9 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Card, Button, TextInput } from 'grommet'
+import { EditIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
 
 class WeekTab extends React.PureComponent {
+  state = {
+    updatting: {},
+    task: {},
+    newPoint: null
+  }
+  handleEdit = task => {
+    this.setState({
+      task: task,
+      newPoint: task.point,
+      updatting: Object.assign({}, this.state.updatting, { [task.id]: true })
+    })
+  }
+  handleChangePoint = () => {
+    const { newPoint, task } = this.state
+    this.setState({ updatting: {}, task: {}, newPoint: null })
+    this.props.handleChangePoint(newPoint, task)
+  }
   getImage = task => {
     let image
     switch (task) {
@@ -34,7 +52,8 @@ class WeekTab extends React.PureComponent {
     return image
   }
   render() {
-    const { tasks, handleChangeTask, handleChangeHelper, handleChangePoint } = this.props
+    const { tasks, handleChangeTask, handleChangeHelper } = this.props
+    const { updatting, newPoint } = this.state
     let rvIndex = 0
     return (
       <Box margin="small" direction="row" wrap>
@@ -71,17 +90,26 @@ class WeekTab extends React.PureComponent {
                     <div style={{ margin: '10px 0' }}>
                       {helperTask && (
                         <span>
-                          <b>Helper:</b>{' '}
-                          <a onClick={() => handleChangeHelper(helperTask)}>{helperTask.name}</a>
+                          <a onClick={() => handleChangeHelper(helperTask)}>
+                            <b>Helper:</b> {helperTask.name}
+                          </a>
                           <br />
                         </span>
                       )}
                       <span>
-                        <b>Point: </b>
-                        <TextInput
-                          value={mainTask.point}
-                          onDOMChange={e => handleChangePoint(e.target.value, mainTask)}
-                        />{' '}
+                        {updatting[mainTask.id] ? (
+                          <div>
+                            <TextInput
+                              value={newPoint}
+                              onDOMChange={e => this.setState({ newPoint: e.target.value })}
+                            />
+                            <Button icon={<EditIcon />} onClick={this.handleChangePoint} />
+                          </div>
+                        ) : (
+                          <a onClick={() => this.handleEdit(mainTask)}>
+                            <b>Point: </b> {mainTask.point}
+                          </a>
+                        )}
                       </span>
                     </div>
                   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel } from 'grommet'
+import { toast } from 'react-toastify'
 import { WeekTab, Available } from '../components'
 import { api, consts } from '../utils'
 
@@ -23,20 +24,23 @@ class Schedule extends React.Component {
   }
 
   handleChangeTask = taskToChange => {
-    api
-      .get(
-        `/students/${taskToChange.student_id}/available?taskName=${taskToChange.task}&hall=${
-          taskToChange.hall
-        }`
-      )
-      .then(availables => {
-        this.setState({ availables, taskToChange, availableList: false })
+    const { student_id, task, hall } = taskToChange
+    api.get(`/students/${student_id}/available?taskName=${task}&hall=${hall}`).then(availables => {
+      this.setState({
+        availables,
+        taskToChange,
+        availableList: false
       })
+    })
   }
 
   handleChangeHelper = taskToChange => {
     api.get(`/students`).then(availables => {
-      this.setState({ availables, taskToChange, availableList: false })
+      this.setState({
+        availables,
+        taskToChange,
+        availableList: false
+      })
     })
   }
 
@@ -47,6 +51,7 @@ class Schedule extends React.Component {
       point: taskToChange.helper ? null : student.nextPoint
     }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
+      toast.success(`The task was reassigned to ${student.name}.`)
       this.setState({ availableList: true })
       this.loadData()
     })
