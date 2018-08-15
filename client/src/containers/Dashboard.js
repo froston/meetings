@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import { api, consts } from '../utils'
 
@@ -40,6 +41,10 @@ class Dashboard extends Component {
     return null
   }
 
+  navigate = () => {
+    this.props.history.push('/students')
+  }
+
   render() {
     const { brothers, sisters } = this.state
     return (
@@ -54,11 +59,13 @@ class Dashboard extends Component {
         </Paragraph>
         {this.getWarning()}
         <Box pad={{ vertical: 'small' }}>
-          <h2>Distribution</h2>
+          <Heading tag="h2" margin="small">
+            Students Distribution
+          </Heading>
           <Distribution
             series={[
-              { label: 'Brothers', value: brothers, colorIndex: 'graph-1' },
-              { label: 'Sisters', value: sisters, colorIndex: 'graph-2' }
+              { label: 'Brothers', value: brothers, colorIndex: 'graph-1', onClick: this.navigate },
+              { label: 'Sisters', value: sisters, colorIndex: 'graph-2', onClick: this.navigate }
             ]}
           />
         </Box>
@@ -67,4 +74,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard
+export default withRouter(Dashboard)

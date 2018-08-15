@@ -11,6 +11,11 @@ class Nav extends React.PureComponent {
       return location.pathname === link ? 'active' : null
     }
   }
+  handleClick = () => {
+    if (this.props.responsive === 'single') {
+      this.props.handleClose()
+    }
+  }
   render() {
     return (
       <Sidebar colorIndex="neutral-1">
@@ -27,20 +32,16 @@ class Nav extends React.PureComponent {
         </Header>
         <Box flex="grow" justify="start">
           <Menu fill primary>
-            <Link to="/" className={this.isActive('/')} onClick={this.props.handleClose}>
+            <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
               Dashboard
             </Link>
-            <Link
-              to="/students"
-              className={this.isActive('/students')}
-              onClick={this.props.handleClose}
-            >
+            <Link to="/students" className={this.isActive('/students')} onClick={this.handleClick}>
               Students
             </Link>
             <Link
               to="/schedules"
               className={this.isActive('/schedules')}
-              onClick={this.props.handleClose}
+              onClick={this.handleClick}
             >
               Schedules
             </Link>

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import ScheduleIcon from 'grommet/components/icons/base/Schedule'
+import { toast } from 'react-toastify'
 import { ScheduleForm } from '../components'
 import { api } from '../utils'
 
@@ -50,6 +51,7 @@ class ScheduleList extends React.Component {
   handleSubmit = (data, cb) => {
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
+      toast.success('The schedule was created.')
       this.loadData()
       cb()
     })
@@ -57,7 +59,6 @@ class ScheduleList extends React.Component {
 
   checkScheduleExists = (month, year, cb) => {
     api.get(`/schedules?month=${month}&year=${year}`).then(res => {
-      console.log(res)
       cb(res.length > 0)
     })
   }

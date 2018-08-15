@@ -44,7 +44,7 @@ const getById = (id, cb) => {
   })
 }
 
-const createSchedule = function(newSchedule, mainCB) {
+const createSchedule = (newSchedule, mainCB) => {
   const scheduleToInsert = {
     month: Number(newSchedule.month),
     year: Number(newSchedule.year),
@@ -78,9 +78,6 @@ const createSchedule = function(newSchedule, mainCB) {
                         if (students && students.length) {
                           // sort all students
                           students.sort(utils.sortStudents(taskName, hall))
-                          console.log(taskName)
-                          console.log(hall)
-                          console.log(students)
                           const limit =
                             students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
@@ -112,8 +109,6 @@ const createSchedule = function(newSchedule, mainCB) {
                           if (helpers && helpers.length) {
                             // sort all helpers
                             helpers.sort(utils.sortHelpers(taskName))
-                            console.log('Helper')
-                            console.log(helpers)
                             const limit =
                               helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Section, Box, Heading, Paragraph, List, ListItem, Toast, Button, Search } from 'grommet'
+import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { TaskList } from './'
 import { StudentForm } from '../components'
@@ -11,7 +11,6 @@ class StudentList extends React.Component {
     studentForm: true,
     taskForm: true,
     student: {},
-    showToast: false,
     searchTerm: ''
   }
 
@@ -51,7 +50,6 @@ class StudentList extends React.Component {
     e.stopPropagation()
     if (window.confirm('Sure to remove the student?')) {
       api.remove('/students', id).then(() => {
-        this.setState({ showToast: true })
         this.loadData()
       })
     }
@@ -64,12 +62,12 @@ class StudentList extends React.Component {
   handleSubmit = (id, data) => {
     if (id) {
       api.patch('/students', id, data).then(() => {
-        this.setState({ studentForm: true, showToast: true })
+        this.setState({ studentForm: true })
         this.loadData()
       })
     } else {
       api.post('/students', data).then(() => {
-        this.setState({ studentForm: true, showToast: true })
+        this.setState({ studentForm: true })
         this.loadData()
       })
     }
@@ -91,11 +89,12 @@ class StudentList extends React.Component {
         </Box>
         <Box pad={{ vertical: 'medium' }}>
           <Search
-            placeHolder="Search Student"
-            inline={true}
+            inline
+            responsive={false}
             iconAlign="start"
             value={searchTerm}
             onDOMChange={this.handleSearch}
+            placeHolder="Search Student"
           />
         </Box>
         <List selectable onSelect={this.handleSelect}>
@@ -144,11 +143,6 @@ class StudentList extends React.Component {
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
         />
-        {this.state.showToast && (
-          <Toast status="ok" onClose={() => this.setState({ showToast: false })}>
-            Student information has been succesfully saved.
-          </Toast>
-        )}
       </Section>
     )
   }

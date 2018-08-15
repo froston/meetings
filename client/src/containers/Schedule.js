@@ -18,7 +18,6 @@ class Schedule extends React.Component {
   loadData = () => {
     const id = this.props.match.params.id
     api.get(`/schedules/${id}`).then(schedule => {
-      console.log(schedule)
       this.setState({ schedule })
     })
   }
