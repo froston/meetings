@@ -44,8 +44,8 @@ exports.updateStudent = (id, student, cb) => {
   getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)
 }
 
-exports.updateStudentPoint = (id, point, cb) => {
-  getDb().query('UPDATE students SET nextPoint = ? WHERE id = ?', [point, id], cb)
+exports.updateStudentPoint = (id, nextPoint, cb) => {
+  getDb().query('UPDATE students SET nextPoint = ? WHERE id = ?', [nextPoint, id], cb)
 }
 
 exports.removeStudent = (id, cb) => {

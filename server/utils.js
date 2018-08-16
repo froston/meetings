@@ -169,21 +169,21 @@ exports.sortHelpers = taskName => {
     const aLastHelperSum = sumTask(aLastHelper)
     const bLastHelperSum = sumTask(bLastHelper)
     /* 
+      LAST TASK DATE GIVEN EVER
+    */
+    if (aTasksSum > bTasksSum) {
+      return 1
+    }
+    if (bTasksSum > aTasksSum) {
+      return -1
+    }
+    /* 
       LAST HELP TASK DATE GIVEN EVER
     */
     if (aLastTaskAllSum > bLastTaskAllSum) {
       return 1
     }
     if (bLastTaskAllSum > aLastTaskAllSum) {
-      return -1
-    }
-    /* 
-    LAST TASK DATE GIVEN EVER
-  */
-    if (aTasksSum > bTasksSum) {
-      return 1
-    }
-    if (bTasksSum > aTasksSum) {
       return -1
     }
     /* 

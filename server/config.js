@@ -4,5 +4,5 @@ module.exports = {
   dbName: 'meeting',
   dbUser: 'root',
   dbPassword: 'root',
-  limit: 3
+  limit: 1
 }
