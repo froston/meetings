@@ -54,9 +54,6 @@ exports.sortStudents = (taskName, hall) => {
     // TASKS FILTERED BY TASK NAME
     const aTasksFiltered = aTasks.filter(task => task.task == taskName)
     const bTasksFiltered = bTasks.filter(task => task.task == taskName)
-    // HELPER TASK SUM
-    const aHelpTaskSum = sumTask(a.helpTasks[0])
-    const bHelpTaskSum = sumTask(b.helpTasks[0])
     // TASKS EVER SUM
     const aLastTaskAll = aTasks[0]
     const bLastLastAll = bTasks[0]
@@ -67,27 +64,21 @@ exports.sortStudents = (taskName, hall) => {
     const bLastTaskPoint = bTasksFiltered[0]
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
-    /* 
-      LATEST TASK AND POINT DATE
-    */
+    /* LATEST TASK AND POINT DATE */
     if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
       return 1
     }
     if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
       return -1
     }
-    /* 
-      LAST TASK DATE GIVEN EVER
-    */
+    /* LAST TASK DATE GIVEN EVER */
     if (aLastTaskAllSum > bLastTaskAllSum) {
       return 1
     }
     if (bLastTaskAllSum > aLastTaskAllSum) {
       return -1
     }
-    /* 
-      LAST HALL TASK IN
-    */
+    /* LAST HALL TASK IN */
     if (aLastTaskAll && bLastLastAll) {
       if (aLastTaskAll.hall === hall && bLastLastAll.hall !== hall) {
         return 1
@@ -96,53 +87,34 @@ exports.sortStudents = (taskName, hall) => {
         return -1
       }
     }
-
-    /* 
-      LAST HELPER TASK DATE GIVEN
-    */
-    if (aHelpTaskSum > bHelpTaskSum) {
-      return 1
-    }
-    if (bHelpTaskSum > aHelpTaskSum) {
-      return -1
-    }
-    /* 
-      AMOUNT OF TASKS GIVEN IN TOTAL
-    */
+    /* AMOUNT OF TASKS GIVEN IN TOTAL */
     if (aTasks.length > bTasks.length) {
       return 1
     }
     if (bTasks.length > aTasks.length) {
       return -1
     }
-    /* 
-      HAVE WORKED ON THIS POINT ALREADY 
-    */
+    /* HAVE WORKED ON THIS POINT ALREADY */
     if (aTasksFiltered.length && !bTasksFiltered.length) {
       return 1
     }
     if (!aTasksFiltered.length && bTasksFiltered.length) {
       return -1
     }
-    /* 
-    AMOUNT OF TASKS GIVEN BY POINT
-  */
+    /* AMOUNT OF TASKS GIVEN BY POINT */
     if (aTasksFiltered.length > bTasksFiltered.length) {
       return 1
     }
     if (bTasksFiltered.length > aTasksFiltered.length) {
       return -1
     }
-    /* 
-      LAST TIME TASK GIVEN BY POINT
-    */
+    /* LAST TIME TASK GIVEN BY POINT  */
     if (aLastTaskPointSum > bLastTaskPointSum) {
       return 1
     }
     if (bLastTaskPointSum > aLastTaskPointSum) {
       return -1
     }
-
     // WELL ...
     return 0
   }
@@ -152,59 +124,50 @@ exports.sortHelpers = taskName => {
     // MAIN TASKS SUM
     const aTasksSum = sumTask(a.tasks[0])
     const bTasksSum = sumTask(b.tasks[0])
-    // ALL HELP TASKS
-    const aHelpTasks = a.helpTasks
-    const bHelpTasks = b.helpTasks
-    // HELP TASKS FILTERED BY TASK NAME
-    const aTasksFiltered = aHelpTasks.filter(task => task.task == taskName)
-    const bTasksFiltered = bHelpTasks.filter(task => task.task == taskName)
     // LAST TASKS FROM ALL
-    const aLastTaskAll = aHelpTasks[0]
-    const bLastLastAll = bHelpTasks[0]
-    const aLastTaskAllSum = sumTask(aLastTaskAll)
-    const bLastTaskAllSum = sumTask(bLastLastAll)
+    const aHelperSum = sumTask(a.helpTasks[0])
+    const bHelperSum = sumTask(b.helpTasks[0])
+    // HELP TASKS FILTERED BY TASK NAME
+    const aTasksFiltered = a.helpTasks.filter(task => task.task == taskName)
+    const bTasksFiltered = b.helpTasks.filter(task => task.task == taskName)
     // LAST TIME HELPER
-    const aLastHelper = aTasksFiltered[0]
-    const bLastHelper = bTasksFiltered[0]
-    const aLastHelperSum = sumTask(aLastHelper)
-    const bLastHelperSum = sumTask(bLastHelper)
-    /* 
-      LAST HELP TASK DATE GIVEN EVER
-    */
-    if (aLastTaskAllSum > bLastTaskAllSum) {
+    const aLastHelperSum = sumTask(aTasksFiltered[0])
+    const bLastHelperSum = sumTask(bTasksFiltered[0])
+    /* LATEST TASK AND HELPER */
+    if (aHelperSum > bHelperSum && aTasksSum > bTasksSum) {
       return 1
     }
-    if (bLastTaskAllSum > aLastTaskAllSum) {
+    if (bHelperSum > aHelperSum && bTasksSum > aTasksSum) {
       return -1
     }
-    /* 
-    LAST TASK DATE GIVEN EVER
-  */
+    /*  LAST TASK  */
     if (aTasksSum > bTasksSum) {
       return 1
     }
     if (bTasksSum > aTasksSum) {
       return -1
     }
-    /* 
-    LAST TIME HELPER
-  */
+    /* LAST HELPER */
+    if (aHelperSum > bHelperSum) {
+      return 1
+    }
+    if (bHelperSum > aHelperSum) {
+      return -1
+    }
+    /*  LAST TIME HELPER  */
     if (aLastHelperSum > bLastHelperSum) {
       return 1
     }
     if (bLastHelperSum > aLastHelperSum) {
       return -1
     }
-    /* 
-      AMOUNT OF HELP TASKS GIVEN IN TOTAL
-    */
+    /* AMOUNT OF HELP TASKS GIVEN IN TOTAL */
     if (aTasksFiltered.length > bTasksFiltered.length) {
       return 1
     }
     if (bTasksFiltered.length > aTasksFiltered.length) {
       return -1
     }
-
     // WELL ...
     return 0
   }

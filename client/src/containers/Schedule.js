@@ -25,23 +25,28 @@ class Schedule extends React.Component {
 
   handleChangeTask = taskToChange => {
     const { student_id, task, hall } = taskToChange
-    api.get(`/students/${student_id}/available?taskName=${task}&hall=${hall}`).then(availables => {
-      this.setState({
-        availables,
-        taskToChange,
-        availableList: false
+    api
+      .get(`/students/${student_id}/available?taskName=${task}&hall=${hall}&helper=0`)
+      .then(availables => {
+        this.setState({
+          availables,
+          taskToChange,
+          availableList: false
+        })
       })
-    })
   }
 
   handleChangeHelper = taskToChange => {
-    api.get(`/students`).then(availables => {
-      this.setState({
-        availables,
-        taskToChange,
-        availableList: false
+    const { student_id, task, hall } = taskToChange
+    api
+      .get(`/students/${student_id}/available?taskName=${task}&hall=${hall}&helper=1`)
+      .then(availables => {
+        this.setState({
+          availables,
+          taskToChange,
+          availableList: false
+        })
       })
-    })
   }
 
   handleSelectNew = student => {

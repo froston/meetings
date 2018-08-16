@@ -1,5 +1,6 @@
 const express = require('express')
 const model = require('../models/students')
+const utils = require('../utils')
 
 const router = express.Router()
 
@@ -27,7 +28,13 @@ router.get('/:id/available', (req, res) => {
   // const id = req.params.id // TODO: get all but this id
   const taskName = req.query.taskName
   const hall = req.query.hall
+  const helper = req.query.helper === '1' ? true : false
   model.getAvailableStudents(taskName, hall, (err, students) => {
+    if (helper) {
+      students.sort(utils.sortHelpers(taskName))
+    } else {
+      students.sort(utils.sortStudents(taskName, hall))
+    }
     if (err) {
       res.status(500).send(err)
     }

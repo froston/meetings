@@ -88,14 +88,12 @@ class WeekTab extends React.PureComponent {
                   }
                   description={
                     <div style={{ margin: '10px 0' }}>
-                      {helperTask && (
-                        <span>
-                          <a onClick={() => handleChangeHelper(helperTask)}>
-                            <b>Helper:</b> {helperTask.name}
-                          </a>
-                          <br />
-                        </span>
-                      )}
+                      <span style={{ visibility: helperTask ? '' : 'hidden' }}>
+                        <a onClick={() => handleChangeHelper(helperTask)}>
+                          <b>Helper:</b> {helperTask && helperTask.name}
+                        </a>
+                        <br />
+                      </span>
                       <span>
                         {updatting[mainTask.id] ? (
                           <div>
