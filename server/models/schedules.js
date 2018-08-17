@@ -79,17 +79,15 @@ const createSchedule = (newSchedule, mainCB) => {
                         if (err) throw err
                         if (students && students.length) {
                           // sort all students
-                          students.sort(
-                            utils.sortStudents(taskName, hall, scheduleMonth, scheduleYear)
-                          )
-                          const limit =
-                            students.length > config.limit ? config.limit : students.length
+                          students.sort(utils.sortStudents(taskName, hall, scheduleMonth, scheduleYear))
+                          const limit = students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
                           const finalStudent = students[flhsIndex]
+                          const nextPoint = finalStudent.nextPoint + 1
                           // assign task
                           const studentTask = {
                             student_id: finalStudent.id,
-                            point: finalStudent.nextPoint + 1,
+                            point: nextPoint,
                             schedule_id: newSchedule.id,
                             task: taskName,
                             week: Number(week),
@@ -100,7 +98,9 @@ const createSchedule = (newSchedule, mainCB) => {
                             helper: false
                           }
                           taskModel.createTask(studentTask, err => {
-                            callbackFinal(err, finalStudent.gender)
+                            studentModel.updateStudentPoint(finalStudent.id, nextPoint, err => {
+                              callbackFinal(err, finalStudent.gender)
+                            })
                           })
                         } else {
                           callbackFinal('No students!')
@@ -113,8 +113,7 @@ const createSchedule = (newSchedule, mainCB) => {
                           if (helpers && helpers.length) {
                             // sort all helpers
                             helpers.sort(utils.sortHelpers(taskName, scheduleMonth, scheduleYear))
-                            const limit =
-                              helpers.length > config.limit ? config.limit : helpers.length
+                            const limit = helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
                             const finalHelper = helpers[flhsIndex]
                             // assign task
@@ -164,11 +163,7 @@ const removeSchedule = (id, cb) => {
     // delete schedule
     getDb().query('DELETE FROM schedules WHERE id = ?', res.id, (err, res) => {
       // delete all related tasks
-      getDb().query(
-        'DELETE FROM tasks WHERE month = ? AND year = ?',
-        [schedule.month, schedule.year],
-        cb
-      )
+      getDb().query('DELETE FROM tasks WHERE month = ? AND year = ?', [schedule.month, schedule.year], cb)
     })
   })
 }

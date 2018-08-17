@@ -164,13 +164,6 @@ exports.sortHelpers = (taskName, month, year) => {
     if (bHelperSum > aHelperSum && bTasksSum > aTasksSum) {
       return -1
     }
-    /*  LAST TASK  */
-    if (aTasksSum > bTasksSum) {
-      return 1
-    }
-    if (bTasksSum > aTasksSum) {
-      return -1
-    }
     /* LAST HELPER */
     if (aHelperSum > bHelperSum) {
       return 1
@@ -183,6 +176,13 @@ exports.sortHelpers = (taskName, month, year) => {
       return 1
     }
     if (bLastHelperSum > aLastHelperSum) {
+      return -1
+    }
+    /*  LAST TASK  */
+    if (aTasksSum > bTasksSum) {
+      return 1
+    }
+    if (bLastTaskAllSum > aLastTaskAllSum) {
       return -1
     }
     /* AMOUNT OF HELP TASKS GIVEN IN TOTAL */
