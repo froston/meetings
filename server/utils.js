@@ -182,7 +182,7 @@ exports.sortHelpers = (taskName, month, year) => {
     if (aTasksSum > bTasksSum) {
       return 1
     }
-    if (bLastTaskAllSum > aLastTaskAllSum) {
+    if (bTasksSum > aTasksSum) {
       return -1
     }
     /* AMOUNT OF HELP TASKS GIVEN IN TOTAL */
