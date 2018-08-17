@@ -23,7 +23,7 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon --inspect server/index.js",
-    "heroku-postbuild": "cd client && npm && npm run build"
+    "heroku-postbuild": "cd client && npm run build"
   },
   "husky": {
     "hooks": {
