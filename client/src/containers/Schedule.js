@@ -23,23 +23,12 @@ class Schedule extends React.Component {
     })
   }
 
-  handleChangeTask = taskToChange => {
-    const { student_id, task, hall } = taskToChange
+  handleChangeTask = (taskToChange, helper = false) => {
+    const { student_id, task, hall, month, year } = taskToChange
     api
-      .get(`/students/${student_id}/available?taskName=${task}&hall=${hall}&helper=0`)
-      .then(availables => {
-        this.setState({
-          availables,
-          taskToChange,
-          availableList: false
-        })
-      })
-  }
-
-  handleChangeHelper = taskToChange => {
-    const { student_id, task, hall } = taskToChange
-    api
-      .get(`/students/${student_id}/available?taskName=${task}&hall=${hall}&helper=1`)
+      .get(
+        `/students/${student_id}/available?taskName=${task}&month=${month}&year=${year}&hall=${hall}&helper=${helper}`
+      )
       .then(availables => {
         this.setState({
           availables,

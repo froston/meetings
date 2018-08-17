@@ -52,7 +52,7 @@ class WeekTab extends React.PureComponent {
     return image
   }
   render() {
-    const { tasks, handleChangeTask, handleChangeHelper } = this.props
+    const { tasks, handleChangeTask } = this.props
     const { updatting, newPoint } = this.state
     let rvIndex = 0
     return (
@@ -89,7 +89,7 @@ class WeekTab extends React.PureComponent {
                   description={
                     <div style={{ margin: '10px 0' }}>
                       <span style={{ visibility: helperTask ? '' : 'hidden' }}>
-                        <a onClick={() => handleChangeHelper(helperTask)}>
+                        <a onClick={() => handleChangeTask(helperTask, true)}>
                           <b>Helper:</b> {helperTask && helperTask.name}
                         </a>
                         <br />
@@ -126,7 +126,6 @@ class WeekTab extends React.PureComponent {
 WeekTab.propTypes = {
   tasks: PropTypes.array,
   handleChangeTask: PropTypes.func,
-  handleChangeHelper: PropTypes.func,
   handleChangePoint: PropTypes.func
 }
 

@@ -46,7 +46,17 @@ exports.getAvailableName = taskName => {
 
 const sumTask = task => (task ? task.week + task.month + task.year : 0)
 
-exports.sortStudents = (taskName, hall) => {
+const hadTask = (lastMain, lastHelper, month, year) => {
+  if (lastMain && lastMain.month === month && lastMain.year === year) {
+    return true
+  }
+  if (lastHelper && lastHelper.month === month && lastHelper.year === year) {
+    return true
+  }
+  return false
+}
+
+exports.sortStudents = (taskName, hall, month, year) => {
   return (a, b) => {
     // ALL MAIN TASKS
     const aTasks = a.tasks
@@ -64,6 +74,13 @@ exports.sortStudents = (taskName, hall) => {
     const bLastTaskPoint = bTasksFiltered[0]
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
+    /* HAD TASK THIS MONTH */
+    if (hadTask(a.tasks[0], a.helpTasks[0], month, year)) {
+      return 1
+    }
+    if (hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+      return -1
+    }
     /* LATEST TASK AND POINT DATE */
     if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
       return 1
@@ -119,7 +136,7 @@ exports.sortStudents = (taskName, hall) => {
     return 0
   }
 }
-exports.sortHelpers = taskName => {
+exports.sortHelpers = (taskName, month, year) => {
   return (a, b) => {
     // MAIN TASKS SUM
     const aTasksSum = sumTask(a.tasks[0])
@@ -133,6 +150,13 @@ exports.sortHelpers = taskName => {
     // LAST TIME HELPER
     const aLastHelperSum = sumTask(aTasksFiltered[0])
     const bLastHelperSum = sumTask(bTasksFiltered[0])
+    /* HAD TASK THIS MONTH */
+    if (hadTask(a.tasks[0], a.helpTasks[0], month, year)) {
+      return 1
+    }
+    if (hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+      return -1
+    }
     /* LATEST TASK AND HELPER */
     if (aHelperSum > bHelperSum && aTasksSum > bTasksSum) {
       return 1

@@ -52,6 +52,8 @@ const createSchedule = (newSchedule, mainCB) => {
   }
   const scheduleWeeks = Array.from({ length: newSchedule.weeks }, (v, i) => i + 1)
   const scheduleTasks = newSchedule.tasks
+  const scheduleMonth = scheduleToInsert.month
+  const scheduleYear = scheduleToInsert.year
   const scheduleHalls = newSchedule.hall === 'All' ? ['A', 'B'] : [newSchedule.hall]
   // create new schedule
   getDb().query('INSERT INTO schedules SET ?', scheduleToInsert, (err, res) => {
@@ -77,7 +79,9 @@ const createSchedule = (newSchedule, mainCB) => {
                         if (err) throw err
                         if (students && students.length) {
                           // sort all students
-                          students.sort(utils.sortStudents(taskName, hall))
+                          students.sort(
+                            utils.sortStudents(taskName, hall, scheduleMonth, scheduleYear)
+                          )
                           const limit =
                             students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
@@ -108,7 +112,7 @@ const createSchedule = (newSchedule, mainCB) => {
                         studentModel.getAvailableHelpers(gender, (err, helpers) => {
                           if (helpers && helpers.length) {
                             // sort all helpers
-                            helpers.sort(utils.sortHelpers(taskName))
+                            helpers.sort(utils.sortHelpers(taskName, scheduleMonth, scheduleYear))
                             const limit =
                               helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
