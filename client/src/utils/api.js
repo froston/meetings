@@ -24,7 +24,7 @@ export const post = (url, data) => {
 }
 
 export const patch = (url, id, data) => {
-  return fetch(`/api${url} / ${id}`, {
+  return fetch(`/api${url}/${id}`, {
     headers: getHeaders(),
     method: 'PATCH',
     body: JSON.stringify({ ...data })
@@ -32,7 +32,7 @@ export const patch = (url, id, data) => {
 }
 
 export const remove = (url, id) => {
-  return fetch(`/api${url} / ${id}`, {
+  return fetch(`/api${url}/${id}`, {
     headers: getHeaders(),
     method: 'DELETE'
   }).catch(console.error)
