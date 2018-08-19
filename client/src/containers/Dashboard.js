@@ -30,8 +30,7 @@ class Dashboard extends Component {
         <Box pad={{ vertical: 'small' }}>
           <Notification
             message={`Schedule Time Warning - ${15 - day} days left`}
-            state={`You have time to create next schedule until 15/${date.getMonth() +
-              1}/${date.getFullYear()}`}
+            state={`You have time to create next schedule until 15/${date.getMonth() + 1}/${date.getFullYear()}`}
             size="medium"
             status="warning"
           />
@@ -53,7 +52,7 @@ class Dashboard extends Component {
           Dashboard
         </Heading>
         <Paragraph margin="small">
-          Welcome to ministry school dashboard.
+          Welcome to Our Christian Life and Ministry Meeting.
           <br />
           Here you can manage the students and monthly schedules.
         </Paragraph>

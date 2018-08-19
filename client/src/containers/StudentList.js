@@ -80,10 +80,7 @@ class StudentList extends React.Component {
         <Heading tag="h1" margin="small">
           Students
         </Heading>
-        <Paragraph margin="small">
-          Create, update or remove ministry school students here. <br />
-          You can create, remove and see the history of tasks.
-        </Paragraph>
+        <Paragraph margin="small">Create, update or remove ministry school students and their tasks here.</Paragraph>
         <Box pad={{ vertical: 'medium' }}>
           <Button icon={<AddIcon />} label="Add New Student" onClick={this.handleAdd} href="#" />
         </Box>
