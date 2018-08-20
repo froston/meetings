@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 // helpers
 exports.getAvailable = student => {
   return [
@@ -44,7 +46,7 @@ exports.getAvailableName = taskName => {
   return task
 }
 
-const sumTask = task => (task ? task.week + task.month + task.year : 0)
+const sumTask = task => (task ? Number(moment(`${task.week}/${task.month}/${task.year}`, 'D/M/YYYY').format('x')) : 0)
 
 const hadTask = (lastMain, lastHelper, month, year) => {
   if (lastMain && lastMain.month === month && lastMain.year === year) {
@@ -75,12 +77,22 @@ exports.sortStudents = (taskName, hall, month, year) => {
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
     /* HAD TASK THIS MONTH */
-    if (hadTask(a.tasks[0], a.helpTasks[0], month, year)) {
+    if (hadTask(a.tasks[0], a.helpTasks[0], month, year) && !hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return 1
     }
-    if (hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+    if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return -1
     }
+    /* LAST TIME GAVE TALK (ONLY SISTERS) */
+    if (a.gender == 'S' && b.gender === 'S') {
+      if (sumTask(a.helpTasks[0]) > sumTask(a.tasks[0]) && sumTask(b.helpTasks[0]) < sumTask(b.tasks[0])) {
+        return -1
+      }
+      if (sumTask(a.helpTasks[0]) < sumTask(a.tasks[0]) && sumTask(b.helpTasks[0]) > sumTask(b.tasks[0])) {
+        return 1
+      }
+    }
+
     /* LATEST TASK AND POINT DATE */
     if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
       return 1
@@ -88,13 +100,7 @@ exports.sortStudents = (taskName, hall, month, year) => {
     if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
       return -1
     }
-    /* LAST TASK DATE GIVEN EVER */
-    if (aLastTaskAllSum > bLastTaskAllSum) {
-      return 1
-    }
-    if (bLastTaskAllSum > aLastTaskAllSum) {
-      return -1
-    }
+
     /* LAST HALL TASK IN */
     if (aLastTaskAll && bLastLastAll) {
       if (aLastTaskAll.hall === hall && bLastLastAll.hall !== hall) {
@@ -103,6 +109,13 @@ exports.sortStudents = (taskName, hall, month, year) => {
       if (aLastTaskAll.hall !== hall && bLastLastAll.hall === hall) {
         return -1
       }
+    }
+    /* LAST TASK DATE GIVEN EVER */
+    if (aLastTaskAllSum > bLastTaskAllSum) {
+      return 1
+    }
+    if (bLastTaskAllSum > aLastTaskAllSum) {
+      return -1
     }
     /* AMOUNT OF TASKS GIVEN IN TOTAL */
     if (aTasks.length > bTasks.length) {
@@ -151,10 +164,10 @@ exports.sortHelpers = (taskName, month, year) => {
     const aLastHelperSum = sumTask(aTasksFiltered[0])
     const bLastHelperSum = sumTask(bTasksFiltered[0])
     /* HAD TASK THIS MONTH */
-    if (hadTask(a.tasks[0], a.helpTasks[0], month, year)) {
+    if (hadTask(a.tasks[0], a.helpTasks[0], month, year) && !hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return 1
     }
-    if (hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+    if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return -1
     }
     /* LATEST TASK AND HELPER */

@@ -70,7 +70,7 @@ class Schedule extends React.Component {
       const tasksB = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_B)
       weeks.push(
         <Tab key={week} title={`Week ${week}`}>
-          <Accordion openMulti={true} active={0}>
+          <Accordion openMulti={true} active={[0, 1]}>
             {tasksA.length && (
               <AccordionPanel heading={`Hall ${consts.HALLS_A}`}>
                 <WeekTab

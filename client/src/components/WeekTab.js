@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Card, Button, TextInput } from 'grommet'
-import { EditIcon } from 'grommet/components/icons/base'
+import { SaveIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
+import { reading, initialCall, returnVisit, bibleStudy, talk } from '../images'
 
 class WeekTab extends React.PureComponent {
   state = {
@@ -26,28 +27,22 @@ class WeekTab extends React.PureComponent {
     let image
     switch (task) {
       case consts.AVAILABLE_READING:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/1011208/univ/art/1011208_univ_pns_lg.jpg'
+        image = reading
         break
       case consts.AVAILABLE_INITIAL_CALL:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/502015167/univ/art/502015167_univ_sqr_lg.jpg'
+        image = initialCall
         break
       case consts.AVAILABLE_RETURN_VISIT:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/502013362/univ/art/502013362_univ_sqr_lg.jpg'
+        image = returnVisit
         break
       case consts.AVAILABLE_BIBLE_STUDY:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/502012131/univ/art/502012131_univ_sqr_lg.jpg'
+        image = bibleStudy
         break
       case consts.AVAILABLE_TALK:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/502012476/univ/art/502012476_univ_sqr_lg.jpg'
+        image = talk
         break
       default:
-        image =
-          'https://assetsnffrgf-a.akamaihd.net/assets/m/1011208/univ/art/1011208_univ_pns_lg.jpg'
+        image = reading
     }
     return image
   }
@@ -58,9 +53,7 @@ class WeekTab extends React.PureComponent {
     return (
       <Box margin="small" direction="row" wrap>
         {consts.scheduleOptions.map(taskFullName => {
-          const taskName = taskFullName.includes('Return Visit')
-            ? taskFullName.substring(3)
-            : taskFullName
+          const taskName = taskFullName.includes('Return Visit') ? taskFullName.substring(3) : taskFullName
           let mainTask
           let helperTask
           if (taskName === consts.AVAILABLE_RETURN_VISIT) {
@@ -79,13 +72,7 @@ class WeekTab extends React.PureComponent {
                   label={mainTask.task}
                   heading={mainTask.name}
                   textSize="small"
-                  link={
-                    <Button
-                      label="Change Task"
-                      primary
-                      onClick={() => handleChangeTask(mainTask)}
-                    />
-                  }
+                  link={<Button label="Change Task" primary onClick={() => handleChangeTask(mainTask)} />}
                   description={
                     <div style={{ margin: '10px 0' }}>
                       <span style={{ visibility: helperTask ? '' : 'hidden' }}>
@@ -101,7 +88,7 @@ class WeekTab extends React.PureComponent {
                               value={newPoint}
                               onDOMChange={e => this.setState({ newPoint: e.target.value })}
                             />
-                            <Button icon={<EditIcon />} onClick={this.handleChangePoint} />
+                            <Button icon={<SaveIcon />} onClick={this.handleChangePoint} />
                           </div>
                         ) : (
                           <a onClick={() => this.handleEdit(mainTask)}>
