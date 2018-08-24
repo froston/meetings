@@ -83,7 +83,7 @@ exports.sortStudents = (taskName, hall, month, year) => {
     if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return -1
     }
-    /* LAST TIME GAVE TALK (ONLY SISTERS) */
+    /* LAST TIME GAVE TALK VS HELPER (ONLY SISTERS) */
     if (a.gender == 'S' && b.gender === 'S') {
       if (sumTask(a.helpTasks[0]) > sumTask(a.tasks[0]) && sumTask(b.helpTasks[0]) < sumTask(b.tasks[0])) {
         return -1
@@ -169,6 +169,15 @@ exports.sortHelpers = (taskName, month, year) => {
     }
     if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return -1
+    }
+    /* LAST TIME GAVE TALK VS HELPER (ONLY SISTERS) */
+    if (a.gender == 'S' && b.gender === 'S') {
+      if (sumTask(a.helpTasks[0]) < sumTask(a.tasks[0]) && sumTask(b.helpTasks[0]) > sumTask(b.tasks[0])) {
+        return -1
+      }
+      if (sumTask(a.helpTasks[0]) > sumTask(a.tasks[0]) && sumTask(b.helpTasks[0]) < sumTask(b.tasks[0])) {
+        return 1
+      }
     }
     /* LATEST TASK AND HELPER */
     if (aHelperSum > bHelperSum && aTasksSum > bTasksSum) {
