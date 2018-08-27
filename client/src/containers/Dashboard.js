@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { translate, Trans } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import { api, consts } from '../utils'
 
@@ -45,16 +46,17 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { t } = this.props
     const { brothers, sisters } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          Dashboard
+          {t('title')}
         </Heading>
         <Paragraph margin="small">
-          Welcome to Our Christian Life and Ministry Meeting.
-          <br />
-          Here you can manage the students and monthly schedules.
+          <Trans i18nKey="desc">
+            <br />
+          </Trans>
         </Paragraph>
         {this.getWarning()}
         <Box pad={{ vertical: 'small' }}>
@@ -73,4 +75,4 @@ class Dashboard extends Component {
   }
 }
 
-export default withRouter(Dashboard)
+export default withRouter(translate('dashboard')(Dashboard))
