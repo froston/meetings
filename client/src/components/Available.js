@@ -1,14 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import { Layer, Box, Heading, List, ListItem } from 'grommet'
 
 class Available extends React.PureComponent {
   render() {
-    const { availables, hidden, handleSelect, handleClose } = this.props
+    const { t, availables, hidden, handleSelect, handleClose } = this.props
     return (
       <Layer closer overlayClose align="right" onClose={handleClose} hidden={hidden}>
         <Heading tag="h2" margin="medium">
-          Available Students
+          {t('available')}
         </Heading>
         <List selectable style={{ minWidth: 550 }}>
           {availables.map((student, index) => (
@@ -39,4 +40,4 @@ Available.propTypes = {
   handleClose: PropTypes.func
 }
 
-export default Available
+export default translate('students')(Available)

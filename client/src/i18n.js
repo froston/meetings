@@ -9,9 +9,8 @@ i18n
   .use(reactI18nextModule)
   .init({
     fallbackLng: 'es',
-    // have a common namespace used around the full app
-    ns: ['default'],
-    defaultNS: 'default',
+    ns: ['common'],
+    defaultNS: 'common',
     keySeparator: false, // we use content as keys
     react: {
       wait: true

@@ -1,0 +1,12 @@
+{
+  "title": "Programas",
+  "desc": "Genere, edite y elimine los programas aquí.",
+  "generate": "Generar Nuevo Programa",
+  "newMessage": "El programa fue creado.",
+  "confirmRemove": "Seguro de eliminar el programa?",
+  "new": "Nuevo Programa",
+  "remove": "Eliminar Programa",
+  "name": "Programa",
+  "reassigned": "La Asignación fue reasignada a ",
+  "change": "Cambiar Asignación"
+}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { translate } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { TaskList } from './'
@@ -48,7 +49,7 @@ class StudentList extends React.Component {
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    if (window.confirm('Sure to remove the student?')) {
+    if (window.confirm(this.props.t('confirmRemove'))) {
       api.remove('/students', id).then(() => {
         this.loadData()
       })
@@ -63,26 +64,27 @@ class StudentList extends React.Component {
     if (id) {
       api.patch('/students', id, data).then(() => {
         this.setState({ studentForm: true })
-        this.loadData()
+        this.loadData(this.state.searchTerm)
       })
     } else {
       api.post('/students', data).then(() => {
         this.setState({ studentForm: true })
-        this.loadData()
+        this.loadData(this.state.searchTerm)
       })
     }
   }
 
   render() {
+    const { t } = this.props
     const { searchTerm } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          Students
+          {t('title')}
         </Heading>
-        <Paragraph margin="small">Create, update or remove ministry school students and their tasks here.</Paragraph>
+        <Paragraph margin="small">{t('desc')}</Paragraph>
         <Box pad={{ vertical: 'medium' }}>
-          <Button icon={<AddIcon />} label="Add New Student" onClick={this.handleAdd} href="#" />
+          <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
         </Box>
         <Box pad={{ vertical: 'medium' }}>
           <Search
@@ -91,7 +93,7 @@ class StudentList extends React.Component {
             iconAlign="start"
             value={searchTerm}
             onDOMChange={this.handleSearch}
-            placeHolder="Search Student"
+            placeHolder={t('search')}
           />
         </Box>
         <List selectable onSelect={this.handleSelect}>
@@ -118,12 +120,12 @@ class StudentList extends React.Component {
                 <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={e => this.handleTasks(e, student)}
-                  a11yTitle="See Tasks"
+                  a11yTitle={t('tasks')}
                 />
                 <Button
                   icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, student.id)}
-                  a11yTitle="Remove Student"
+                  a11yTitle={t('remove')}
                 />
               </Box>
             </ListItem>
@@ -145,4 +147,4 @@ class StudentList extends React.Component {
   }
 }
 
-export default StudentList
+export default translate('students')(StudentList)

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import { Form, FormField, Footer, Button, Select, NumberInput, DateTime, CheckBox } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
@@ -17,11 +18,12 @@ class TaskForm extends React.PureComponent {
   state = initState
 
   validate = cb => {
+    const { t } = this.props
     const { task, hall, date } = this.state
     let errors = {}
-    !task ? (errors.task = 'Required') : undefined
-    !hall ? (errors.hall = 'Required') : undefined
-    !date ? (errors.date = 'Required') : undefined
+    !task ? (errors.task = t('common:required')) : undefined
+    !hall ? (errors.hall = t('common:required')) : undefined
+    !date ? (errors.date = t('common:required')) : undefined
     if (Object.keys(errors).length) {
       this.setState({
         errors: Object.assign({}, this.state.errors, errors)
@@ -63,40 +65,37 @@ class TaskForm extends React.PureComponent {
   }
 
   render() {
+    const { t } = this.props
     const { task, hall, point, helper, date, errors } = this.state
     return (
       <div>
         <Form pad="medium" onSubmit={this.handleSubmit}>
-          <FormField label="Date" error={errors.date}>
-            <DateTime
-              format="M/D/YYYY"
-              value={date}
-              onChange={value => this.handleChange('date', value)}
-            />
+          <FormField label={t('common:date')} error={errors.date}>
+            <DateTime format="M/D/YYYY" value={date} onChange={value => this.handleChange('date', value)} />
           </FormField>
-          <FormField label="Talk" error={errors.task}>
+          <FormField label={t('common:talk')} error={errors.task}>
             <Select
               options={consts.availableOptions}
               value={task}
               onChange={({ value }) => this.handleChange('task', value)}
             />
           </FormField>
-          <FormField label="Halls" error={errors.hall}>
+          <FormField label={t('common:hall')} error={errors.hall}>
             <Select
-              placeHolder="Halls"
+              placeHolder={t('common:hall')}
               options={[consts.HALLS_A, consts.HALLS_B]}
               value={hall}
               onChange={({ value }) => this.handleChange('hall', value)}
             />
           </FormField>
-          <FormField label="Point">
+          <FormField label={t('common:point')}>
             <NumberInput value={point} onChange={e => this.handleChange('point', e.target.value)} />
           </FormField>
-          <FormField label="Helper">
+          <FormField label={t('common:helper')}>
             <CheckBox checked={helper} onChange={e => this.handleChange('helper', !helper)} />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
-            <Button label="Add Task" type="submit" primary />
+            <Button label={t('add')} type="submit" primary />
           </Footer>
         </Form>
       </div>
@@ -109,4 +108,4 @@ TaskForm.propTypes = {
   handleSubmit: PropTypes.func
 }
 
-export default TaskForm
+export default translate(['tasks', 'common'])(TaskForm)

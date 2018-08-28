@@ -1,4 +1,7 @@
 {
   "title": "Tablero",
-  "desc": "Bienvenido to Our Christian Life and Ministry Meeting. <0 /> Here you can manage the students and monthly schedules."
+  "desc": "Bienvenido a la reunión Vida y Ministerio Cristianos. Aquí puede administrar los estudiantes y programas mensuales.",
+  "dist": "Distribución de los Estudiantes",
+  "brothers": "Hermanos",
+  "sisters": "Hermanas"
 }

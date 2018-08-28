@@ -1,4 +1,5 @@
 import React from 'react'
+import { translate } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import { api } from '../utils'
@@ -33,7 +34,7 @@ class TaskList extends React.PureComponent {
 
   handleRemove = (e, id) => {
     e.preventDefault()
-    if (window.confirm('Sure to remove the task?')) {
+    if (window.confirm(this.props.t('confirmRemove'))) {
       api.remove(`/tasks`, id).then(() => {
         this.loadData()
       })
@@ -41,24 +42,24 @@ class TaskList extends React.PureComponent {
   }
 
   render() {
-    const { hidden, student, handleClose } = this.props
+    const { t, hidden, student, handleClose } = this.props
     const { tasks } = this.state
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
-              Tasks: {student && student.name}
+              {t('title')} {student && student.name}
             </Heading>
           </Header>
           <TaskForm student={student} handleSubmit={this.handleSubmit} />
           <Table responsive={false} scrollable>
             <thead>
               <tr>
-                <th>Task</th>
-                <th>Date</th>
-                <th>Hall</th>
-                <th>Point</th>
+                <th>{t('common:task')}</th>
+                <th>{t('common:date')}</th>
+                <th>{t('common:hall')}</th>
+                <th>{t('common:point')}</th>
                 <th />
               </tr>
             </thead>
@@ -66,7 +67,7 @@ class TaskList extends React.PureComponent {
               {tasks &&
                 tasks.map((task, index) => (
                   <TableRow key={index}>
-                    <td>{task.helper ? 'Helper' : <b>{task.task}</b>}</td>
+                    <td>{task.helper ? t('common:helper') : <b>{task.task}</b>}</td>
                     <td>{`${task.month}/${task.year}`}</td>
                     <td>{task.hall}</td>
                     <td>{task.helper ? null : task.point}</td>
@@ -75,7 +76,7 @@ class TaskList extends React.PureComponent {
                         <Button
                           icon={<FormTrashIcon size="medium" />}
                           onClick={e => this.handleRemove(e, task.id)}
-                          a11yTitle="Remove Schedule"
+                          a11yTitle={t('remove')}
                         />
                       </Box>
                     </td>
@@ -89,4 +90,4 @@ class TaskList extends React.PureComponent {
   }
 }
 
-export default TaskList
+export default translate(['tasks', 'common'])(TaskList)

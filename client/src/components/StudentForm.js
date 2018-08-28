@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import {
   Layer,
   Form,
@@ -40,7 +41,7 @@ class StudentForm extends React.PureComponent {
   validate = cb => {
     const { name } = this.state
     let errors = {}
-    !name ? (errors.name = 'Required') : undefined
+    !name ? (errors.name = this.props.t('common:required')) : undefined
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
@@ -83,39 +84,36 @@ class StudentForm extends React.PureComponent {
   }
 
   render() {
-    const { hidden, student } = this.props
+    const { t, hidden, student } = this.props
     const { name, nextPoint, available, hall, errors } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
-              <Heading>{student ? student.name : 'New Student'}</Heading>
+              <Heading>{student ? student.name : t('new')}</Heading>
             </Header>
-            <FormField label="Name and Surname" error={errors.name}>
-              <TextInput
-                value={name}
-                onDOMChange={e => this.handleChange('name', e.target.value)}
-              />
+            <FormField label={t('nameSurname')} error={errors.name}>
+              <TextInput value={name} onDOMChange={e => this.handleChange('name', e.target.value)} />
             </FormField>
-            <FormField label="Gender">
+            <FormField label={t('common:gender')}>
               <RadioButton
                 id={consts.GENDER_BROTHER}
-                label="Brother"
+                label={t('brother')}
                 checked={this.state.gender === consts.GENDER_BROTHER}
                 onChange={e => this.handleChange('gender', consts.GENDER_BROTHER)}
               />
               <RadioButton
                 id={consts.GENDER_SISTER}
-                label="Sister"
+                label={t('sister')}
                 checked={this.state.gender === consts.GENDER_SISTER}
                 onChange={e => this.handleChange('gender', consts.GENDER_SISTER)}
               />
             </FormField>
-            <FormField label="Available">
+            <FormField label={t('common:available')}>
               <Select
                 id="Available"
-                label="Available"
+                label={t('common:available')}
                 inline
                 multiple
                 options={consts.availableOptions}
@@ -123,22 +121,19 @@ class StudentForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('available', value)}
               />
             </FormField>
-            <FormField label="Halls">
+            <FormField label={t('common:halls')}>
               <Select
-                placeHolder="Halls"
+                placeHolder={t('common:halls')}
                 options={consts.hallsOptions}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
-            <FormField label="Next Point">
-              <NumberInput
-                value={nextPoint}
-                onChange={e => this.handleChange('nextPoint', e.target.value)}
-              />
+            <FormField label={t('common:nextPoint')}>
+              <NumberInput value={nextPoint} onChange={e => this.handleChange('nextPoint', e.target.value)} />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
-              <Button label="Submit" type="submit" primary={true} />
+              <Button label={t('common:submit')} type="submit" primary={true} />
             </Footer>
           </Form>
         </Layer>
@@ -154,4 +149,4 @@ StudentForm.propTypes = {
   handleClose: PropTypes.func
 }
 
-export default StudentForm
+export default translate(['students', 'common'])(StudentForm)

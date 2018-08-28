@@ -1,4 +1,5 @@
 import React from 'react'
+import { translate } from 'react-i18next'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel } from 'grommet'
 import { toast } from 'react-toastify'
 import { WeekTab, Available } from '../components'
@@ -45,7 +46,7 @@ class Schedule extends React.Component {
       point: taskToChange.helper ? null : student.nextPoint
     }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
-      toast.success(`The task was reassigned to ${student.name}.`)
+      toast.success(`${this.props.t('reassigned')} ${student.name}.`)
       this.setState({ availableList: true })
       this.loadData()
     })
@@ -63,16 +64,17 @@ class Schedule extends React.Component {
   }
 
   renderWeeks = () => {
+    const { t } = this.props
     const { schedule } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
       const tasksA = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_A)
       const tasksB = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_B)
       weeks.push(
-        <Tab key={week} title={`Week ${week}`}>
+        <Tab key={week} title={`${t('common:week')} ${week}`}>
           <Accordion openMulti={true} active={[0, 1]}>
             {tasksA.length && (
-              <AccordionPanel heading={`Hall ${consts.HALLS_A}`}>
+              <AccordionPanel heading={`${t('common:hall')} ${consts.HALLS_A}`}>
                 <WeekTab
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
@@ -82,7 +84,7 @@ class Schedule extends React.Component {
               </AccordionPanel>
             )}
             {tasksB.length && (
-              <AccordionPanel heading={`Hall ${consts.HALLS_B}`}>
+              <AccordionPanel heading={`${t('common:hall')} ${consts.HALLS_B}`}>
                 <WeekTab
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}
@@ -99,11 +101,12 @@ class Schedule extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const { schedule, availables, availableList } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          Schedule - {schedule.month} / {schedule.year}
+          {t('name')} - {schedule.month} / {schedule.year}
         </Heading>
         <Tabs justify="start">{this.renderWeeks()}</Tabs>
         <Available
@@ -117,4 +120,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default Schedule
+export default translate(['schedules', 'common'])(Schedule)

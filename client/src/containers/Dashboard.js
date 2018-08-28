@@ -61,12 +61,12 @@ class Dashboard extends Component {
         {this.getWarning()}
         <Box pad={{ vertical: 'small' }}>
           <Heading tag="h2" margin="small">
-            Students Distribution
+            {t('dist')}
           </Heading>
           <Distribution
             series={[
-              { label: 'Brothers', value: brothers, colorIndex: 'graph-1', onClick: this.navigate },
-              { label: 'Sisters', value: sisters, colorIndex: 'graph-2', onClick: this.navigate }
+              { label: t('brothers'), value: brothers, colorIndex: 'graph-1', onClick: this.navigate },
+              { label: t('sisters'), value: sisters, colorIndex: 'graph-2', onClick: this.navigate }
             ]}
           />
         </Box>

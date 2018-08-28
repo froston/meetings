@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import { Box, Card, Button, TextInput } from 'grommet'
 import { SaveIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
@@ -47,7 +48,7 @@ class WeekTab extends React.PureComponent {
     return image
   }
   render() {
-    const { tasks, handleChangeTask } = this.props
+    const { t, tasks, handleChangeTask } = this.props
     const { updatting, newPoint } = this.state
     let rvIndex = 0
     return (
@@ -72,12 +73,12 @@ class WeekTab extends React.PureComponent {
                   label={mainTask.task}
                   heading={mainTask.name}
                   textSize="small"
-                  link={<Button label="Change Task" primary onClick={() => handleChangeTask(mainTask)} />}
+                  link={<Button label={t('change')} primary onClick={() => handleChangeTask(mainTask)} />}
                   description={
                     <div style={{ margin: '10px 0' }}>
                       <span style={{ visibility: helperTask ? '' : 'hidden' }}>
                         <a onClick={() => handleChangeTask(helperTask, true)}>
-                          <b>Helper:</b> {helperTask && helperTask.name}
+                          <b>{t('common:helper')}: </b> {helperTask && helperTask.name}
                         </a>
                         <br />
                       </span>
@@ -92,7 +93,7 @@ class WeekTab extends React.PureComponent {
                           </div>
                         ) : (
                           <a onClick={() => this.handleEdit(mainTask)}>
-                            <b>Point: </b> {mainTask.point}
+                            <b>{t('common:point')}</b> {mainTask.point}
                           </a>
                         )}
                       </span>
@@ -116,4 +117,4 @@ WeekTab.propTypes = {
   handleChangePoint: PropTypes.func
 }
 
-export default WeekTab
+export default translate(['schedules', 'common'])(WeekTab)

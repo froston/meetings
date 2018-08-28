@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import {
   Layer,
   Header,
@@ -45,16 +46,17 @@ class ScheduleForm extends React.PureComponent {
   }
 
   validate = cb => {
+    const { t } = this.props
     const { weeks, month, year, hall } = this.state
     let errors = {}
     this.props.checkScheduleExists(month.value, year, exists => {
-      !weeks ? (errors.weeks = 'Required') : undefined
-      !month.value ? (errors.month = 'Required') : undefined
-      !year ? (errors.year = 'Required') : undefined
-      !hall ? (errors.hall = 'Required') : undefined
+      !weeks ? (errors.weeks = t('required')) : undefined
+      !month.value ? (errors.month = t('required')) : undefined
+      !year ? (errors.year = t('required')) : undefined
+      !hall ? (errors.hall = t('required')) : undefined
       if (exists) {
-        errors.month = 'Schedule already exists'
-        errors.year = 'Schedule already exists'
+        errors.month = t('newForm.exists')
+        errors.year = t('newForm.exists')
       }
       if (Object.keys(errors).length || exists) {
         this.setState({
@@ -100,10 +102,10 @@ class ScheduleForm extends React.PureComponent {
     const weeks = []
     for (let weekNum = 1; weekNum <= this.state.weeks; weekNum++) {
       weeks.push(
-        <AccordionPanel key={weekNum} heading={`Week ${weekNum}`}>
+        <AccordionPanel key={weekNum} heading={`${this.props.t('common:week')} ${weekNum}`}>
           <Select
             id="Tasks"
-            label="Tasks"
+            label={this.props.t('tasks')}
             inline
             multiple
             options={consts.scheduleOptions}
@@ -116,49 +118,43 @@ class ScheduleForm extends React.PureComponent {
     return weeks
   }
   render() {
-    const { hidden, handleClose } = this.props
+    const { t, hidden, handleClose } = this.props
     const { month, year, weeks, hall, errors, submitting } = this.state
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
-              New Schedule
+              {t('new')}
             </Heading>
           </Header>
           <Form pad="medium" onSubmit={this.handleSubmit}>
-            <FormField label="Month" error={errors.month}>
+            <FormField label={t('common:month')} error={errors.month}>
               <Select
                 id="Month"
-                label="Month"
+                label={t('common:month')}
                 options={consts.monthsOptions}
                 value={month}
                 onChange={({ value }) => this.handleChange('month', value)}
               />
             </FormField>
-            <FormField label="Year" error={errors.year}>
-              <TextInput
-                value={year}
-                onDOMChange={e => this.handleChange('year', e.target.value)}
-              />
+            <FormField label={t('common:year')} error={errors.year}>
+              <TextInput value={year} onDOMChange={e => this.handleChange('year', e.target.value)} />
             </FormField>
-            <FormField label="Halls" error={errors.hall}>
+            <FormField label={t('common:halls')} error={errors.hall}>
               <Select
-                placeHolder="Halls"
+                placeHolder={t('common:halls')}
                 options={consts.hallsOptions}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
-            <FormField label="Week Number" error={errors.weeks}>
-              <NumberInput
-                value={weeks}
-                onChange={e => this.handleChange('weeks', e.target.value)}
-              />
+            <FormField label={t('common:weekNum')} error={errors.weeks}>
+              <NumberInput value={weeks} onChange={e => this.handleChange('weeks', e.target.value)} />
             </FormField>
             <Accordion active={0}>{this.renderWeeks()}</Accordion>
             <Footer pad={{ vertical: 'medium' }}>
-              {submitting ? <Spinning /> : <Button label="Generate" type="submit" primary />}
+              {submitting ? <Spinning /> : <Button label={t('common:generate')} type="submit" primary />}
             </Footer>
           </Form>
         </Layer>
@@ -173,4 +169,4 @@ ScheduleForm.propTypes = {
   handleClose: PropTypes.func
 }
 
-export default ScheduleForm
+export default translate(['schedules', 'common'])(ScheduleForm)

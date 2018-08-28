@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import ScheduleIcon from 'grommet/components/icons/base/Schedule'
@@ -37,7 +38,7 @@ class ScheduleList extends React.Component {
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    if (window.confirm('Sure to remove the schedule?')) {
+    if (window.confirm(this.props.t('confirmRemove'))) {
       api.remove('/schedules', id).then(() => {
         this.loadData()
       })
@@ -51,7 +52,7 @@ class ScheduleList extends React.Component {
   handleSubmit = (data, cb) => {
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
-      toast.success('The schedule was created.')
+      toast.success(this.props.t('newMessage'))
       this.loadData()
       cb()
     })
@@ -64,20 +65,16 @@ class ScheduleList extends React.Component {
   }
 
   render() {
+    const { t } = this.props
     const { schedules, scheduleForm } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          Schedules
+          {t('title')}
         </Heading>
-        <Paragraph margin="small">Generate, update and remove schedules.</Paragraph>
+        <Paragraph margin="small">{t('desc')}</Paragraph>
         <Box pad={{ vertical: 'medium' }}>
-          <Button
-            icon={<ScheduleIcon />}
-            label="Generate New Schedule"
-            onClick={this.handleAdd}
-            href="#"
-          />
+          <Button icon={<ScheduleIcon />} label={t('generate')} onClick={this.handleAdd} href="#" />
         </Box>
         <List selectable>
           {schedules.map((schedule, index) => (
@@ -97,7 +94,7 @@ class ScheduleList extends React.Component {
                 <Button
                   icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, schedule.id)}
-                  a11yTitle="Remove Schedule"
+                  a11yTitle={t('remove')}
                 />
               </Box>
             </ListItem>
@@ -114,4 +111,4 @@ class ScheduleList extends React.Component {
   }
 }
 
-export default withRouter(ScheduleList)
+export default withRouter(translate('schedules')(ScheduleList))
