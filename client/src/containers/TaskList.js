@@ -67,7 +67,7 @@ class TaskList extends React.PureComponent {
               {tasks &&
                 tasks.map((task, index) => (
                   <TableRow key={index}>
-                    <td>{task.helper ? t('common:helper') : <b>{task.task}</b>}</td>
+                    <td>{task.helper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
                     <td>{`${task.month}/${task.year}`}</td>
                     <td>{task.hall}</td>
                     <td>{task.helper ? null : task.point}</td>

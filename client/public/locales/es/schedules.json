@@ -8,5 +8,6 @@
   "remove": "Eliminar Programa",
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
-  "change": "Cambiar Asignación"
+  "change": "Cambiar Asignación",
+  "exists": "Programa ya existe"
 }

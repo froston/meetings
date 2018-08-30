@@ -1,0 +1,13 @@
+{
+  "title": "Rozvrhy",
+  "desc": "Vytvářejte, upravujte a odstraňujte rozvrhy.",
+  "generate": "Vygenerovat Nový Rozvrh",
+  "newMessage": "Rozvrh byl vytvořen",
+  "confirmRemove": "Opravdu smazat rozvrh?",
+  "remove": "Smazat Rozvrh",
+  "name": "Rozvrh",
+  "reassigned": "Úkol byl předán ",
+  "change": "Upravit Úkol",
+  "new": "Nový Rozvrh",
+  "exists": "Rozvrh již existuje"
+}

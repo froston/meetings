@@ -74,7 +74,7 @@ class Schedule extends React.Component {
         <Tab key={week} title={`${t('common:week')} ${week}`}>
           <Accordion openMulti={true} active={[0, 1]}>
             {tasksA.length && (
-              <AccordionPanel heading={`${t('common:hall')} ${consts.HALLS_A}`}>
+              <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_A}`)}`}>
                 <WeekTab
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
@@ -84,7 +84,7 @@ class Schedule extends React.Component {
               </AccordionPanel>
             )}
             {tasksB.length && (
-              <AccordionPanel heading={`${t('common:hall')} ${consts.HALLS_B}`}>
+              <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_B}`)}`}>
                 <WeekTab
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}

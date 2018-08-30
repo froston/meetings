@@ -7,7 +7,7 @@ import { consts } from '../utils'
 
 const initState = {
   task: '',
-  hall: '',
+  hall: {},
   date: '',
   point: 1,
   helper: false,
@@ -21,8 +21,8 @@ class TaskForm extends React.PureComponent {
     const { t } = this.props
     const { task, hall, date } = this.state
     let errors = {}
-    !task ? (errors.task = t('common:required')) : undefined
-    !hall ? (errors.hall = t('common:required')) : undefined
+    !task.value ? (errors.task = t('common:required')) : undefined
+    !hall.value ? (errors.hall = t('common:required')) : undefined
     !date ? (errors.date = t('common:required')) : undefined
     if (Object.keys(errors).length) {
       this.setState({
@@ -53,8 +53,8 @@ class TaskForm extends React.PureComponent {
       const newTask = {
         student_id: id,
         ...this.getTaskDate(this.state.date),
-        task: this.state.task,
-        hall: this.state.hall,
+        task: this.state.task.value,
+        hall: this.state.hall.value,
         point: this.state.point,
         helper: this.state.helper,
         completed: true
@@ -75,7 +75,7 @@ class TaskForm extends React.PureComponent {
           </FormField>
           <FormField label={t('common:talk')} error={errors.task}>
             <Select
-              options={consts.availableOptions}
+              options={consts.availableOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
               value={task}
               onChange={({ value }) => this.handleChange('task', value)}
             />
@@ -83,7 +83,7 @@ class TaskForm extends React.PureComponent {
           <FormField label={t('common:hall')} error={errors.hall}>
             <Select
               placeHolder={t('common:hall')}
-              options={[consts.HALLS_A, consts.HALLS_B]}
+              options={[consts.HALLS_A, consts.HALLS_B].map(hl => ({ value: hl, label: t(`common:hall${hl}`) }))}
               value={hall}
               onChange={({ value }) => this.handleChange('hall', value)}
             />

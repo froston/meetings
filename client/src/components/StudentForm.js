@@ -20,7 +20,7 @@ const initState = {
   name: '',
   nextPoint: 1,
   gender: consts.GENDER_SISTER,
-  hall: consts.HALLS_ALL,
+  hall: {},
   available: [],
   errors: {}
 }
@@ -39,9 +39,11 @@ class StudentForm extends React.PureComponent {
   }
 
   validate = cb => {
-    const { name } = this.state
+    const { name, hall } = this.state
     let errors = {}
     !name ? (errors.name = this.props.t('common:required')) : undefined
+    !hall.value ? (errors.hall = this.props.t('common:required')) : undefined
+
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
@@ -50,12 +52,12 @@ class StudentForm extends React.PureComponent {
   }
 
   loadForm = () => {
-    const { student } = this.props
+    const { t, student } = this.props
     const state = {
       name: student.name,
       gender: student.gender,
       available: student.available,
-      hall: student.hall,
+      hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
       nextPoint: student.nextPoint || 1
     }
     this.setState({ ...state })
@@ -69,12 +71,13 @@ class StudentForm extends React.PureComponent {
     e.preventDefault()
     this.validate(() => {
       const { student } = this.props
+      const values = { ...this.state }
+      const newValues = Object.assign({}, values, { available: values.available.map(obj => obj && obj.value) })
+      newValues.hall = this.state.hall.value
       if (student && student.id) {
-        const values = { ...this.state }
-        this.props.handleSubmit(student && student.id, values)
+        this.props.handleSubmit(student && student.id, newValues)
       } else {
-        const values = { ...this.state }
-        this.props.handleSubmit(null, values)
+        this.props.handleSubmit(null, newValues)
       }
     })
   }
@@ -116,15 +119,15 @@ class StudentForm extends React.PureComponent {
                 label={t('common:available')}
                 inline
                 multiple
-                options={consts.availableOptions}
+                options={consts.availableOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
                 value={available}
                 onChange={({ value }) => this.handleChange('available', value)}
               />
             </FormField>
-            <FormField label={t('common:halls')}>
+            <FormField label={t('common:halls')} error={errors.hall}>
               <Select
                 placeHolder={t('common:halls')}
-                options={consts.hallsOptions}
+                options={consts.hallsOptions.map(hl => ({ value: hl, label: t(`common:hall${hl}`) }))}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />

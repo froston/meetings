@@ -3,11 +3,11 @@ const moment = require('moment')
 // helpers
 exports.getAvailable = student => {
   return [
-    student.reading ? 'Reading' : undefined,
-    student.initial_call ? 'Initial Call' : undefined,
-    student.return_visit ? 'Return Visit' : undefined,
-    student.study ? 'Bible Study' : undefined,
-    student.talk ? 'Talk' : undefined
+    student.reading ? { value: 'Reading' } : undefined,
+    student.initial_call ? { value: 'Initial Call' } : undefined,
+    student.return_visit ? { value: 'Return Visit' } : undefined,
+    student.study ? { value: 'Bible Study' } : undefined,
+    student.talk ? { value: 'Talk' } : undefined
   ]
 }
 

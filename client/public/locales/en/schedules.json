@@ -5,13 +5,9 @@
   "newMessage": "The schedule was created.",
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
-  "schedule": {
-    "name": "Schedule",
-    "reassigned": "The task was reassigned to ",
-    "change": "Change Task"
-  },
-  "newForm": {
-    "name": "New Schedule",
-    "exists": "Schedule already exists"
-  }
+  "name": "Schedule",
+  "reassigned": "The task was reassigned to ",
+  "change": "Change Task",
+  "new": "New Schedule",
+  "exists": "Schedule already exists"
 }

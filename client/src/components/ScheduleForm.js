@@ -31,7 +31,7 @@ const initState = {
   year: String(moment().year()),
   weeks: 1,
   tasks: [],
-  hall: consts.HALLS_ALL,
+  hall: {},
   submitting: false,
   errors: {}
 }
@@ -50,14 +50,14 @@ class ScheduleForm extends React.PureComponent {
     const { weeks, month, year, hall } = this.state
     let errors = {}
     this.props.checkScheduleExists(month.value, year, exists => {
-      !weeks ? (errors.weeks = t('required')) : undefined
-      !month.value ? (errors.month = t('required')) : undefined
-      !year ? (errors.year = t('required')) : undefined
-      !hall ? (errors.hall = t('required')) : undefined
       if (exists) {
-        errors.month = t('newForm.exists')
-        errors.year = t('newForm.exists')
+        errors.month = t('exists')
+        errors.year = t('exists')
       }
+      !weeks ? (errors.weeks = t('common:required')) : undefined
+      !month.value ? (errors.month = t('common:required')) : undefined
+      !year ? (errors.year = t('common:required')) : undefined
+      !hall.value ? (errors.hall = t('common:required')) : undefined
       if (Object.keys(errors).length || exists) {
         this.setState({
           errors: Object.assign({}, this.state.errors, errors),
@@ -79,9 +79,9 @@ class ScheduleForm extends React.PureComponent {
     this.validate(() => {
       // convert return visits
       const tasks = this.state.tasks.map(task =>
-        task.map(taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName))
+        task.map(taskName => (taskName.value.includes('Return Visit') ? taskName.value.substring(3) : taskName.value))
       )
-      const values = { ...this.state, tasks, month: this.state.month.value }
+      const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }
       this.props.handleSubmit(values, () => {
         this.setState({ ...initState })
       })
@@ -105,10 +105,10 @@ class ScheduleForm extends React.PureComponent {
         <AccordionPanel key={weekNum} heading={`${this.props.t('common:week')} ${weekNum}`}>
           <Select
             id="Tasks"
-            label={this.props.t('tasks')}
+            label={this.props.t('common:tasks')}
             inline
             multiple
-            options={consts.scheduleOptions}
+            options={consts.scheduleOptions.map(value => ({ value, label: this.props.t(`common:${value}`) }))}
             value={this.state.tasks[weekNum]}
             onChange={({ value }) => this.handleWeekChange(weekNum, value)}
           />
@@ -133,7 +133,7 @@ class ScheduleForm extends React.PureComponent {
               <Select
                 id="Month"
                 label={t('common:month')}
-                options={consts.monthsOptions}
+                options={consts.monthsOptions.map(value => ({ value, label: t(`common:month${value}`) }))}
                 value={month}
                 onChange={({ value }) => this.handleChange('month', value)}
               />
@@ -144,7 +144,7 @@ class ScheduleForm extends React.PureComponent {
             <FormField label={t('common:halls')} error={errors.hall}>
               <Select
                 placeHolder={t('common:halls')}
-                options={consts.hallsOptions}
+                options={consts.hallsOptions.map(value => ({ value, label: t(`common:hall${value}`) }))}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />

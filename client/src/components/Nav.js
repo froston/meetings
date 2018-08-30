@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
@@ -19,6 +20,7 @@ class Nav extends React.PureComponent {
     }
   }
   setLang = lang => {
+    moment.locale(lang)
     this.props.i18n.changeLanguage(lang)
   }
   logout = () => {

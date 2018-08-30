@@ -70,7 +70,7 @@ class WeekTab extends React.PureComponent {
               <Box key={mainTask.id} margin="small">
                 <Card
                   thumbnail={this.getImage(mainTask.task)}
-                  label={mainTask.task}
+                  label={t(`common:${mainTask.task}`)}
                   heading={mainTask.name}
                   textSize="small"
                   link={<Button label={t('change')} primary onClick={() => handleChangeTask(mainTask)} />}
@@ -93,7 +93,7 @@ class WeekTab extends React.PureComponent {
                           </div>
                         ) : (
                           <a onClick={() => this.handleEdit(mainTask)}>
-                            <b>{t('common:point')}</b> {mainTask.point}
+                            <b>{t('common:point')}: </b> {mainTask.point}
                           </a>
                         )}
                       </span>

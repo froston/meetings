@@ -1,4 +1,7 @@
 {
-  "title": "Uvod",
-  "desc": "Welcome to Our Christian Life and Ministry Meeting. Here you can manage the students and monthly schedules."
+  "title": "Úvod",
+  "desc": "Vítejte na shromáždění Náš Křesťanský život a služba. Tady můžete spravovat studenty a měsíční rozvrhy.",
+  "dist": "Rozdělení Studentů",
+  "brothers": "Bratři",
+  "sisters": "Sestry"
 }
