@@ -19,29 +19,34 @@ import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { consts } from '../utils'
 
-const initState = {
-  month: {
-    value: moment()
-      .add(1, 'M')
-      .format('M'),
-    label: moment()
-      .add(1, 'M')
-      .format('MMMM')
-  },
-  year: String(moment().year()),
-  weeks: 1,
-  tasks: [],
-  hall: {},
-  submitting: false,
-  errors: {}
-}
-
 class ScheduleForm extends React.PureComponent {
-  state = initState
+  getState = () => ({
+    month: {
+      value: Number(
+        moment()
+          .add(1, 'M')
+          .format('M')
+      ),
+      label: moment()
+        .add(1, 'M')
+        .format('MMMM')
+    },
+    year: String(moment().year()),
+    weeks: 1,
+    tasks: [],
+    hall: {
+      value: consts.HALLS_ALL,
+      label: this.props.t(`common:hall${consts.HALLS_ALL}`)
+    },
+    submitting: false,
+    errors: {}
+  })
+
+  state = this.getState()
 
   componentDidUpdate(prevProps) {
     if (prevProps.hidden !== this.props.hidden) {
-      this.setState({ ...initState })
+      this.setState({ ...this.getState() })
     }
   }
 
@@ -83,7 +88,7 @@ class ScheduleForm extends React.PureComponent {
       )
       const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }
       this.props.handleSubmit(values, () => {
-        this.setState({ ...initState })
+        this.setState({ ...this.getState() })
       })
     })
   }

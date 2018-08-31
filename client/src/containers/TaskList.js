@@ -69,7 +69,7 @@ class TaskList extends React.PureComponent {
                   <TableRow key={index}>
                     <td>{task.helper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
                     <td>{`${task.month}/${task.year}`}</td>
-                    <td>{task.hall}</td>
+                    <td>{t(`common:hall${task.hall}`)}</td>
                     <td>{task.helper ? null : task.point}</td>
                     <td>
                       <Box direction="row">

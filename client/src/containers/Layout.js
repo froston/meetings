@@ -1,6 +1,8 @@
 import React from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
-import { App, Box, Article, Split, Button } from 'grommet'
+import moment from 'moment'
+import { translate } from 'react-i18next'
+import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
 import { Dashboard, StudentList, ScheduleList, Schedule } from './'
@@ -12,12 +14,21 @@ class Layout extends React.PureComponent {
     responsive: 'multiple'
   }
 
+  componentDidMount() {
+    moment.locale(this.props.i18n.language)
+  }
+
   handleNav = () => {
     this.setState({ navActive: !this.state.navActive })
   }
 
   handleResponsive = responsive => {
     this.setState({ responsive })
+  }
+
+  setLang = lang => {
+    moment.locale(lang)
+    this.props.i18n.changeLanguage(lang)
   }
 
   logout = () => {
@@ -32,7 +43,13 @@ class Layout extends React.PureComponent {
     let openNav
     if (navActive) {
       nav = (
-        <Nav handleClose={this.handleNav} logout={this.logout} location={this.props.location} responsive={responsive} />
+        <Nav
+          setLang={this.setLang}
+          handleClose={this.handleNav}
+          logout={this.logout}
+          location={this.props.location}
+          responsive={responsive}
+        />
       )
     } else {
       openNav = <Button icon={<MenuIcon />} onClick={this.handleNav} margin="medium" />
@@ -59,4 +76,4 @@ class Layout extends React.PureComponent {
   }
 }
 
-export default withRouter(Layout)
+export default withRouter(translate()(Layout))
