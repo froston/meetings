@@ -1,0 +1,14 @@
+{
+  "title": "Studenti",
+  "desc": "Create, update or remove ministry school students and their tasks here.",
+  "search": "Vyhledat Studenty",
+  "available": "Studenti k Dispozici",
+  "tasks": "Úkoly",
+  "add": "Přidat Nového Studenta",
+  "remove": "Odstranit Studenta",
+  "confirmRemove": "Opravdu odstranit studenta?",
+  "new": "Nový Student",
+  "nameSurname": "Jméno a Příjmení",
+  "brother": "Bratr",
+  "sister": "Sestra"
+}

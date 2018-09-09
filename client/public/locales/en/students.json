@@ -1,0 +1,14 @@
+{
+  "title": "Students",
+  "desc": "Create, update or remove ministry school students and their tasks here.",
+  "search": "Search Students",
+  "available": "Available Students",
+  "tasks": "See Tasks",
+  "add": "Add New Student",
+  "remove": "Remove Student",
+  "confirmRemove": "Sure to remove the student?",
+  "new": "New Student",
+  "nameSurname": "Name and Surname",
+  "brother": "Brother",
+  "sister": "Sister"
+}

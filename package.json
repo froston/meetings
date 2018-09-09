@@ -1,16 +1,48 @@
 {
   "name": "meeting",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server/index.js",
   "license": "MIT",
+  "engines": {
+    "node": "8.11.1"
+  },
   "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "btoa": "^1.2.1",
     "express": "^4.15.3",
-    "mongodb": "^3.1.1",
-    "nodemon": "^1.18.3"
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.4",
+    "mysql": "^2.16.0",
+    "node-mysql": "^0.4.2",
+    "nodemon": "^1.18.4",
+    "passport": "^0.4.0",
+    "passport-http": "^0.3.0"
+  },
+  "devDependencies": {
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "heroku-postbuild": "cd client && npm && npm run build"
+    "start": "node server/index.js",
+    "dev": "nodemon --inspect server/index.js",
+    "heroku-postbuild": "cd client && npm i && npm run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write --no-semi --single-quote --print-width 120",
+      "git add"
+    ]
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "client/src"
+    ]
   }
 }
