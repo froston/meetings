@@ -1,7 +1,11 @@
 {
   "title": "Dashboard",
-  "desc": "Welcome to Our Christian Life and Ministry Meeting. Here you can manage the students and monthly schedules.",
+  "desc": "Welcome to 'Our Christian Life and Ministry Meeting' App. Here you can manage the students and monthly schedules.",
   "dist": "Students Distribution",
   "brothers": "Brothers",
-  "sisters": "Sisters"
+  "sisters": "Sisters",
+  "messageWarnTitle": "Schedule Missing - {{left}} days left",
+  "messageWarnDesc": "You have time to create next schedule until {{until}}.",
+  "messageOkTitle": "Schedule Ready",
+  "messageOkDesc": "Your schedule for {{month}} is ready."
 }

@@ -1,7 +1,11 @@
 {
   "title": "Úvod",
-  "desc": "Vítejte na shromáždění Náš Křesťanský život a služba. Tady můžete spravovat studenty a měsíční rozvrhy.",
+  "desc": "Vítejte v aplikaci 'Shromáždění Náš Křesťanský život a služba'. Zde můžete spravovat studenty a měsíční rozvrhy.",
   "dist": "Rozdělení Studentů",
   "brothers": "Bratři",
-  "sisters": "Sestry"
+  "sisters": "Sestry",
+  "messageWarnTitle": "Chybí Rozvrh - zbývá {{left}} dní",
+  "messageWarnDesc": "Máte čas na vytvoření rozvrhu do {{until}}.",
+  "messageOkTitle": "Rozvrh Připraven",
+  "messageOkDesc": "Váš rozvrh pro {{month}} je hotov."
 }

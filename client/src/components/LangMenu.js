@@ -15,10 +15,10 @@ class LangMenu extends React.PureComponent {
           English
         </Anchor>
         <Anchor href="#" onClick={() => this.handleClick('es')} className={lang === 'es' ? 'active' : ''}>
-          Espanol
+          español
         </Anchor>
         <Anchor href="#" onClick={() => this.handleClick('cs')} className={lang === 'cs' ? 'active' : ''}>
-          Cestina
+          čeština
         </Anchor>
       </Menu>
     )
