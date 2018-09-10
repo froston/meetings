@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/:studentId', (req, res) => {
   const studentId = req.params.studentId
-  model.getByStudentId(studentId, (err, student) => {
+  model.getTasks(studentId, (err, student) => {
     if (err) {
       res.status(500).send(err)
     }
