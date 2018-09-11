@@ -2,6 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
+import Spinning from 'grommet/components/icons/Spinning'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import ScheduleIcon from 'grommet/components/icons/base/Schedule'
 import { toast } from 'react-toastify'
@@ -10,6 +11,7 @@ import { api } from '../utils'
 
 class ScheduleList extends React.Component {
   state = {
+    loading: false,
     schedules: [],
     scheduleForm: true
   }
@@ -19,9 +21,11 @@ class ScheduleList extends React.Component {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     api.get('/schedules').then(schedules => {
       this.setState({
-        schedules: schedules || []
+        schedules: schedules || [],
+        loading: false
       })
     })
   }
@@ -66,7 +70,7 @@ class ScheduleList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedules, scheduleForm } = this.state
+    const { schedules, scheduleForm, loading } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -99,6 +103,11 @@ class ScheduleList extends React.Component {
               </Box>
             </ListItem>
           ))}
+          {loading && (
+            <div style={{ textAlign: 'center' }}>
+              <Spinning />
+            </div>
+          )}
         </List>
         <ScheduleForm
           hidden={scheduleForm}

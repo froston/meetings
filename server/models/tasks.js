@@ -1,13 +1,5 @@
 const { getDb } = require('../db')
 
-exports.getByStudentId = (id, cb) => {
-  getDb().query(
-    'SELECT * FROM tasks WHERE student_id = ? ORDER BY year DESC, month DESC, week DESC',
-    id,
-    cb
-  )
-}
-
 exports.getBySchedule = (month, year, cb) => {
   getDb().query('SELECT * FROM tasks WHERE month = ? AND year = ?', [month, year], cb)
 }

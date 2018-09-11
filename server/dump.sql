@@ -70,8 +70,6 @@ CREATE TABLE `users` (
   `password` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `users` (`id`, `email`, `password`) VALUES (1, 'muller.pav@gmail.com', 'RnJvc3RvbjEyMw==')
-
 --
 -- Indexes for dumped tables
 --

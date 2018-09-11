@@ -18,10 +18,9 @@ passport.use(userModel.basicAuth())
 
 initDb(err => {
   if (err) throw err
-  const port = process.env.PORT || config.port
-  app.listen(port, err => {
+  app.listen(config.port, err => {
     if (err) throw err
-    console.log(`Server listening on ${port}`)
+    console.log(`Server listening on ${config.port}`)
   })
 })
 

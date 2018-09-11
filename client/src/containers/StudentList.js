@@ -2,12 +2,14 @@ import React from 'react'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
+import Spinning from 'grommet/components/icons/Spinning'
 import { TaskList } from './'
 import { StudentForm } from '../components'
 import { api, consts } from '../utils'
 
 class StudentList extends React.Component {
   state = {
+    loading: false,
     students: [],
     studentForm: true,
     taskForm: true,
@@ -20,9 +22,10 @@ class StudentList extends React.Component {
   }
 
   loadData = searchTerm => {
+    this.setState({ loading: true })
     const filter = searchTerm ? `?name=${searchTerm}` : ''
     api.get(`/students${filter}`).then(students => {
-      this.setState({ students: students || [] })
+      this.setState({ students: students || [], loading: false })
     })
   }
 
@@ -76,7 +79,7 @@ class StudentList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { searchTerm } = this.state
+    const { searchTerm, loading } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -130,6 +133,11 @@ class StudentList extends React.Component {
               </Box>
             </ListItem>
           ))}
+          {loading && (
+            <div style={{ textAlign: 'center' }}>
+              <Spinning />
+            </div>
+          )}
         </List>
         <StudentForm
           hidden={this.state.studentForm}

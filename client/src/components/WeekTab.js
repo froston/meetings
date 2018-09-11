@@ -15,14 +15,16 @@ class WeekTab extends React.PureComponent {
   handleEdit = task => {
     this.setState({
       task: task,
-      newPoint: task.point,
+      newPoint: String(task.point),
       updatting: Object.assign({}, this.state.updatting, { [task.id]: true })
     })
   }
   handleChangePoint = () => {
     const { newPoint, task } = this.state
     this.setState({ updatting: {}, task: {}, newPoint: null })
-    this.props.handleChangePoint(newPoint, task)
+    if (newPoint > 0) {
+      this.props.handleChangePoint(newPoint, task)
+    }
   }
   getImage = task => {
     let image
