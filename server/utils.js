@@ -92,15 +92,6 @@ exports.sortStudents = (taskName, hall, month, year) => {
         return 1
       }
     }
-
-    /* LATEST TASK AND POINT DATE */
-    if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
-      return 1
-    }
-    if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
-      return -1
-    }
-
     /* LAST HALL TASK IN */
     if (aLastTaskAll && bLastLastAll) {
       if (aLastTaskAll.hall === hall && bLastLastAll.hall !== hall) {
@@ -109,6 +100,13 @@ exports.sortStudents = (taskName, hall, month, year) => {
       if (aLastTaskAll.hall !== hall && bLastLastAll.hall === hall) {
         return -1
       }
+    }
+    /* LATEST TASK AND POINT DATE */
+    if (aLastTaskAllSum > bLastTaskAllSum && aLastTaskPointSum > bLastTaskPointSum) {
+      return 1
+    }
+    if (bLastTaskAllSum > aLastTaskAllSum && bLastTaskPointSum > aLastTaskPointSum) {
+      return -1
     }
     /* LAST TASK DATE GIVEN EVER */
     if (aLastTaskAllSum > bLastTaskAllSum) {
