@@ -3,9 +3,9 @@ import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
-import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
-import ScheduleIcon from 'grommet/components/icons/base/Schedule'
+import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
+import { saveAs } from 'file-saver/FileSaver'
 import { ScheduleForm } from '../components'
 import { api } from '../utils'
 
@@ -47,6 +47,14 @@ class ScheduleList extends React.Component {
         this.loadData()
       })
     }
+  }
+
+  handleReport = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    api.downloadReport(`/schedules/${id}/generate`).then(blob => {
+      saveAs(blob, 'report.xlsx')
+    })
   }
 
   handleForm = () => {
@@ -96,7 +104,12 @@ class ScheduleList extends React.Component {
               </Box>
               <Box direction="row">
                 <Button
-                  icon={<FormTrashIcon size="medium" />}
+                  icon={<DocumentExcelIcon size="medium" />}
+                  onClick={e => this.handleReport(e, schedule.id)}
+                  a11yTitle={t('report')}
+                />
+                <Button
+                  icon={<FormTrashIcon size="large" />}
                   onClick={e => this.handleRemove(e, schedule.id)}
                   a11yTitle={t('remove')}
                 />

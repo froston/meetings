@@ -22,6 +22,11 @@ router.get('/:id', (req, res) => {
   })
 })
 
+router.get('/:id/generate', (req, res) => {
+  const id = req.params.id
+  model.generateReport(id, res)
+})
+
 router.post('/', (req, res) => {
   const newSchedule = req.body
   model.createSchedule(newSchedule, (err, schedule) => {

@@ -126,7 +126,7 @@ class StudentList extends React.Component {
                   a11yTitle={t('tasks')}
                 />
                 <Button
-                  icon={<FormTrashIcon size="medium" />}
+                  icon={<FormTrashIcon size="large" />}
                   onClick={e => this.handleRemove(e, student.id)}
                   a11yTitle={t('remove')}
                 />

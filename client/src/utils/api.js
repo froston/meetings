@@ -57,3 +57,14 @@ export const authenticate = (username, password, cb) => {
     cb('Input your username and password')
   }
 }
+
+export const downloadReport = url => {
+  let headers = new Headers()
+  headers.set('Authorization', 'Basic ' + localStorage.getItem('auth'))
+  return fetch(`/api${url}`, {
+    headers: headers,
+    method: 'GET'
+  })
+    .then(res => res.blob())
+    .catch(console.error)
+}

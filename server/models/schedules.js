@@ -168,9 +168,17 @@ const removeSchedule = (id, cb) => {
   })
 }
 
+const generateReport = (id, res) => {
+  getById(id, (err, schedule) => {
+    if (err) throw err
+    utils.generateSheet(schedule, res)
+  })
+}
+
 module.exports = {
   getAll,
   getById,
   createSchedule,
-  removeSchedule
+  removeSchedule,
+  generateReport
 }
