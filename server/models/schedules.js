@@ -76,11 +76,16 @@ const createSchedule = (newSchedule, mainCB) => {
                 async.waterfall(
                   [
                     callbackFinal => {
-                      studentModel.getAvailableStudents(taskName, hall, (err, students) => {
+                      // sorting and query options
+                      const sortingOpt = {
+                        taskName,
+                        hall,
+                        month: scheduleMonth,
+                        year: scheduleYear
+                      }
+                      studentModel.getSortedAvailables('student', sortingOpt, (err, students) => {
                         if (err) throw err
                         if (students && students.length) {
-                          // sort all students
-                          students.sort(sorting.sortStudents(taskName, hall, scheduleMonth, scheduleYear))
                           const limit = students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
                           const finalStudent = students[flhsIndex]
@@ -110,10 +115,16 @@ const createSchedule = (newSchedule, mainCB) => {
                     },
                     (gender, callbackHelper) => {
                       if (taskName !== 'Reading' && taskName !== 'Talk') {
-                        studentModel.getAvailableHelpers(gender, (err, helpers) => {
+                        // sorting and query options
+                        const sortingOpt = {
+                          taskName,
+                          gender,
+                          month: scheduleMonth,
+                          year: scheduleYear
+                        }
+                        studentModel.getSortedAvailables('helper', sortingOpt, (err, helpers) => {
+                          if (err) throw err
                           if (helpers && helpers.length) {
-                            // sort all helpers
-                            helpers.sort(sorting.sortHelpers(taskName, scheduleMonth, scheduleYear))
                             const limit = helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
                             const finalHelper = helpers[flhsIndex]

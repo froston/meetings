@@ -2,6 +2,7 @@ const async = require('async')
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
 const consts = require('../helpers/consts')
+const sorting = require('../helpers/sorting')
 
 exports.getAll = (name, cb) => {
   const like = name ? `WHERE name LIKE "%${name}%"` : ``
@@ -54,7 +55,32 @@ exports.removeStudent = (id, cb) => {
   })
 }
 
-exports.getAvailableStudents = (taskName, hall, cb) => {
+exports.getSortedAvailables = (type, options, cb) => {
+  const taskName = options.taskName
+  const gender = options.gender
+  const hall = options.hall
+  const month = options.month
+  const year = options.year
+  switch (type) {
+    case 'student':
+      getAvailableStudents(taskName, hall, (err, students) => {
+        students.sort(sorting.sortStudents(taskName, hall, month, year))
+        cb(err, students)
+      })
+      break
+    case 'helper':
+      getAvailableHelpers(gender, (err, students) => {
+        students.sort(sorting.sortHelpers(taskName, month, year))
+        cb(err, students)
+      })
+      break
+    default:
+      cb(null, [])
+      break
+  }
+}
+
+const getAvailableStudents = (taskName, hall, cb) => {
   getDb().query(
     `
     SELECT * FROM students 
@@ -68,8 +94,14 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
         students,
         (student, callback) => {
           taskModel.getTasks(student.id, (err, tasks) => {
-            student.tasks = tasks.filter(t => !t.helper)
-            student.helpTasks = tasks.filter(t => t.helper)
+            // distinguish reading task from other tasks
+            if (taskName === 'Reading') {
+              student.tasks = tasks.filter(t => !t.helper && t.task === 'Reading')
+              student.helpTasks = tasks.filter(t => t.helper)
+            } else {
+              student.tasks = tasks.filter(t => !t.helper && t.task !== 'Reading')
+              student.helpTasks = tasks.filter(t => t.helper)
+            }
             callback(err)
           })
         },
@@ -81,8 +113,9 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
   )
 }
 
-exports.getAvailableHelpers = (gender, cb) => {
-  getDb().query(`SELECT * FROM students WHERE gender = ?`, [gender], (err, students) => {
+const getAvailableHelpers = (gender, cb) => {
+  const where = gender ? `WHERE gender = '${gender}'` : ``
+  getDb().query(`SELECT * FROM students ${where}`, (err, students) => {
     if (err) throw err
     async.map(
       students,
