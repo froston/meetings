@@ -2,8 +2,9 @@ const async = require('async')
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
 const studentModel = require('./students')
-const utils = require('../utils')
 const config = require('../config')
+const sheets = require('../helpers/sheets')
+const sorting = require('../helpers/sorting')
 
 const getAll = (query, cb) => {
   let where = ''
@@ -79,7 +80,7 @@ const createSchedule = (newSchedule, mainCB) => {
                         if (err) throw err
                         if (students && students.length) {
                           // sort all students
-                          students.sort(utils.sortStudents(taskName, hall, scheduleMonth, scheduleYear))
+                          students.sort(sorting.sortStudents(taskName, hall, scheduleMonth, scheduleYear))
                           const limit = students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
                           const finalStudent = students[flhsIndex]
@@ -112,7 +113,7 @@ const createSchedule = (newSchedule, mainCB) => {
                         studentModel.getAvailableHelpers(gender, (err, helpers) => {
                           if (helpers && helpers.length) {
                             // sort all helpers
-                            helpers.sort(utils.sortHelpers(taskName, scheduleMonth, scheduleYear))
+                            helpers.sort(sorting.sortHelpers(taskName, scheduleMonth, scheduleYear))
                             const limit = helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
                             const finalHelper = helpers[flhsIndex]
@@ -171,7 +172,7 @@ const removeSchedule = (id, cb) => {
 const generateReport = (id, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    utils.generateSheet(schedule, res)
+    sheets.generateSheet(schedule, res)
   })
 }
 

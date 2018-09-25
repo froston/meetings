@@ -1,14 +1,14 @@
 const async = require('async')
 const { getDb } = require('../db')
 const taskModel = require('./tasks')
-const utils = require('../utils')
+const consts = require('../helpers/consts')
 
 exports.getAll = (name, cb) => {
   const like = name ? `WHERE name LIKE "%${name}%"` : ``
   getDb().query(`SELECT * FROM students ${like} ORDER BY name`, (err, results) => {
     if (err) throw err
     results.forEach(student => {
-      student.available = utils.getAvailable(student)
+      student.available = consts.getAvailable(student)
     })
     cb(err, results)
   })
@@ -17,7 +17,7 @@ exports.getAll = (name, cb) => {
 exports.getById = (id, cb) => {
   getDb().query('SELECT * FROM students WHERE id = ?', id, (err, results) => {
     if (err) throw err
-    results[0].available = utils.getAvailable(results[0])
+    results[0].available = consts.getAvailable(results[0])
     cb(err, results)
   })
 }
@@ -28,7 +28,7 @@ exports.createStudent = (newStudent, cb) => {
     gender: newStudent.gender,
     hall: newStudent.hall,
     nextPoint: newStudent.nextPoint,
-    ...utils.setAvailable(newStudent.available)
+    ...consts.setAvailable(newStudent.available)
   }
   getDb().query('INSERT INTO students SET ?', studentToInsert, cb)
 }
@@ -39,7 +39,7 @@ exports.updateStudent = (id, student, cb) => {
     gender: student.gender,
     hall: student.hall,
     nextPoint: student.nextPoint,
-    ...utils.setAvailable(student.available)
+    ...consts.setAvailable(student.available)
   }
   getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)
 }
@@ -58,7 +58,7 @@ exports.getAvailableStudents = (taskName, hall, cb) => {
   getDb().query(
     `
     SELECT * FROM students 
-    WHERE ${utils.getAvailableName(taskName)} IS TRUE AND 
+    WHERE ${consts.getAvailableName(taskName)} IS TRUE AND 
     (hall = "All" OR hall = ?)
   `,
     [hall],
