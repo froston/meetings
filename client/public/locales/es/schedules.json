@@ -9,5 +9,7 @@
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
   "change": "Cambiar Asignación",
+  "changeHelper": "Cambiar Ayudante",
+  "changePoint": "Cambiar Punto",
   "exists": "Programa ya existe"
 }

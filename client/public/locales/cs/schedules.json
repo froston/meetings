@@ -7,7 +7,9 @@
   "remove": "Smazat Rozvrh",
   "name": "Rozvrh",
   "reassigned": "Úkol byl předán ",
-  "change": "Upravit Úkol",
+  "change": "Změnit Zadání",
+  "changeHelper": "Změnit Pomocníka",
+  "changePoint": "Změnit Bod",
   "new": "Nový Rozvrh",
   "exists": "Rozvrh již existuje"
 }

@@ -39,5 +39,6 @@
   "month12": "December",
   "hallAll": "Both",
   "hallA": "Main",
-  "hallB": "Auxiliar"
+  "hallB": "Auxiliar",
+  "name": "Name"
 }

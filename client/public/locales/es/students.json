@@ -10,5 +10,6 @@
   "new": "Nuevo Estudiante",
   "nameSurname": "Nombre y Apellido",
   "brother": "Hermano",
-  "sister": "Hermana"
+  "sister": "Hermana",
+  "sort": "Los estudiantes están ordenados según la probabilidad de dar otro tema."
 }
