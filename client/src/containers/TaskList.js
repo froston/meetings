@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
@@ -42,7 +43,7 @@ class TaskList extends React.PureComponent {
   }
 
   render() {
-    const { t, hidden, student, handleClose } = this.props
+    const { t, hidden, student, handleClose, showForm } = this.props
     const { tasks } = this.state
     return (
       <div>
@@ -52,7 +53,7 @@ class TaskList extends React.PureComponent {
               {t('title')} {student && student.name}
             </Heading>
           </Header>
-          <TaskForm student={student} handleSubmit={this.handleSubmit} />
+          {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} />}
           <Table responsive={false} scrollable>
             <thead>
               <tr>
@@ -88,6 +89,13 @@ class TaskList extends React.PureComponent {
       </div>
     )
   }
+}
+
+TaskList.propTypes = {
+  hidden: PropTypes.bool,
+  student: PropTypes.object,
+  handleClose: PropTypes.func,
+  showForm: PropTypes.bool
 }
 
 export default translate(['tasks', 'common'])(TaskList)

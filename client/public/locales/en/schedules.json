@@ -8,6 +8,9 @@
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
   "change": "Change Task",
+  "changeHelper": "Change Helper",
+  "changePoint": "Change Point",
   "new": "New Schedule",
-  "exists": "Schedule already exists"
+  "exists": "Schedule already exists",
+  "scheduleWarn": " {{name}} appears more then once in the month"
 }

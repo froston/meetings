@@ -10,5 +10,6 @@
   "new": "Nový Student",
   "nameSurname": "Jméno a Příjmení",
   "brother": "Bratr",
-  "sister": "Sestra"
+  "sister": "Sestra",
+  "sort": "Studenti jsou seřazeni podle šancí přednést další úkol."
 }
