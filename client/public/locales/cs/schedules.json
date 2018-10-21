@@ -11,5 +11,6 @@
   "changeHelper": "Změnit Pomocníka",
   "changePoint": "Změnit Bod",
   "new": "Nový Rozvrh",
-  "exists": "Rozvrh již existuje"
+  "exists": "Rozvrh již existuje",
+  "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci"
 }

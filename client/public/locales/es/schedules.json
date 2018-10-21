@@ -11,5 +11,6 @@
   "change": "Cambiar Asignación",
   "changeHelper": "Cambiar Ayudante",
   "changePoint": "Cambiar Punto",
-  "exists": "Programa ya existe"
+  "exists": "Programa ya existe",
+  "scheduleWarn": " {{name}} aparece más que una vez en el mes"
 }

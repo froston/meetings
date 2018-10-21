@@ -33,6 +33,10 @@
   background: #8cc800;
 }
 
+.week-tab .grommetux-tile--selected {
+  background-color: rgba(221, 221, 221, 0.5);
+}
+
 .week-tab {
   margin-top: 30px;
 }

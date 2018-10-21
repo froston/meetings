@@ -39,29 +39,28 @@ class WeekTab extends React.PureComponent {
       student
     })
   }
-  getImage = task => {
-    let image
-    switch (task) {
-      case consts.AVAILABLE_READING:
-        image = reading
-        break
-      case consts.AVAILABLE_INITIAL_CALL:
-        image = initialCall
-        break
-      case consts.AVAILABLE_RETURN_VISIT:
-        image = returnVisit
-        break
-      case consts.AVAILABLE_BIBLE_STUDY:
-        image = bibleStudy
-        break
-      case consts.AVAILABLE_TALK:
-        image = talk
-        break
-      default:
-        image = reading
+  handleKeyDown = e => {
+    if (e.keyCode === 27) {
+      this.setState({ updatting: {}, task: {}, newPoint: null })
     }
-    return image
+    if (e.keyCode === 13) {
+      this.handleChangePoint()
+    }
   }
+
+  renderPointWarning = (task, point) => {
+    if (task === 'Reading' && point > 17) {
+      return <span style={{ color: 'red' }}>{`${point} (lower then 17)`}</span>
+    }
+    if ((task === 'Talk' && point == 7) || point == 18 || point == 30) {
+      return <span style={{ color: 'red' }}>{`${point} (not 7, 18 or 30)`}</span>
+    }
+    if (task !== 'Reading' && task !== 'Talk' && (point == 7 || point > 51)) {
+      return <span style={{ color: 'red' }}>{`${point} (not 7 or higher then 51)`}</span>
+    }
+    return point
+  }
+
   render() {
     const { t, tasks, handleChangeTask } = this.props
     const { updatting, newPoint } = this.state
@@ -112,13 +111,20 @@ class WeekTab extends React.PureComponent {
                     </span>
                     <span>
                       <b>{t('common:point')}: </b>
+
                       {updatting[mainTask.id] ? (
                         <div>
-                          <TextInput value={newPoint} onDOMChange={e => this.setState({ newPoint: e.target.value })} />
+                          <TextInput
+                            value={newPoint}
+                            onDOMChange={e => this.setState({ newPoint: e.target.value })}
+                            onKeyDown={this.handleKeyDown}
+                          />
                           <Button icon={<SaveIcon />} onClick={this.handleChangePoint} />
                         </div>
                       ) : (
-                        <a onClick={() => this.handleEdit(mainTask)}>{mainTask.point}</a>
+                        <a onClick={() => this.handleEdit(mainTask)}>
+                          {this.renderPointWarning(mainTask.task, mainTask.point)}
+                        </a>
                       )}
                     </span>
                   </Paragraph>

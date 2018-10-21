@@ -1,6 +1,6 @@
 import React from 'react'
 import { translate } from 'react-i18next'
-import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel } from 'grommet'
+import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } from 'grommet'
 import { toast } from 'react-toastify'
 import { WeekTab, Available } from '../components'
 import { api, consts } from '../utils'
@@ -10,7 +10,8 @@ class Schedule extends React.Component {
     schedule: {},
     availables: [],
     taskToChange: {},
-    availableList: true
+    availableList: true,
+    warnings: []
   }
 
   componentDidMount() {
@@ -21,6 +22,7 @@ class Schedule extends React.Component {
     const id = this.props.match.params.id
     api.get(`/schedules/${id}`).then(schedule => {
       this.setState({ schedule })
+      this.getWarnings(schedule.tasks)
     })
   }
 
@@ -63,6 +65,19 @@ class Schedule extends React.Component {
     this.setState({ availableList: true })
   }
 
+  getWarnings = tasks => {
+    let warnings = [],
+      names = []
+    const { t } = this.props
+    tasks.forEach(task => {
+      if (tasks.filter(t => task.name === t.name).length > 1 && !names.includes(task.name)) {
+        warnings.push(t('scheduleWarn', { name: task.name }))
+        names.push(task.name)
+      }
+    })
+    this.setState({ warnings })
+  }
+
   renderWeeks = () => {
     const { t } = this.props
     const { schedule } = this.state
@@ -102,12 +117,23 @@ class Schedule extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedule, availables, availableList } = this.state
+    const { schedule, availables, availableList, warnings } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
           {t('name')} - {schedule.month} / {schedule.year}
         </Heading>
+        <Notification
+          message="Schedule warnings"
+          state={warnings.map((warn, i) => (
+            <span key={i}>
+              {warn}
+              <br />
+            </span>
+          ))}
+          size="medium"
+          status="warning"
+        />
         <Tabs justify="start">{this.renderWeeks()}</Tabs>
         <Available
           hidden={availableList}

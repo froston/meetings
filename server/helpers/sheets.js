@@ -84,8 +84,8 @@ exports.generateSheet = (schedule, cb) => {
           } else {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${mainTask.name} ${mainTask.point}`)
           }
+          row++
         }
-        row++
       })
     })
     row++
