@@ -4,7 +4,6 @@ const taskModel = require('./tasks')
 const studentModel = require('./students')
 const config = require('../config')
 const sheets = require('../helpers/sheets')
-const sorting = require('../helpers/sorting')
 
 const getAll = (query, cb) => {
   let where = ''

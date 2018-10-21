@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
-import { Layer, Box, Heading, List, ListItem } from 'grommet'
+import { Layer, Box, Heading, List, ListItem, Paragraph } from 'grommet'
 
 class Available extends React.PureComponent {
   render() {
@@ -11,6 +11,7 @@ class Available extends React.PureComponent {
         <Heading tag="h2" margin="medium">
           {t('available')}
         </Heading>
+        <Paragraph>{t('students:sort')}</Paragraph>
         <List selectable style={{ minWidth: 550 }}>
           {availables.map((student, index) => (
             <ListItem

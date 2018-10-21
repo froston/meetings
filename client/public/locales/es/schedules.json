@@ -9,5 +9,8 @@
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
   "change": "Cambiar Asignación",
-  "exists": "Programa ya existe"
+  "changeHelper": "Cambiar Ayudante",
+  "changePoint": "Cambiar Punto",
+  "exists": "Programa ya existe",
+  "scheduleWarn": " {{name}} aparece más que una vez en el mes"
 }
