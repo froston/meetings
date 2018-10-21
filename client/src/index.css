@@ -52,6 +52,10 @@
   border: none;
   border-left: 5px solid #dc2878;
 }
+.week-tab .BibleStudy {
+  border: none;
+  border-left: 5px solid #0a64a0;
+}
 .week-tab .Talk {
   border: none;
   border-left: 5px solid #49516f;
