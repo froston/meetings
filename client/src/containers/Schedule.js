@@ -123,17 +123,19 @@ class Schedule extends React.Component {
         <Heading tag="h1" margin="small">
           {t('name')} - {schedule.month} / {schedule.year}
         </Heading>
-        <Notification
-          message="Schedule warnings"
-          state={warnings.map((warn, i) => (
-            <span key={i}>
-              {warn}
-              <br />
-            </span>
-          ))}
-          size="medium"
-          status="warning"
-        />
+        {warnings.length && (
+          <Notification
+            message="Schedule warnings"
+            state={warnings.map((warn, i) => (
+              <span key={i}>
+                {warn}
+                <br />
+              </span>
+            ))}
+            size="medium"
+            status="warning"
+          />
+        )}
         <Tabs justify="start">{this.renderWeeks()}</Tabs>
         <Available
           hidden={availableList}
