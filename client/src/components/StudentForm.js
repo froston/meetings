@@ -41,9 +41,8 @@ class StudentForm extends React.PureComponent {
   validate = cb => {
     const { name, hall } = this.state
     let errors = {}
-    !name ? (errors.name = this.props.t('common:required')) : undefined
-    !hall.value ? (errors.hall = this.props.t('common:required')) : undefined
-
+    if (!name) errors.name = this.props.t('common:required')
+    if (!hall.value) errors.hall = this.props.t('common:required')
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {

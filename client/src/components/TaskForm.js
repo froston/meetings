@@ -21,9 +21,9 @@ class TaskForm extends React.PureComponent {
     const { t } = this.props
     const { task, hall, date } = this.state
     let errors = {}
-    !task.value ? (errors.task = t('common:required')) : undefined
-    !hall.value ? (errors.hall = t('common:required')) : undefined
-    !date ? (errors.date = t('common:required')) : undefined
+    if (!task.value) errors.task = t('common:required')
+    if (!hall.value) errors.hall = t('common:required')
+    if (!date) errors.date = t('common:required')
     if (Object.keys(errors).length) {
       this.setState({
         errors: Object.assign({}, this.state.errors, errors)
