@@ -2,6 +2,7 @@ import React from 'react'
 import { translate } from 'react-i18next'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } from 'grommet'
 import { toast } from 'react-toastify'
+import moment from 'moment'
 import { WeekTab, Available } from '../components'
 import { api, consts } from '../utils'
 
@@ -11,6 +12,7 @@ class Schedule extends React.Component {
     availables: [],
     taskToChange: {},
     availableList: true,
+    helpers: false,
     warnings: []
   }
 
@@ -36,7 +38,8 @@ class Schedule extends React.Component {
         this.setState({
           availables,
           taskToChange,
-          availableList: false
+          availableList: false,
+          helpers: helper
         })
       })
   }
@@ -117,15 +120,15 @@ class Schedule extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedule, availables, availableList, warnings } = this.state
+    const { schedule, availables, helpers, availableList, warnings } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          {t('name')} - {schedule.month} / {schedule.year}
+          {t('name')} - {moment(schedule.month, 'MM').format('MMMM')} {schedule.year}
         </Heading>
-        {warnings.length && (
+        {warnings.length > 0 && (
           <Notification
-            message="Schedule warnings"
+            message={t('warnings')}
             state={warnings.map((warn, i) => (
               <span key={i}>
                 {warn}
@@ -142,6 +145,7 @@ class Schedule extends React.Component {
           availables={availables}
           handleSelect={this.handleSelectNew}
           handleClose={this.handleCloseAvailable}
+          helpers={helpers}
         />
       </Section>
     )

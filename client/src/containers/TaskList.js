@@ -98,4 +98,8 @@ TaskList.propTypes = {
   showForm: PropTypes.bool
 }
 
+TaskList.defaultProps = {
+  showForm: true
+}
+
 export default translate(['tasks', 'common'])(TaskList)

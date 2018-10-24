@@ -6,11 +6,13 @@
   "confirmRemove": "Seguro de eliminar el programa?",
   "new": "Nuevo Programa",
   "remove": "Eliminar Programa",
+  "report": "Generar Programa XLS",
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
   "change": "Cambiar Asignación",
   "changeHelper": "Cambiar Ayudante",
   "changePoint": "Cambiar Punto",
   "exists": "Programa ya existe",
+  "warnings": "Advertencia de programa",
   "scheduleWarn": " {{name}} aparece más que una vez en el mes"
 }

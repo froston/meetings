@@ -5,6 +5,7 @@
   "newMessage": "Rozvrh byl vytvořen",
   "confirmRemove": "Opravdu smazat rozvrh?",
   "remove": "Smazat Rozvrh",
+  "report": "Vygenerovat rozvrh v XLS",
   "name": "Rozvrh",
   "reassigned": "Úkol byl předán ",
   "change": "Změnit Zadání",
@@ -12,5 +13,6 @@
   "changePoint": "Změnit Bod",
   "new": "Nový Rozvrh",
   "exists": "Rozvrh již existuje",
+  "warnings": "Varování rozvrhu",
   "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci"
 }
