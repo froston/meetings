@@ -140,22 +140,24 @@ class WeekTab extends React.PureComponent {
                   <Anchor href="#" onClick={() => handleChangeTask(mainTask)}>
                     {t('change')}
                   </Anchor>
-                  <Anchor href="#" onClick={() => handleChangeTask(helperTask, true)}>
-                    {t('changeHelper')}
-                  </Anchor>
+                  {helperTask && (
+                    <Anchor href="#" onClick={() => handleChangeTask(helperTask, true)}>
+                      {t('changeHelper')}
+                    </Anchor>
+                  )}
                 </Menu>
-                <TaskList
-                  hidden={this.state.taskForm}
-                  student={this.state.student}
-                  handleClose={() => this.setState({ taskForm: true })}
-                  showForm={false}
-                />
               </Tile>
             )
           } else {
             return null
           }
         })}
+        <TaskList
+          hidden={this.state.taskForm}
+          student={this.state.student}
+          handleClose={() => this.setState({ taskForm: true })}
+          showForm={false}
+        />
       </Tiles>
     )
   }
