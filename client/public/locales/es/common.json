@@ -17,13 +17,13 @@
   "available": "Disponible",
   "nextPoint": "Próximo Punto",
   "submit": "Guardar",
-  "Reading": "Lectura",
-  "Initial Call": "Primera Conversación",
+  "Reading": "Lectura de la Bíblia",
+  "Initial Call": "Primera conversación",
   "Return Visit": "Revisita",
-  "1. Return Visit": "1.ª Revisita",
-  "2. Return Visit": "2.ª Revisita",
-  "3. Return Visit": "3.ª Revisita",
-  "Bible Study": "Estudio Bíblico",
+  "1. Return Visit": "1.ª revisita",
+  "2. Return Visit": "2.ª revisita",
+  "3. Return Visit": "3.ª revisita",
+  "Bible Study": "Curso bíblico",
   "Talk": "Discruso",
   "month1": "enero",
   "month2": "febrero",
@@ -40,5 +40,5 @@
   "hallAll": "Ambas",
   "hallA": "Principal",
   "hallB": "Auxiliar",
-  "name": "Nobmre"
+  "name": "Nombre"
 }

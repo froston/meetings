@@ -5,6 +5,7 @@
   "newMessage": "The schedule was created.",
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
+  "report": "Generate XLS Schedule",
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
   "change": "Change Task",
@@ -12,5 +13,6 @@
   "changePoint": "Change Point",
   "new": "New Schedule",
   "exists": "Schedule already exists",
+  "warnings": "Schedule warnings",
   "scheduleWarn": " {{name}} appears more then once in the month"
 }

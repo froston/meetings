@@ -124,11 +124,13 @@ class StudentList extends React.Component {
                   icon={<CatalogIcon size="medium" />}
                   onClick={e => this.handleTasks(e, student)}
                   a11yTitle={t('tasks')}
+                  title={t('tasks')}
                 />
                 <Button
                   icon={<FormTrashIcon size="large" />}
                   onClick={e => this.handleRemove(e, student.id)}
                   a11yTitle={t('remove')}
+                  title={t('remove')}
                 />
               </Box>
             </ListItem>

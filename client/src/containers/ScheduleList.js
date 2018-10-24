@@ -6,6 +6,7 @@ import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver/FileSaver'
+import moment from 'moment'
 import { ScheduleForm } from '../components'
 import { api } from '../utils'
 
@@ -100,18 +101,20 @@ class ScheduleList extends React.Component {
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
-                <strong>{`${schedule.month} / ${schedule.year}`}</strong>
+                <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
               </Box>
               <Box direction="row">
                 <Button
                   icon={<DocumentExcelIcon size="medium" />}
                   onClick={e => this.handleReport(e, schedule.id)}
                   a11yTitle={t('report')}
+                  title={t('report')}
                 />
                 <Button
                   icon={<FormTrashIcon size="large" />}
                   onClick={e => this.handleRemove(e, schedule.id)}
                   a11yTitle={t('remove')}
+                  title={t('remove')}
                 />
               </Box>
             </ListItem>
