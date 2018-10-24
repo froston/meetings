@@ -53,7 +53,6 @@ class Dashboard extends Component {
         return (
           <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
             <Notification
-              state={`You have time to create next schedule until `}
               message={t('messageWarnTitle', { left: 15 - this.day })}
               state={t('messageWarnDesc', {
                 until: `15/${this.month}/${this.year}`,

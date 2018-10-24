@@ -59,10 +59,10 @@ class ScheduleForm extends React.PureComponent {
         errors.month = t('exists')
         errors.year = t('exists')
       }
-      !weeks ? (errors.weeks = t('common:required')) : undefined
-      !month.value ? (errors.month = t('common:required')) : undefined
-      !year ? (errors.year = t('common:required')) : undefined
-      !hall.value ? (errors.hall = t('common:required')) : undefined
+      if (!weeks) errors.weeks = t('common:required')
+      if (!month.value) errors.month = t('common:required')
+      if (!year) errors.year = t('common:required')
+      if (!hall.value) errors.hall = t('common:required')
       if (Object.keys(errors).length || exists) {
         this.setState({
           errors: Object.assign({}, this.state.errors, errors),

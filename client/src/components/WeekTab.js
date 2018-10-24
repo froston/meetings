@@ -4,7 +4,6 @@ import { translate } from 'react-i18next'
 import { Box, Tiles, Tile, Paragraph, Header, Heading, Menu, Anchor, TextInput, Button } from 'grommet'
 import { UserSettingsIcon, SaveIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
-import { reading, initialCall, returnVisit, bibleStudy, talk } from '../images'
 import { TaskList } from '../containers'
 
 class WeekTab extends React.PureComponent {
@@ -52,10 +51,10 @@ class WeekTab extends React.PureComponent {
     if (task === 'Reading' && point > 17) {
       return <span style={{ color: 'red' }}>{`${point} (lower then 17)`}</span>
     }
-    if (task === 'Talk' && (point == 7 || point == 18 || point == 30)) {
+    if (task === 'Talk' && (point === 7 || point === 18 || point === 30)) {
       return <span style={{ color: 'red' }}>{`${point} (not 7, 18 or 30)`}</span>
     }
-    if (task !== 'Reading' && task !== 'Talk' && (point == 7 || point > 51)) {
+    if (task !== 'Reading' && task !== 'Talk' && (point === 7 || point > 51)) {
       return <span style={{ color: 'red' }}>{`${point} (not 7 or higher then 51)`}</span>
     }
     return point
@@ -99,12 +98,14 @@ class WeekTab extends React.PureComponent {
                   <Paragraph margin="none">
                     <span>
                       <b>{t('common:name')}: </b>
-                      <a onClick={() => this.showTasks(mainTask)}>{mainTask.name}</a>
+                      <a href="#tasks" onClick={() => this.showTasks(mainTask)}>
+                        {mainTask.name}
+                      </a>
                     </span>
                     <br />
                     <span style={{ display: helperTask ? '' : 'none' }}>
                       <b>{t('common:helper')}: </b>
-                      <a onClick={() => this.showTasks(helperTask)}>
+                      <a href="#helpers" onClick={() => this.showTasks(helperTask)}>
                         {helperTask && helperTask.name}
                         <br />
                       </a>
@@ -122,7 +123,7 @@ class WeekTab extends React.PureComponent {
                           <Button icon={<SaveIcon />} onClick={this.handleChangePoint} />
                         </div>
                       ) : (
-                        <a onClick={() => this.handleEdit(mainTask)}>
+                        <a href="#point" onClick={() => this.handleEdit(mainTask)}>
                           {this.renderPointWarning(mainTask.task, mainTask.point)}
                         </a>
                       )}
