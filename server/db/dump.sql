@@ -27,6 +27,7 @@ CREATE TABLE `schedules` (
 CREATE TABLE `students` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
+  `participate` tinyint(1) DEFAULT NULL,
   `gender` char(2) DEFAULT NULL,
   `hall` varchar(5) DEFAULT NULL,
   `nextPoint` int(11) DEFAULT NULL,

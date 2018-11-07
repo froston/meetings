@@ -25,16 +25,12 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/available', (req, res) => {
-  const taskName = req.query.taskName
-  const hall = req.query.hall
-  const month = Number(req.query.month)
-  const year = Number(req.query.year)
   const helper = req.query.helper == 'true' ? true : false
   const sortingOpt = {
-    taskName,
-    hall,
-    month,
-    year
+    taskName: req.query.taskName,
+    hall: req.query.hall,
+    month: Number(req.query.month),
+    year: Number(req.query.year)
   }
   model.getSortedAvailables(helper ? 'helper' : 'student', sortingOpt, (err, students) => {
     if (err) {
