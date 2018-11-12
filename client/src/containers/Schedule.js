@@ -124,7 +124,8 @@ class Schedule extends React.Component {
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          {t('name')} - {moment(schedule.month, 'MM').format('MMMM')} {schedule.year}
+          {t('name')}
+          {schedule.month && schedule.year && ` - ${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}
         </Heading>
         {warnings.length > 0 && (
           <Notification

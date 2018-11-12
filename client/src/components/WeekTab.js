@@ -48,8 +48,8 @@ class WeekTab extends React.PureComponent {
   }
 
   renderPointWarning = (task, point) => {
-    if (task === 'Reading' && point > 17) {
-      return <span style={{ color: 'red' }}>{`${point} (lower then 17)`}</span>
+    if (task === 'Reading' && point >= 18) {
+      return <span style={{ color: 'red' }}>{`${point} (lower then 18)`}</span>
     }
     if (task === 'Talk' && (point === 7 || point === 18 || point === 30)) {
       return <span style={{ color: 'red' }}>{`${point} (not 7, 18 or 30)`}</span>

@@ -26,6 +26,7 @@ exports.getById = (id, cb) => {
 exports.createStudent = (newStudent, cb) => {
   const studentToInsert = {
     name: newStudent.name,
+    participate: newStudent.participate,
     gender: newStudent.gender,
     hall: newStudent.hall,
     nextPoint: newStudent.nextPoint,
@@ -37,6 +38,7 @@ exports.createStudent = (newStudent, cb) => {
 exports.updateStudent = (id, student, cb) => {
   const studentToUpdate = {
     name: student.name,
+    participate: student.participate,
     gender: student.gender,
     hall: student.hall,
     nextPoint: student.nextPoint,
@@ -85,7 +87,8 @@ const getAvailableStudents = (taskName, hall, cb) => {
     `
     SELECT * FROM students 
     WHERE ${consts.getAvailableName(taskName)} IS TRUE AND 
-    (hall = "All" OR hall = ?)
+    (hall = "All" OR hall = ?) AND
+    participate IS TRUE
   `,
     [hall],
     (err, students) => {
@@ -114,7 +117,7 @@ const getAvailableStudents = (taskName, hall, cb) => {
 }
 
 const getAvailableHelpers = (gender, cb) => {
-  const where = gender ? `WHERE gender = '${gender}'` : ``
+  const where = `WHERE participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
   getDb().query(`SELECT * FROM students ${where}`, (err, students) => {
     if (err) throw err
     async.map(

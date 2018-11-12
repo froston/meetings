@@ -12,12 +12,14 @@ import {
   TextInput,
   NumberInput,
   RadioButton,
+  CheckBox,
   Select
 } from 'grommet'
 import { consts } from '../utils'
 
 const initState = {
   name: '',
+  participate: true,
   nextPoint: 1,
   gender: consts.GENDER_SISTER,
   hall: {},
@@ -54,6 +56,7 @@ class StudentForm extends React.PureComponent {
     const { t, student } = this.props
     const state = {
       name: student.name,
+      participate: !!student.participate,
       gender: student.gender,
       available: student.available,
       hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
@@ -87,7 +90,7 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { t, hidden, student } = this.props
-    const { name, nextPoint, available, hall, errors } = this.state
+    const { name, nextPoint, available, hall, errors, gender, participate } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -98,17 +101,24 @@ class StudentForm extends React.PureComponent {
             <FormField label={t('nameSurname')} error={errors.name}>
               <TextInput value={name} onDOMChange={e => this.handleChange('name', e.target.value)} />
             </FormField>
-            <FormField label={t('common:gender')}>
+            <FormField label={t('participate')}>
+              <CheckBox
+                onChange={e => this.handleChange('participate', e.target.checked)}
+                checked={participate}
+                toggle
+              />
+            </FormField>
+            <FormField>
               <RadioButton
                 id={consts.GENDER_BROTHER}
                 label={t('brother')}
-                checked={this.state.gender === consts.GENDER_BROTHER}
+                checked={gender === consts.GENDER_BROTHER}
                 onChange={e => this.handleChange('gender', consts.GENDER_BROTHER)}
               />
               <RadioButton
                 id={consts.GENDER_SISTER}
                 label={t('sister')}
-                checked={this.state.gender === consts.GENDER_SISTER}
+                checked={gender === consts.GENDER_SISTER}
                 onChange={e => this.handleChange('gender', consts.GENDER_SISTER)}
               />
             </FormField>
