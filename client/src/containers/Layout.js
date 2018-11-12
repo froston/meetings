@@ -63,9 +63,9 @@ class Layout extends React.PureComponent {
               {openNav}
               <Switch>
                 <Route exact path="/" component={Dashboard} />
-                <Route exact path="/students" component={StudentList} />
+                <Route path="/students" component={StudentList} />
                 <Route exact path="/schedules" component={ScheduleList} />
-                <Route exact path="/schedules/:id" component={Schedule} />
+                <Route path="/schedules/:id" component={Schedule} />
               </Switch>
             </Article>
           </Box>

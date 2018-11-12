@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Route, withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Box, Tiles, Tile, Paragraph, Header, Heading, Menu, Anchor, TextInput, Button } from 'grommet'
 import { UserSettingsIcon, SaveIcon } from 'grommet/components/icons/base'
@@ -29,14 +30,8 @@ class WeekTab extends React.PureComponent {
     }
   }
   showTasks = task => {
-    const student = {
-      id: task.student_id,
-      name: task.name
-    }
-    this.setState({
-      taskForm: false,
-      student
-    })
+    const { history, match } = this.props
+    history.push(`${match.url}/tasks/${task.student_id}`)
   }
   handleKeyDown = e => {
     if (e.keyCode === 27) {
@@ -61,7 +56,7 @@ class WeekTab extends React.PureComponent {
   }
 
   render() {
-    const { t, tasks, handleChangeTask } = this.props
+    const { t, tasks, handleChangeTask, match } = this.props
     const { updatting, newPoint } = this.state
     let rvIndex = 0
     return (
@@ -98,14 +93,14 @@ class WeekTab extends React.PureComponent {
                   <Paragraph margin="none">
                     <span>
                       <b>{t('common:name')}: </b>
-                      <a href="#tasks" onClick={() => this.showTasks(mainTask)}>
+                      <a href="" onClick={() => this.showTasks(mainTask)}>
                         {mainTask.name}
                       </a>
                     </span>
                     <br />
                     <span style={{ display: helperTask ? '' : 'none' }}>
                       <b>{t('common:helper')}: </b>
-                      <a href="#helpers" onClick={() => this.showTasks(helperTask)}>
+                      <a href="" onClick={() => this.showTasks(helperTask)}>
                         {helperTask && helperTask.name}
                         <br />
                       </a>
@@ -142,7 +137,7 @@ class WeekTab extends React.PureComponent {
                     {t('change')}
                   </Anchor>
                   {helperTask && (
-                    <Anchor href="#" onClick={() => handleChangeTask(helperTask, true)}>
+                    <Anchor href="" onClick={() => handleChangeTask(helperTask, true)}>
                       {t('changeHelper')}
                     </Anchor>
                   )}
@@ -153,12 +148,7 @@ class WeekTab extends React.PureComponent {
             return null
           }
         })}
-        <TaskList
-          hidden={this.state.taskForm}
-          student={this.state.student}
-          handleClose={() => this.setState({ taskForm: true })}
-          showForm={false}
-        />
+        <Route exact path={`${match.url}/tasks/:id`} component={TaskList} />
       </Tiles>
     )
   }
@@ -170,4 +160,4 @@ WeekTab.propTypes = {
   handleChangePoint: PropTypes.func
 }
 
-export default translate(['schedules', 'common'])(WeekTab)
+export default translate(['schedules', 'common'])(withRouter(WeekTab))

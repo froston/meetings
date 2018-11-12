@@ -49,7 +49,7 @@ class TaskForm extends React.PureComponent {
   handleSubmit = e => {
     e.preventDefault()
     this.validate(() => {
-      const id = this.props.student.id
+      const id = this.props.studentId
       const newTask = {
         student_id: id,
         ...this.getTaskDate(this.state.date),
@@ -104,7 +104,7 @@ class TaskForm extends React.PureComponent {
 }
 
 TaskForm.propTypes = {
-  student: PropTypes.object,
+  studentId: PropTypes.string,
   handleSubmit: PropTypes.func
 }
 

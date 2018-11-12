@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import {
   Layer,
@@ -15,9 +16,10 @@ import {
   CheckBox,
   Select
 } from 'grommet'
-import { consts } from '../utils'
+import { api, consts } from '../utils'
 
 const initState = {
+  id: null,
   name: '',
   participate: true,
   nextPoint: 1,
@@ -30,14 +32,9 @@ const initState = {
 class StudentForm extends React.PureComponent {
   state = initState
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.hidden !== this.props.hidden) {
-      if (this.props.student) {
-        this.loadForm()
-      } else {
-        this.setState({ ...initState })
-      }
-    }
+  componentDidMount() {
+    const { match } = this.props
+    this.loadForm(match.params.id)
   }
 
   validate = cb => {
@@ -52,17 +49,24 @@ class StudentForm extends React.PureComponent {
     }
   }
 
-  loadForm = () => {
-    const { t, student } = this.props
-    const state = {
-      name: student.name,
-      participate: !!student.participate,
-      gender: student.gender,
-      available: student.available,
-      hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
-      nextPoint: student.nextPoint || 1
+  loadForm = id => {
+    const { t } = this.props
+    if (id > 0) {
+      api.get(`/students/${id}`).then(student => {
+        const state = {
+          id: student.id,
+          name: student.name,
+          participate: !!student.participate,
+          gender: student.gender,
+          available: student.available,
+          hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
+          nextPoint: student.nextPoint || 1
+        }
+        this.setState({ ...state })
+      })
+    } else {
+      this.setState({ ...initState })
     }
-    this.setState({ ...state })
   }
 
   handleChange = (name, value) => {
@@ -72,31 +76,36 @@ class StudentForm extends React.PureComponent {
   handleSubmit = e => {
     e.preventDefault()
     this.validate(() => {
-      const { student } = this.props
+      const { id } = this.state
       const values = { ...this.state }
       const newValues = Object.assign({}, values, { available: values.available.map(obj => obj && obj.value) })
       newValues.hall = this.state.hall.value
-      if (student && student.id) {
-        this.props.handleSubmit(student && student.id, newValues)
+      if (id > 0) {
+        api.patch('/students', id, newValues).then(() => {
+          this.handleClose()
+        })
       } else {
-        this.props.handleSubmit(null, newValues)
+        api.post('/students', newValues).then(() => {
+          this.handleClose()
+        })
       }
     })
   }
 
   handleClose = () => {
+    this.props.history.push('/students')
     this.props.handleClose()
   }
 
   render() {
-    const { t, hidden, student } = this.props
+    const { t } = this.props
     const { name, nextPoint, available, hall, errors, gender, participate } = this.state
     return (
       <div>
-        <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
+        <Layer closer overlayClose align="right" onClose={this.handleClose}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
-              <Heading>{student ? student.name : t('new')}</Heading>
+              <Heading>{name ? name : t('new')}</Heading>
             </Header>
             <FormField label={t('nameSurname')} error={errors.name}>
               <TextInput value={name} onDOMChange={e => this.handleChange('name', e.target.value)} />
@@ -155,10 +164,9 @@ class StudentForm extends React.PureComponent {
 }
 
 StudentForm.propTypes = {
-  hidden: PropTypes.bool,
-  student: PropTypes.object,
-  handleSubmit: PropTypes.func,
+  history: PropTypes.object,
+  match: PropTypes.object,
   handleClose: PropTypes.func
 }
 
-export default translate(['students', 'common'])(StudentForm)
+export default translate(['students', 'common'])(withRouter(StudentForm))

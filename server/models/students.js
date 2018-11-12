@@ -19,7 +19,7 @@ exports.getById = (id, cb) => {
   getDb().query('SELECT * FROM students WHERE id = ?', id, (err, results) => {
     if (err) throw err
     results[0].available = consts.getAvailable(results[0])
-    cb(err, results)
+    cb(err, results[0])
   })
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
@@ -8,17 +9,21 @@ import { TaskForm } from '../components'
 
 class TaskList extends React.PureComponent {
   state = {
+    name: null,
     tasks: []
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.hidden !== this.props.hidden) {
-      this.loadData()
-    }
+  componentDidMount() {
+    this.loadData()
   }
 
   loadData = () => {
-    api.get(`/tasks/${this.props.student.id}`).then(tasks => {
+    const { match } = this.props
+    const { id } = match.params
+    api.get(`/students/${id}`).then(student => {
+      this.setState({ name: student.name })
+    })
+    api.get(`/tasks/${id}`).then(tasks => {
       this.setState({ tasks })
     })
   }
@@ -42,18 +47,22 @@ class TaskList extends React.PureComponent {
     }
   }
 
+  handleClose = () => {
+    this.props.history.goBack()
+  }
+
   render() {
-    const { t, hidden, student, handleClose, showForm } = this.props
-    const { tasks } = this.state
+    const { t, showForm, match } = this.props
+    const { tasks, name } = this.state
     return (
       <div>
-        <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
+        <Layer closer overlayClose align="center" onClose={this.handleClose}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
-              {t('title')} {student && student.name}
+              {t('title')} - {name}:
             </Heading>
           </Header>
-          {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} />}
+          {showForm && <TaskForm studentId={match.params.id} handleSubmit={this.handleSubmit} />}
           <Table responsive={false} scrollable>
             <thead>
               <tr>
@@ -94,14 +103,8 @@ class TaskList extends React.PureComponent {
 }
 
 TaskList.propTypes = {
-  hidden: PropTypes.bool,
-  student: PropTypes.object,
-  handleClose: PropTypes.func,
-  showForm: PropTypes.bool
+  history: PropTypes.object,
+  match: PropTypes.object
 }
 
-TaskList.defaultProps = {
-  showForm: true
-}
-
-export default translate(['tasks', 'common'])(TaskList)
+export default translate(['tasks', 'common'])(withRouter(TaskList))

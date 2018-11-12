@@ -1,5 +1,6 @@
 import React from 'react'
 import { translate } from 'react-i18next'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -35,18 +36,21 @@ class StudentList extends React.Component {
     this.loadData(searchTerm)
   }
 
-  handleSelect = index => {
-    this.setState({ studentForm: false, student: this.state.students[index] })
+  handleSelect = id => {
+    const { history, match } = this.props
+    history.push(`${match.url}/${id}`)
   }
 
   handleAdd = () => {
-    this.setState({ studentForm: false, student: null })
+    const { history } = this.props
+    history.push(`/students/new`)
   }
 
-  handleTasks = (e, student) => {
+  handleTasks = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ taskForm: false, student })
+    const { history, match } = this.props
+    history.push(`${match.url}/${id}/tasks`)
   }
 
   handleRemove = (e, id) => {
@@ -59,26 +63,8 @@ class StudentList extends React.Component {
     }
   }
 
-  handleForm = (formName, val) => {
-    this.setState({ [formName]: val })
-  }
-
-  handleSubmit = (id, data) => {
-    if (id) {
-      api.patch('/students', id, data).then(() => {
-        this.setState({ studentForm: true })
-        this.loadData(this.state.searchTerm)
-      })
-    } else {
-      api.post('/students', data).then(() => {
-        this.setState({ studentForm: true })
-        this.loadData(this.state.searchTerm)
-      })
-    }
-  }
-
   render() {
-    const { t } = this.props
+    const { t, match } = this.props
     const { searchTerm, loading } = this.state
     return (
       <Section>
@@ -99,7 +85,7 @@ class StudentList extends React.Component {
             placeHolder={t('search')}
           />
         </Box>
-        <List selectable onSelect={this.handleSelect}>
+        <List selectable>
           {this.state.students.map((student, index) => (
             <ListItem
               key={student.id}
@@ -107,7 +93,7 @@ class StudentList extends React.Component {
               justify="between"
               align="center"
               responsive={false}
-              onClick={this.handleSelect}
+              onClick={() => this.handleSelect(student.id)}
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
               <Box>
@@ -122,7 +108,7 @@ class StudentList extends React.Component {
               <Box direction="row">
                 <Button
                   icon={<CatalogIcon size="medium" />}
-                  onClick={e => this.handleTasks(e, student)}
+                  onClick={e => this.handleTasks(e, student.id)}
                   a11yTitle={t('tasks')}
                   title={t('tasks')}
                 />
@@ -141,20 +127,17 @@ class StudentList extends React.Component {
             </div>
           )}
         </List>
-        <StudentForm
-          hidden={this.state.studentForm}
-          handleSubmit={this.handleSubmit}
-          handleClose={() => this.handleForm('studentForm', true)}
-          student={this.state.student}
-        />
-        <TaskList
-          hidden={this.state.taskForm}
-          student={this.state.student}
-          handleClose={() => this.handleForm('taskForm', true)}
-        />
+        <Switch>
+          <Route
+            exact
+            path={`${match.url}/:id`}
+            render={props => <StudentForm {...props} handleClose={this.loadData} />}
+          />
+          <Route exact path={`${match.url}/:id/tasks`} component={TaskList} />
+        </Switch>
       </Section>
     )
   }
 }
 
-export default translate('students')(StudentList)
+export default translate('students')(withRouter(StudentList))
