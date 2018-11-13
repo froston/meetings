@@ -71,7 +71,7 @@ exports.getSortedAvailables = (type, options, cb) => {
       })
       break
     case 'helper':
-      getAvailableHelpers(gender, (err, students) => {
+      getAvailableHelpers(gender, hall, (err, students) => {
         students.sort(sorting.sortHelpers(taskName, month, year))
         cb(err, students)
       })
@@ -116,9 +116,9 @@ const getAvailableStudents = (taskName, hall, cb) => {
   )
 }
 
-const getAvailableHelpers = (gender, cb) => {
-  const where = `WHERE participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
-  getDb().query(`SELECT * FROM students ${where}`, (err, students) => {
+const getAvailableHelpers = (gender, hall, cb) => {
+  const where = `WHERE (hall = "All" OR hall = ?) AND participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
+  getDb().query(`SELECT * FROM students ${where}`, [hall], (err, students) => {
     if (err) throw err
     async.map(
       students,
