@@ -1,6 +1,5 @@
 const express = require('express')
 const model = require('../models/students')
-const sorting = require('../helpers/sorting')
 
 const router = express.Router()
 
