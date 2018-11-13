@@ -9,6 +9,7 @@ class Dashboard extends Component {
   state = {
     brothers: 0,
     sisters: 0,
+    noParticipate: [],
     scheduleExists: false
   }
   day = moment().date()
@@ -21,10 +22,16 @@ class Dashboard extends Component {
 
   loadData = () => {
     api.get(`/students`).then(res => {
+      console.log(res)
       const students = res || []
-      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER)
-      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER)
-      this.setState({ brothers: brothers.length, sisters: sisters.length })
+      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER && s.participate == true)
+      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER && s.participate == true)
+      const noParticipate = students.filter(s => s.participate == false)
+      this.setState({
+        brothers: brothers.length,
+        sisters: sisters.length,
+        noParticipate: noParticipate.length
+      })
     })
     api.get(`/schedules`).then(schedules => {
       const scheduleExists = schedules.find(
@@ -74,7 +81,7 @@ class Dashboard extends Component {
 
   render() {
     const { t } = this.props
-    const { brothers, sisters } = this.state
+    const { brothers, sisters, noParticipate } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -98,7 +105,18 @@ class Dashboard extends Component {
                 colorIndex: 'graph-1',
                 onClick: () => this.navigate('/students')
               },
-              { label: t('sisters'), value: sisters, colorIndex: 'graph-2', onClick: () => this.navigate('/students') }
+              {
+                label: t('sisters'),
+                value: sisters,
+                colorIndex: 'graph-2',
+                onClick: () => this.navigate('/students')
+              },
+              {
+                label: 'Non-participating',
+                value: noParticipate,
+                colorIndex: 'graph-4',
+                onClick: () => this.navigate('/students')
+              }
             ]}
           />
         </Box>
