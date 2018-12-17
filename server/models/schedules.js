@@ -20,6 +20,7 @@ const getById = (id, cb) => {
     getDb().query(`SELECT * FROM tasks WHERE schedule_id = ?`, schedule.id, (err, tasks) => {
       if (err) throw err
       schedule.tasks = tasks
+      console.log(schedule)
       cb(err, schedule)
     })
   })
@@ -80,8 +81,12 @@ const createSchedule = (newSchedule, mainCB) => {
                             year: Number(newSchedule.year),
                             hall: hall
                           }
-                          taskModel.createTask(studentTask, err => {
-                            callbackFinal(err, studentTask)
+                          taskModel.createTask(studentTask, (err, res) => {
+                            callbackFinal(err, {
+                              ...studentTask,
+                              id: res.insertId,
+                              gender: finalStudent.gender
+                            })
                           })
                         } else {
                           callbackFinal('No students!')
@@ -93,7 +98,7 @@ const createSchedule = (newSchedule, mainCB) => {
                         // sorting and query options
                         const sortingOpt = {
                           taskName,
-                          gender: newTask.finalStudent.gender,
+                          gender: newTask.gender,
                           month: scheduleMonth,
                           year: scheduleYear
                         }

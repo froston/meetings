@@ -13,9 +13,13 @@ import {
   Footer,
   Button,
   Accordion,
-  AccordionPanel
+  AccordionPanel,
+  List,
+  ListItem,
+  Box
 } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
+import { FormTrashIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -33,7 +37,7 @@ class ScheduleForm extends React.PureComponent {
     },
     year: String(moment().year()),
     weeks: 1,
-    tasks: [],
+    tasks: { 1: [], 2: [], 3: [], 4: [], 5: [] },
     hall: {
       value: consts.HALLS_ALL,
       label: this.props.t(`common:hall${consts.HALLS_ALL}`)
@@ -83,9 +87,12 @@ class ScheduleForm extends React.PureComponent {
     this.setState({ submitting: true })
     this.validate(() => {
       // convert return visits
-      const tasks = this.state.tasks.map(task =>
-        task.map(taskName => (taskName.value.includes('Return Visit') ? taskName.value.substring(3) : taskName.value))
-      )
+      let tasks = {}
+      for (let week = 1; week <= this.state.weeks; week++) {
+        tasks[week] = this.state.tasks[week].map(
+          taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName)
+        )
+      }
       const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }
       this.props.handleSubmit(values, () => {
         this.setState({ ...this.getState() })
@@ -97,24 +104,44 @@ class ScheduleForm extends React.PureComponent {
     this.props.handleClose()
   }
 
-  handleWeekChange = (weekNum, val) => {
-    const tasks = Object.assign([], this.state.tasks)
-    tasks[weekNum] = val
+  handleWeekChange = (weekNum, obj) => {
+    const tasks = Object.assign({}, this.state.tasks)
+    tasks[weekNum].push(obj.value)
+    this.setState({ tasks })
+  }
+
+  handleRemoveTask = (e, weekNum, index) => {
+    e.preventDefault()
+    const tasks = Object.assign({}, this.state.tasks)
+    tasks[weekNum].splice(index, 1)
     this.setState({ tasks })
   }
 
   renderWeeks = () => {
+    const { tasks } = this.state
     const weeks = []
     for (let weekNum = 1; weekNum <= this.state.weeks; weekNum++) {
       weeks.push(
         <AccordionPanel key={weekNum} heading={`${this.props.t('common:week')} ${weekNum}`}>
+          <List selectable={false} style={{ marginLeft: 30 }}>
+            {tasks[weekNum] &&
+              tasks[weekNum].map((taskName, index) => (
+                <ListItem key={index} justify="between" margin="none" pad="none">
+                  <span>{this.props.t(`common:${taskName}`)}</span>
+                  <span className="secondary">
+                    <Button
+                      icon={<FormTrashIcon size="small" />}
+                      onClick={e => this.handleRemoveTask(e, weekNum, index)}
+                      title={this.props.t(`tasks:remove`)}
+                    />
+                  </span>
+                </ListItem>
+              ))}
+          </List>
+          <br />
           <Select
-            id="Tasks"
-            label={this.props.t('common:tasks')}
-            inline
-            multiple
+            placeHolder={this.props.t(`common:tasks`)}
             options={consts.scheduleOptions.map(value => ({ value, label: this.props.t(`common:${value}`) }))}
-            value={this.state.tasks[weekNum]}
             onChange={({ value }) => this.handleWeekChange(weekNum, value)}
           />
         </AccordionPanel>
@@ -174,4 +201,4 @@ ScheduleForm.propTypes = {
   handleClose: PropTypes.func
 }
 
-export default translate(['schedules', 'common'])(ScheduleForm)
+export default translate(['schedules', 'tasks', 'common'])(ScheduleForm)
