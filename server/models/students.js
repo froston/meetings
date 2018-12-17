@@ -96,7 +96,7 @@ const getAvailableStudents = (taskName, hall, cb) => {
       async.map(
         students,
         (student, callback) => {
-          taskModel.getTasks(student.id, (err, tasks) => {
+          taskModel.getStudentTasks(student.id, (err, tasks) => {
             // distinguish reading task from other tasks
             if (taskName === 'Reading') {
               student.tasks = tasks.filter(t => !t.helper && t.task === 'Reading')
@@ -123,7 +123,7 @@ const getAvailableHelpers = (gender, hall, cb) => {
     async.map(
       students,
       (student, callback) => {
-        taskModel.getTasks(student.id, (err, tasks) => {
+        taskModel.getHelperTasks(student.id, (err, tasks) => {
           student.tasks = tasks.filter(t => !t.helper)
           student.helpTasks = tasks.filter(t => t.helper)
           callback(err)
