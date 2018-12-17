@@ -69,7 +69,6 @@ const createSchedule = (newSchedule, mainCB) => {
                           const limit = students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
                           const finalStudent = students[flhsIndex]
-                          const nextPoint = finalStudent.nextPoint + 1
                           // assign task
                           const studentTask = {
                             student_id: finalStudent.id,

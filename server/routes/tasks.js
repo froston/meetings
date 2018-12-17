@@ -5,11 +5,11 @@ const router = express.Router()
 
 router.get('/:studentId', (req, res) => {
   const studentId = req.params.studentId
-  model.getTasks(studentId, (err, student) => {
+  model.getStudentTasks(studentId, (err, tasks) => {
     if (err) {
       res.status(500).send(err)
     }
-    res.send(student)
+    res.send(tasks)
   })
 })
 

@@ -47,8 +47,7 @@ class Schedule extends React.Component {
   handleSelectNew = student => {
     const { taskToChange } = this.state
     const task = {
-      student_id: student.id,
-      point: taskToChange.helper ? null : student.nextPoint
+      student_id: student.id
     }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
       toast.success(`${this.props.t('reassigned')} ${student.name}.`)

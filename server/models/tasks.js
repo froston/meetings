@@ -16,7 +16,7 @@ exports.getStudentTasks = (studentId, cb) => {
   )
 }
 
-exports.getHelperTasks = (helperId, cb) => {
+exports.getHelpTasks = (helperId, cb) => {
   getDb().query(
     `
     SELECT * FROM tasks 
