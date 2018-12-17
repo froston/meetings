@@ -10,15 +10,15 @@ import {
   Footer,
   Button,
   TextInput,
-  NumberInput,
   RadioButton,
+  CheckBox,
   Select
 } from 'grommet'
 import { consts } from '../utils'
 
 const initState = {
   name: '',
-  nextPoint: 1,
+  participate: true,
   gender: consts.GENDER_SISTER,
   hall: {},
   available: [],
@@ -41,9 +41,8 @@ class StudentForm extends React.PureComponent {
   validate = cb => {
     const { name, hall } = this.state
     let errors = {}
-    !name ? (errors.name = this.props.t('common:required')) : undefined
-    !hall.value ? (errors.hall = this.props.t('common:required')) : undefined
-
+    if (!name) errors.name = this.props.t('common:required')
+    if (!hall.value) errors.hall = this.props.t('common:required')
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
@@ -55,10 +54,10 @@ class StudentForm extends React.PureComponent {
     const { t, student } = this.props
     const state = {
       name: student.name,
+      participate: !!student.participate,
       gender: student.gender,
       available: student.available,
-      hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
-      nextPoint: student.nextPoint || 1
+      hall: { value: student.hall, label: t(`common:hall${student.hall}`) }
     }
     this.setState({ ...state })
   }
@@ -88,7 +87,7 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { t, hidden, student } = this.props
-    const { name, nextPoint, available, hall, errors } = this.state
+    const { name, available, hall, errors, gender, participate } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -99,17 +98,24 @@ class StudentForm extends React.PureComponent {
             <FormField label={t('nameSurname')} error={errors.name}>
               <TextInput value={name} onDOMChange={e => this.handleChange('name', e.target.value)} />
             </FormField>
-            <FormField label={t('common:gender')}>
+            <FormField label={t('participate')}>
+              <CheckBox
+                onChange={e => this.handleChange('participate', e.target.checked)}
+                checked={participate}
+                toggle
+              />
+            </FormField>
+            <FormField>
               <RadioButton
                 id={consts.GENDER_BROTHER}
                 label={t('brother')}
-                checked={this.state.gender === consts.GENDER_BROTHER}
+                checked={gender === consts.GENDER_BROTHER}
                 onChange={e => this.handleChange('gender', consts.GENDER_BROTHER)}
               />
               <RadioButton
                 id={consts.GENDER_SISTER}
                 label={t('sister')}
-                checked={this.state.gender === consts.GENDER_SISTER}
+                checked={gender === consts.GENDER_SISTER}
                 onChange={e => this.handleChange('gender', consts.GENDER_SISTER)}
               />
             </FormField>
@@ -131,9 +137,6 @@ class StudentForm extends React.PureComponent {
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
-            </FormField>
-            <FormField label={t('common:nextPoint')}>
-              <NumberInput value={nextPoint} onChange={e => this.handleChange('nextPoint', e.target.value)} />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Button label={t('common:submit')} type="submit" primary={true} />

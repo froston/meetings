@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
-import { Layer, Box, Heading, List, ListItem, Paragraph } from 'grommet'
+import { Layer, Heading, List, ListItem, Paragraph } from 'grommet'
 
 class Available extends React.PureComponent {
   render() {
@@ -14,13 +14,13 @@ class Available extends React.PureComponent {
         <Paragraph>{t('students:sort')}</Paragraph>
         <List selectable style={{ minWidth: 550 }}>
           {availables.map((student, index) => {
-            const lastTask = helpers ? student.tasks[0] : student.helpTasks[0]
+            const lastTask = helpers ? student.helpTasks[0] : student.tasks[0]
             return (
               <ListItem
                 key={student.id}
                 pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
                 justify="between"
-                responsive={false}
+                responsive
                 onClick={() => handleSelect(student)}
                 separator={index === 0 ? 'horizontal' : 'bottom'}
               >
@@ -29,7 +29,8 @@ class Available extends React.PureComponent {
                 </span>
                 {lastTask && (
                   <span style={{ color: '#ccc' }} className="secondary">
-                    {helpers ? t('lastHelper') : t('lastTask')}: ({lastTask.week}) {lastTask.month}/{lastTask.year}
+                    {helpers ? t('lastHelper') : t('lastTask')}: {t(`common:${lastTask.task}`)} ({lastTask.week}){' '}
+                    {lastTask.month}/{lastTask.year}
                   </span>
                 )}
               </ListItem>

@@ -17,30 +17,12 @@ const getById = (id, cb) => {
   getDb().query('SELECT * FROM schedules WHERE id = ?', id, (err, schedules) => {
     if (err) throw err
     let schedule = schedules[0]
-    getDb().query(
-      `
-      SELECT 
-        tasks.id,
-        tasks.hall,
-        tasks.task,
-        tasks.week,
-        tasks.month,
-        tasks.year,
-        tasks.point,
-        tasks.completed,
-        tasks.helper,
-        students.name,
-        students.id AS student_id
-      FROM tasks 
-      JOIN students ON students.id = tasks.student_id 
-      WHERE schedule_id = ?`,
-      schedule.id,
-      (err, tasks) => {
-        if (err) throw err
-        schedule.tasks = tasks
-        cb(err, schedule)
-      }
-    )
+    getDb().query(`SELECT * FROM tasks WHERE schedule_id = ?`, schedule.id, (err, tasks) => {
+      if (err) throw err
+      schedule.tasks = tasks
+      console.log(schedule)
+      cb(err, schedule)
+    })
   })
 }
 
@@ -88,23 +70,22 @@ const createSchedule = (newSchedule, mainCB) => {
                           const limit = students.length > config.limit ? config.limit : students.length
                           const flhsIndex = Math.floor(Math.random() * limit)
                           const finalStudent = students[flhsIndex]
-                          const nextPoint = finalStudent.nextPoint + 1
                           // assign task
                           const studentTask = {
                             student_id: finalStudent.id,
-                            point: nextPoint,
+                            student_name: finalStudent.name,
                             schedule_id: newSchedule.id,
                             task: taskName,
                             week: Number(week),
                             month: Number(newSchedule.month),
                             year: Number(newSchedule.year),
-                            hall: hall,
-                            completed: false,
-                            helper: false
+                            hall: hall
                           }
-                          taskModel.createTask(studentTask, err => {
-                            studentModel.updateStudentPoint(finalStudent.id, nextPoint, err => {
-                              callbackFinal(err, finalStudent.gender)
+                          taskModel.createTask(studentTask, (err, res) => {
+                            callbackFinal(err, {
+                              ...studentTask,
+                              id: res.insertId,
+                              gender: finalStudent.gender
                             })
                           })
                         } else {
@@ -112,12 +93,12 @@ const createSchedule = (newSchedule, mainCB) => {
                         }
                       })
                     },
-                    (gender, callbackHelper) => {
+                    (newTask, callbackHelper) => {
                       if (taskName !== 'Reading' && taskName !== 'Talk') {
                         // sorting and query options
                         const sortingOpt = {
                           taskName,
-                          gender,
+                          gender: newTask.gender,
                           month: scheduleMonth,
                           year: scheduleYear
                         }
@@ -127,20 +108,12 @@ const createSchedule = (newSchedule, mainCB) => {
                             const limit = helpers.length > config.limit ? config.limit : helpers.length
                             const flhsIndex = Math.floor(Math.random() * limit)
                             const finalHelper = helpers[flhsIndex]
-                            // assign task
-                            const helperTask = {
-                              student_id: finalHelper.id,
-                              point: null,
-                              schedule_id: newSchedule.id,
-                              task: taskName,
-                              week: Number(week),
-                              month: Number(newSchedule.month),
-                              year: Number(newSchedule.year),
-                              hall: hall,
-                              completed: false,
-                              helper: true
+                            // add helper to new task
+                            const updatedHelper = {
+                              helper_id: finalHelper.id,
+                              helper_name: finalHelper.name
                             }
-                            taskModel.createTask(helperTask, err => {
+                            taskModel.updateTask(newTask.id, updatedHelper, err => {
                               callbackHelper(err)
                             })
                           } else {

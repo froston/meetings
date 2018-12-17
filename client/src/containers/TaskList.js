@@ -72,15 +72,17 @@ class TaskList extends React.PureComponent {
                     <td>{`${task.month}/${task.year}`}</td>
                     <td>{t(`common:hall${task.hall}`)}</td>
                     <td>{task.helper ? null : task.point}</td>
-                    <td>
-                      <Box direction="row">
-                        <Button
-                          icon={<FormTrashIcon size="medium" />}
-                          onClick={e => this.handleRemove(e, task.id)}
-                          a11yTitle={t('remove')}
-                        />
-                      </Box>
-                    </td>
+                    {showForm && (
+                      <td>
+                        <Box direction="row">
+                          <Button
+                            icon={<FormTrashIcon size="medium" />}
+                            onClick={e => this.handleRemove(e, task.id)}
+                            a11yTitle={t('remove')}
+                          />
+                        </Box>
+                      </td>
+                    )}
                   </TableRow>
                 ))}
             </tbody>

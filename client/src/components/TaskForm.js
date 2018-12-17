@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
-import { Form, FormField, Footer, Button, Select, NumberInput, DateTime, CheckBox } from 'grommet'
+import { Form, FormField, Footer, Button, Select, DateTime } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -9,8 +9,6 @@ const initState = {
   task: '',
   hall: {},
   date: '',
-  point: 1,
-  helper: false,
   errors: {}
 }
 
@@ -21,9 +19,9 @@ class TaskForm extends React.PureComponent {
     const { t } = this.props
     const { task, hall, date } = this.state
     let errors = {}
-    !task.value ? (errors.task = t('common:required')) : undefined
-    !hall.value ? (errors.hall = t('common:required')) : undefined
-    !date ? (errors.date = t('common:required')) : undefined
+    if (!task.value) errors.task = t('common:required')
+    if (!hall.value) errors.hall = t('common:required')
+    if (!date) errors.date = t('common:required')
     if (Object.keys(errors).length) {
       this.setState({
         errors: Object.assign({}, this.state.errors, errors)
@@ -54,10 +52,7 @@ class TaskForm extends React.PureComponent {
         student_id: id,
         ...this.getTaskDate(this.state.date),
         task: this.state.task.value,
-        hall: this.state.hall.value,
-        point: this.state.point,
-        helper: this.state.helper,
-        completed: true
+        hall: this.state.hall.value
       }
       this.props.handleSubmit(newTask)
       this.setState({ ...initState })
@@ -66,7 +61,7 @@ class TaskForm extends React.PureComponent {
 
   render() {
     const { t } = this.props
-    const { task, hall, point, helper, date, errors } = this.state
+    const { task, hall, date, errors } = this.state
     return (
       <div>
         <Form pad="medium" onSubmit={this.handleSubmit}>
@@ -87,12 +82,6 @@ class TaskForm extends React.PureComponent {
               value={hall}
               onChange={({ value }) => this.handleChange('hall', value)}
             />
-          </FormField>
-          <FormField label={t('common:point')}>
-            <NumberInput value={point} onChange={e => this.handleChange('point', e.target.value)} />
-          </FormField>
-          <FormField label={t('common:helper')}>
-            <CheckBox checked={helper} onChange={e => this.handleChange('helper', !helper)} />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
             <Button label={t('add')} type="submit" primary />
