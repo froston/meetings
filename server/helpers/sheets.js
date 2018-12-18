@@ -24,9 +24,7 @@ exports.generateSheet = (schedule, cb) => {
       font: { bold: true }
     })
   }
-
   let row = 1
-
   // start generating worksheet
   const monthName = moment(schedule.month, 'MM').format('MMMM')
   ws.cell(row, 1, row, 3, true)
@@ -47,48 +45,26 @@ exports.generateSheet = (schedule, cb) => {
       .style(style.hall)
     row++
 
-    // halls
     const halls = ['A', 'B']
     const hallRow = row
+
     halls.forEach(hall => {
       const tasks = schedule.tasks.filter(a => a.week === week && a.hall === hall)
-      const scheduleOptions = [
-        'Reading',
-        'Initial Call',
-        'Return Visit',
-        'Return Visit',
-        'Return Visit',
-        'Bible Study',
-        'Talk'
-      ]
-      let rvIndex = 0
-      row = hallRow
-      // tasks
-      scheduleOptions.map(taskName => {
-        let mainTask
-        let helperTask
-        if (taskName === 'Return Visit') {
-          mainTask = tasks.filter(t => t.task === taskName && !t.helper)[rvIndex]
-          helperTask = tasks.filter(t => t.task === taskName && t.helper)[rvIndex]
-          rvIndex++
-        } else {
-          mainTask = tasks.find(t => t.task === taskName && !t.helper)
-          helperTask = tasks.find(t => t.task === taskName && t.helper)
-        }
-        if (mainTask) {
-          ws.cell(row, 1).string(`${mainTask.task}`)
-          if (helperTask) {
-            ws.cell(row, hall == 'A' ? 2 : 3).string(
-              `${mainTask.name} ${mainTask.point} + ${helperTask && helperTask.name}`
-            )
+      if (tasks.length) {
+        row = hallRow
+        tasks.forEach(task => {
+          if (week === 1) console.log(task, row)
+          ws.cell(row, 1).string(`${task.task}`)
+          if (task.helper_id) {
+            ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)
           } else {
-            ws.cell(row, hall == 'A' ? 2 : 3).string(`${mainTask.name} ${mainTask.point}`)
+            ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name}`)
           }
           row++
-        }
-      })
+        })
+      }
     })
     row++
   }
-  wb.write('report.xlsx', cb)
+  wb.write(`${monthName} ${schedule.year}.xlsx`, cb)
 }
