@@ -10,7 +10,6 @@ import {
   Footer,
   Button,
   TextInput,
-  NumberInput,
   RadioButton,
   CheckBox,
   Select
@@ -20,7 +19,6 @@ import { consts } from '../utils'
 const initState = {
   name: '',
   participate: true,
-  nextPoint: 1,
   gender: consts.GENDER_SISTER,
   hall: {},
   available: [],
@@ -59,8 +57,7 @@ class StudentForm extends React.PureComponent {
       participate: !!student.participate,
       gender: student.gender,
       available: student.available,
-      hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
-      nextPoint: student.nextPoint || 1
+      hall: { value: student.hall, label: t(`common:hall${student.hall}`) }
     }
     this.setState({ ...state })
   }
@@ -90,7 +87,7 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { t, hidden, student } = this.props
-    const { name, nextPoint, available, hall, errors, gender, participate } = this.state
+    const { name, available, hall, errors, gender, participate } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -140,9 +137,6 @@ class StudentForm extends React.PureComponent {
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
-            </FormField>
-            <FormField label={t('common:nextPoint')}>
-              <NumberInput value={nextPoint} onChange={e => this.handleChange('nextPoint', e.target.value)} />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Button label={t('common:submit')} type="submit" primary={true} />

@@ -28,7 +28,7 @@ exports.generateSheet = (schedule, cb) => {
   let row = 1
 
   // start generating worksheet
-  const monthName = moment(schedule.month + 1, 'MM').format('MMMM')
+  const monthName = moment(schedule.month, 'MM').format('MMMM')
   ws.cell(row, 1, row, 3, true)
     .string(`Apply your self to ministry - ${monthName}  ${schedule.year}`)
     .style(style.main)

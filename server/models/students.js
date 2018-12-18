@@ -29,7 +29,6 @@ exports.createStudent = (newStudent, cb) => {
     participate: newStudent.participate,
     gender: newStudent.gender,
     hall: newStudent.hall,
-    nextPoint: newStudent.nextPoint,
     ...consts.setAvailable(newStudent.available)
   }
   getDb().query('INSERT INTO students SET ?', studentToInsert, cb)
@@ -41,14 +40,9 @@ exports.updateStudent = (id, student, cb) => {
     participate: student.participate,
     gender: student.gender,
     hall: student.hall,
-    nextPoint: student.nextPoint,
     ...consts.setAvailable(student.available)
   }
   getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)
-}
-
-exports.updateStudentPoint = (id, nextPoint, cb) => {
-  getDb().query('UPDATE students SET nextPoint = ? WHERE id = ?', [nextPoint, id], cb)
 }
 
 exports.removeStudent = (id, cb) => {
@@ -96,17 +90,30 @@ const getAvailableStudents = (taskName, hall, cb) => {
       async.map(
         students,
         (student, callback) => {
-          taskModel.getTasks(student.id, (err, tasks) => {
-            // distinguish reading task from other tasks
-            if (taskName === 'Reading') {
-              student.tasks = tasks.filter(t => !t.helper && t.task === 'Reading')
-              student.helpTasks = tasks.filter(t => t.helper)
-            } else {
-              student.tasks = tasks.filter(t => !t.helper && t.task !== 'Reading')
-              student.helpTasks = tasks.filter(t => t.helper)
-            }
-            callback(err)
-          })
+          async.parallel(
+            [
+              // parallel function to get students tasks
+              done => {
+                taskModel.getStudentTasks(student.id, (err, tasks) => {
+                  // distinguish reading task from other tasks
+                  if (taskName === 'Reading') {
+                    student.tasks = tasks.filter(t => t.task === 'Reading')
+                  } else {
+                    student.tasks = tasks.filter(t => t.task !== 'Reading')
+                  }
+                  done(err)
+                })
+              },
+              // parallel function to get help tasks
+              done => {
+                taskModel.getHelpTasks(student.id, (err, tasks) => {
+                  student.helpTasks = tasks
+                  done(err)
+                })
+              }
+            ],
+            callback
+          )
         },
         err => {
           cb(err, students)
@@ -123,11 +130,25 @@ const getAvailableHelpers = (gender, hall, cb) => {
     async.map(
       students,
       (student, callback) => {
-        taskModel.getTasks(student.id, (err, tasks) => {
-          student.tasks = tasks.filter(t => !t.helper)
-          student.helpTasks = tasks.filter(t => t.helper)
-          callback(err)
-        })
+        async.parallel(
+          [
+            // parallel function to get students tasks
+            done => {
+              taskModel.getStudentTasks(student.id, (err, tasks) => {
+                student.tasks = tasks
+                done(err)
+              })
+            },
+            // parallel function to get help tasks
+            done => {
+              taskModel.getHelpTasks(student.id, (err, tasks) => {
+                student.helpTasks = tasks
+                done(err)
+              })
+            }
+          ],
+          callback
+        )
       },
       err => {
         cb(err, students)

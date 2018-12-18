@@ -45,21 +45,19 @@ class Schedule extends React.Component {
   }
 
   handleSelectNew = student => {
-    const { taskToChange } = this.state
-    const task = {
-      student_id: student.id,
-      point: taskToChange.helper ? null : student.nextPoint
-    }
+    const { taskToChange, helpers } = this.state
+    const task = helpers
+      ? {
+          helper_id: student.id,
+          helper_name: student.name
+        }
+      : {
+          student_id: student.id,
+          student_name: student.name
+        }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
       toast.success(`${this.props.t('reassigned')} ${student.name}.`)
       this.setState({ availableList: true })
-      this.loadData()
-    })
-  }
-
-  handleChangePoint = (point, taskToChange) => {
-    const task = { point: point || 0 }
-    api.patch(`/tasks`, taskToChange.id, task).then(() => {
       this.loadData()
     })
   }
@@ -73,9 +71,9 @@ class Schedule extends React.Component {
       names = []
     const { t } = this.props
     tasks.forEach(task => {
-      if (tasks.filter(t => task.name === t.name).length > 1 && !names.includes(task.name)) {
-        warnings.push(t('scheduleWarn', { name: task.name }))
-        names.push(task.name)
+      if (tasks.filter(t => task.student_name === t.student_name).length > 1 && !names.includes(task.student_name)) {
+        warnings.push(t('scheduleWarn', { name: task.student_name }))
+        names.push(task.student_name)
       }
     })
     this.setState({ warnings })
@@ -97,7 +95,6 @@ class Schedule extends React.Component {
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
                   handleChangeHelper={this.handleChangeHelper}
-                  handleChangePoint={this.handleChangePoint}
                 />
               </AccordionPanel>
             )}
@@ -107,7 +104,6 @@ class Schedule extends React.Component {
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}
                   handleChangeHelper={this.handleChangeHelper}
-                  handleChangePoint={this.handleChangePoint}
                 />
               </AccordionPanel>
             )}
