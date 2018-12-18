@@ -4,6 +4,18 @@ exports.getBySchedule = (month, year, cb) => {
   getDb().query('SELECT * FROM tasks WHERE month = ? AND year = ?', [month, year], cb)
 }
 
+exports.getAllTasks = (studentId, cb) => {
+  getDb().query(
+    `
+    SELECT * FROM tasks 
+    WHERE student_id = ? OR helper_id = ?
+    ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
+  `,
+    [studentId, studentId],
+    cb
+  )
+}
+
 exports.getStudentTasks = (studentId, cb) => {
   getDb().query(
     `

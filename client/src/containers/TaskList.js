@@ -45,6 +45,7 @@ class TaskList extends React.PureComponent {
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
     const { tasks } = this.state
+    console.log(tasks)
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
@@ -60,31 +61,34 @@ class TaskList extends React.PureComponent {
                 <th>{t('common:task')}</th>
                 <th>{t('common:date')}</th>
                 <th>{t('common:hall')}</th>
-                <th>{t('common:point')}</th>
+                <th>{t('common:helper')}</th>
                 <th />
               </tr>
             </thead>
             <tbody>
               {tasks &&
-                tasks.map((task, index) => (
-                  <TableRow key={index}>
-                    <td>{task.helper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
-                    <td>{`${task.month}/${task.year}`}</td>
-                    <td>{t(`common:hall${task.hall}`)}</td>
-                    <td>{task.helper ? null : task.point}</td>
-                    {showForm && (
-                      <td>
-                        <Box direction="row">
-                          <Button
-                            icon={<FormTrashIcon size="medium" />}
-                            onClick={e => this.handleRemove(e, task.id)}
-                            a11yTitle={t('remove')}
-                          />
-                        </Box>
-                      </td>
-                    )}
-                  </TableRow>
-                ))}
+                tasks.map((task, index) => {
+                  const isHelper = task.helper_id === student.id
+                  return (
+                    <TableRow key={index}>
+                      <td>{isHelper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
+                      <td>{`(${task.week}) ${task.month}/${task.year}`}</td>
+                      <td>{t(`common:hall${task.hall}`)}</td>
+                      <td>{isHelper ? null : task.helper_name}</td>
+                      {showForm && (
+                        <td>
+                          <Box direction="row">
+                            <Button
+                              icon={<FormTrashIcon size="medium" />}
+                              onClick={e => this.handleRemove(e, task.id)}
+                              a11yTitle={t('remove')}
+                            />
+                          </Box>
+                        </td>
+                      )}
+                    </TableRow>
+                  )
+                })}
             </tbody>
           </Table>
         </Layer>

@@ -47,9 +47,10 @@ class TaskForm extends React.PureComponent {
   handleSubmit = e => {
     e.preventDefault()
     this.validate(() => {
-      const id = this.props.student.id
+      const student = this.props.student
       const newTask = {
-        student_id: id,
+        student_id: student.id,
+        student_name: student.name,
         ...this.getTaskDate(this.state.date),
         task: this.state.task.value,
         hall: this.state.hall.value
