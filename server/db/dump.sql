@@ -46,9 +46,7 @@ CREATE TABLE `students` (
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `student_id` int(11) DEFAULT NULL,
-  `student_name` varchar(100) DEFAULT NULL,
   `helper_id` int(11) DEFAULT NULL,
-  `helper_name` varchar(100) DEFAULT NULL,
   `schedule_id` int(11) DEFAULT NULL,
   `hall` char(2) DEFAULT NULL,
   `task` varchar(50) DEFAULT NULL,

@@ -1,13 +1,31 @@
 const { getDb } = require('../db')
 
 exports.getBySchedule = (month, year, cb) => {
-  getDb().query('SELECT * FROM tasks WHERE month = ? AND year = ?', [month, year], cb)
+  getDb().query(
+    `
+    SELECT 
+      tasks.*,
+      students.name as student_name,
+      helpers.name as helper_name
+    FROM tasks 
+    LEFT JOIN students students ON students.id = tasks.student_id
+    LEFT JOIN students helpers ON helpers.id = tasks.helper_id
+    WHERE month = ? AND year = ?`,
+    [month, year],
+    cb
+  )
 }
 
 exports.getAllTasks = (studentId, cb) => {
   getDb().query(
     `
-    SELECT * FROM tasks 
+    SELECT 
+      tasks.*,
+      students.name as student_name,
+      helpers.name as helper_name
+    FROM tasks 
+    LEFT JOIN students students ON students.id = tasks.student_id
+    LEFT JOIN students helpers ON helpers.id = tasks.helper_id
     WHERE student_id = ? OR helper_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
@@ -19,7 +37,11 @@ exports.getAllTasks = (studentId, cb) => {
 exports.getStudentTasks = (studentId, cb) => {
   getDb().query(
     `
-    SELECT * FROM tasks 
+    SELECT 
+      tasks.*,
+      students.name as student_name
+    FROM tasks 
+    LEFT JOIN students ON students.id = tasks.student_id
     WHERE student_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
@@ -31,7 +53,11 @@ exports.getStudentTasks = (studentId, cb) => {
 exports.getHelpTasks = (helperId, cb) => {
   getDb().query(
     `
-    SELECT * FROM tasks 
+    SELECT 
+      tasks.*,
+      students.name as helper_name
+    FROM tasks 
+    LEFT JOIN students ON students.id = tasks.helper_id
     WHERE helper_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
@@ -43,9 +69,7 @@ exports.getHelpTasks = (helperId, cb) => {
 exports.createTask = (task, cb) => {
   const taskToInsert = {
     student_id: task.student_id,
-    student_name: task.student_name,
     helper_id: task.helper_id,
-    helper_name: task.helper_name,
     schedule_id: task.schedule_id,
     task: task.task,
     hall: task.hall,
@@ -62,6 +86,10 @@ exports.updateTask = (id, taskToUpdate, cb) => {
 
 exports.removeTask = (id, cb) => {
   getDb().query('DELETE FROM tasks WHERE id = ?', id, cb)
+}
+
+exports.removeByStudent = (studentId, cb) => {
+  getDb().query('DELETE FROM tasks WHERE student_id = ?', studentId, cb)
 }
 
 exports.removeBySchedule = (month, year, cb) => {

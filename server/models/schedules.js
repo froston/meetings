@@ -17,7 +17,7 @@ const getById = (id, cb) => {
   getDb().query('SELECT * FROM schedules WHERE id = ?', id, (err, schedules) => {
     if (err) throw err
     let schedule = schedules[0]
-    getDb().query(`SELECT * FROM tasks WHERE month = ? AND year = ?`, [schedule.month, schedule.year], (err, tasks) => {
+    taskModel.getBySchedule(schedule.month, schedule.year, (err, tasks) => {
       if (err) throw err
       schedule.tasks = tasks
       cb(err, schedule)
@@ -72,7 +72,6 @@ const createSchedule = (newSchedule, mainCB) => {
                           // assign task
                           const studentTask = {
                             student_id: finalStudent.id,
-                            student_name: finalStudent.name,
                             schedule_id: newSchedule.id,
                             task: taskName,
                             week: Number(week),
@@ -109,8 +108,7 @@ const createSchedule = (newSchedule, mainCB) => {
                             const finalHelper = helpers[flhsIndex]
                             // add helper to new task
                             const updatedHelper = {
-                              helper_id: finalHelper.id,
-                              helper_name: finalHelper.name
+                              helper_id: finalHelper.id
                             }
                             taskModel.updateTask(newTask.id, updatedHelper, err => {
                               callbackHelper(err)
@@ -146,7 +144,7 @@ const removeSchedule = (id, cb) => {
     // delete schedule
     getDb().query('DELETE FROM schedules WHERE id = ?', res.id, (err, res) => {
       // delete all related tasks
-      getDb().query('DELETE FROM tasks WHERE month = ? AND year = ?', [schedule.month, schedule.year], cb)
+      taskModel.removeBySchedule(schedule.month, schedule.year, cb)
     })
   })
 }

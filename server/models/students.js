@@ -47,7 +47,7 @@ exports.updateStudent = (id, student, cb) => {
 
 exports.removeStudent = (id, cb) => {
   getDb().query('DELETE FROM students WHERE id = ?', id, () => {
-    getDb().query('DELETE FROM tasks WHERE student_id = ?', id, cb)
+    taskModel.removeByStudent(id, cb)
   })
 }
 
