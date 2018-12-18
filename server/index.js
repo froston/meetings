@@ -6,7 +6,6 @@ const config = require('./config')
 const router = require('./router')
 const { initDb } = require('./db')
 const userModel = require('./models/users')
-const migrationsModel = require('./models/migrations')
 
 const app = express()
 
@@ -28,12 +27,6 @@ initDb(err => {
 
 app.get('/unauthorized', (req, res) => {
   res.status(401).send('Unauthorized')
-})
-
-app.get('/migrate', (req, res) => {
-  migrationsModel.run(() => {
-    res.status(200).send('DONE')
-  })
 })
 
 app.use('/api', passport.authenticate('basic', { session: false, failureRedirect: '/unauthorized' }), router)
