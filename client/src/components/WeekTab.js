@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import { Box, Tiles, Tile, Paragraph, Header, Heading, Menu, Anchor } from 'grommet'
 import { UserSettingsIcon } from 'grommet/components/icons/base'
-import { consts } from '../utils'
 import { TaskList } from '../containers'
 
 class WeekTab extends React.PureComponent {
@@ -11,11 +10,8 @@ class WeekTab extends React.PureComponent {
     taskForm: true,
     student: {}
   }
-  showTasks = task => {
-    const student = {
-      id: task.student_id,
-      name: task.name
-    }
+  showTasks = (id, name) => {
+    const student = { id, name }
     this.setState({
       taskForm: false,
       student
@@ -24,8 +20,6 @@ class WeekTab extends React.PureComponent {
 
   render() {
     const { t, tasks, handleChangeTask } = this.props
-    let rvIndex = 0
-    console.log(tasks)
     return (
       <Tiles fill flush selectable className="week-tab">
         {tasks.map(task => {
@@ -49,14 +43,14 @@ class WeekTab extends React.PureComponent {
                   <Paragraph margin="none">
                     <span>
                       <b>{t('common:name')}: </b>
-                      <a href="#tasks" onClick={() => this.showTasks(task)}>
+                      <a href="#tasks" onClick={() => this.showTasks(task.student_id, task.student_name)}>
                         {task.student_name}
                       </a>
                     </span>
                     <br />
                     <span style={{ display: task.helper_id ? '' : 'none' }}>
                       <b>{t('common:helper')}: </b>
-                      <a href="#helpers" onClick={() => this.showTasks(task)}>
+                      <a href="#helpers" onClick={() => this.showTasks(task.helper_id, task.helper_name)}>
                         {task.helper_name}
                         <br />
                       </a>
@@ -74,11 +68,12 @@ class WeekTab extends React.PureComponent {
                   <Anchor href="#" onClick={() => handleChangeTask(task)}>
                     {t('change')}
                   </Anchor>
-                  {task.helper_id && (
-                    <Anchor href="#" onClick={() => handleChangeTask(task, true)}>
-                      {t('changeHelper')}
-                    </Anchor>
-                  )}
+                  {task.task !== 'Reading' &&
+                    task.task !== 'Talk' && (
+                      <Anchor href="#" onClick={() => handleChangeTask(task, true)}>
+                        {t('changeHelper')}
+                      </Anchor>
+                    )}
                 </Menu>
               </Tile>
             )
@@ -99,8 +94,7 @@ class WeekTab extends React.PureComponent {
 
 WeekTab.propTypes = {
   tasks: PropTypes.array,
-  handleChangeTask: PropTypes.func,
-  handleChangePoint: PropTypes.func
+  handleChangeTask: PropTypes.func
 }
 
 export default translate(['schedules', 'common'])(WeekTab)

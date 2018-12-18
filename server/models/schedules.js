@@ -10,17 +10,16 @@ const getAll = (query, cb) => {
   if (query.month > 0 && query.year > 0) {
     where = `WHERE month = ${query.month} AND year = ${query.year}`
   }
-  getDb().query(`SELECT * FROM schedules ${where} ORDER BY month DESC, year DESC`, cb)
+  getDb().query(`SELECT * FROM schedules ${where} ORDER BY year DESC, month DESC`, cb)
 }
 
 const getById = (id, cb) => {
   getDb().query('SELECT * FROM schedules WHERE id = ?', id, (err, schedules) => {
     if (err) throw err
     let schedule = schedules[0]
-    getDb().query(`SELECT * FROM tasks WHERE schedule_id = ?`, schedule.id, (err, tasks) => {
+    getDb().query(`SELECT * FROM tasks WHERE month = ? AND year = ?`, [schedule.month, schedule.year], (err, tasks) => {
       if (err) throw err
       schedule.tasks = tasks
-      console.log(schedule)
       cb(err, schedule)
     })
   })
