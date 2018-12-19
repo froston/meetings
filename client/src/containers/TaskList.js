@@ -45,7 +45,6 @@ class TaskList extends React.PureComponent {
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
     const { tasks } = this.state
-    console.log(tasks)
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
@@ -62,7 +61,7 @@ class TaskList extends React.PureComponent {
                 <th>{t('common:date')}</th>
                 <th>{t('common:hall')}</th>
                 <th>{t('common:helper')}</th>
-                <th />
+                {showForm && <th />}
               </tr>
             </thead>
             <tbody>

@@ -1,9 +1,9 @@
 const moment = require('moment')
 const xl = require('excel4node')
 
-exports.generateSheet = (schedule, cb) => {
+exports.generateXls = (schedule, cb) => {
   var wb = new xl.Workbook({ defaultFont: { size: 10, name: 'Ubuntu' } })
-  var ws = wb.addWorksheet('Tasks')
+  var ws = wb.addWorksheet('Asignaciones')
   // set rows columns sizes
   ws.row(1).setHeight(30)
   ws.column(1).setWidth(20)
@@ -28,20 +28,20 @@ exports.generateSheet = (schedule, cb) => {
   // start generating worksheet
   const monthName = moment(schedule.month, 'MM').format('MMMM')
   ws.cell(row, 1, row, 3, true)
-    .string(`Apply your self to ministry - ${monthName}  ${schedule.year}`)
+    .string(`Seamos mejores maestros - ${monthName}  ${schedule.year}`)
     .style(style.main)
   row++
 
   for (let week = 1; week <= schedule.weeks; week++) {
     ws.cell(row, 1, row, 3, true)
-      .string(`Week ${week}`)
+      .string(`Semana ${week}`)
       .style(style.week)
     row++
     ws.cell(row, 2)
-      .string(`Main Hall`)
+      .string(`Sala principal`)
       .style(style.hall)
     ws.cell(row, 3)
-      .string(`Auxiliar Hall`)
+      .string(`Sala auxiliar`)
       .style(style.hall)
     row++
 
@@ -53,7 +53,6 @@ exports.generateSheet = (schedule, cb) => {
       if (tasks.length) {
         row = hallRow
         tasks.forEach(task => {
-          if (week === 1) console.log(task, row)
           ws.cell(row, 1).string(`${task.task}`)
           if (task.helper_id) {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)

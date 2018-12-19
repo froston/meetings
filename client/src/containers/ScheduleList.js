@@ -3,9 +3,9 @@ import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
-import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentPdfIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
-import { saveAs } from 'file-saver/FileSaver'
+import { saveAs } from 'file-saver'
 import moment from 'moment'
 import { ScheduleForm } from '../components'
 import { api } from '../utils'
@@ -50,12 +50,26 @@ class ScheduleList extends React.Component {
     }
   }
 
-  handleReport = (e, id) => {
+  downloadXls = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    api.downloadReport(`/schedules/${id}/generate`).then(blob => {
+    api.downloadFile(`/schedules/${id}/downloadXls`).then(blob => {
       saveAs(blob, 'report.xlsx')
     })
+  }
+
+  downloadPdfs = (e, schedule) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const beginsWith = prompt(
+      this.props.t('pdfReportPrompt', { date: `${moment(schedule.month, 'M').format('MMMM')} ${schedule.year}` }),
+      1
+    )
+    if (beginsWith) {
+      api.downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}`).then(blob => {
+        saveAs(blob, 'appointments.zip')
+      })
+    }
   }
 
   handleForm = () => {
@@ -105,8 +119,14 @@ class ScheduleList extends React.Component {
               </Box>
               <Box direction="row">
                 <Button
+                  icon={<DocumentPdfIcon size="medium" />}
+                  onClick={e => this.downloadPdfs(e, schedule)}
+                  a11yTitle={t('report')}
+                  title={t('report')}
+                />
+                <Button
                   icon={<DocumentExcelIcon size="medium" />}
-                  onClick={e => this.handleReport(e, schedule.id)}
+                  onClick={e => this.downloadXls(e, schedule.id)}
                   a11yTitle={t('report')}
                   title={t('report')}
                 />

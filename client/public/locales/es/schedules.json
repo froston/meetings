@@ -14,5 +14,6 @@
   "changePoint": "Cambiar Punto",
   "exists": "Programa ya existe",
   "warnings": "Advertencia de programa",
-  "scheduleWarn": " {{name}} aparece más que una vez en el mes"
+  "scheduleWarn": " {{name}} aparece más que una vez en el mes",
+  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asginaciones:"
 }

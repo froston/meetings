@@ -14,5 +14,6 @@
   "new": "New Schedule",
   "exists": "Schedule already exists",
   "warnings": "Schedule warnings",
-  "scheduleWarn": " {{name}} appears more then once in the month"
+  "scheduleWarn": " {{name}} appears more then once in the month",
+  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:"
 }

@@ -38,6 +38,17 @@ export const remove = (url, id) => {
   }).catch(console.error)
 }
 
+export const downloadFile = url => {
+  let headers = new Headers()
+  headers.set('Authorization', 'Basic ' + localStorage.getItem('auth'))
+  return fetch(`/api${url}`, {
+    headers: headers,
+    method: 'GET'
+  })
+    .then(res => res.blob())
+    .catch(console.error)
+}
+
 export const authenticate = (username, password, cb) => {
   if (username && password) {
     const auth = btoa(`${username}:${password}`)
@@ -56,15 +67,4 @@ export const authenticate = (username, password, cb) => {
   } else {
     cb('Input your username and password')
   }
-}
-
-export const downloadReport = url => {
-  let headers = new Headers()
-  headers.set('Authorization', 'Basic ' + localStorage.getItem('auth'))
-  return fetch(`/api${url}`, {
-    headers: headers,
-    method: 'GET'
-  })
-    .then(res => res.blob())
-    .catch(console.error)
 }

@@ -4,6 +4,7 @@ const taskModel = require('./tasks')
 const studentModel = require('./students')
 const config = require('../config')
 const sheets = require('../helpers/sheets')
+const pdf = require('../helpers/pdf/pdf')
 
 const getAll = (query, cb) => {
   let where = ''
@@ -149,10 +150,17 @@ const removeSchedule = (id, cb) => {
   })
 }
 
-const generateReport = (id, res) => {
+const generateXls = (id, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    sheets.generateSheet(schedule, res)
+    sheets.generateXls(schedule, res)
+  })
+}
+
+const generatePdfs = (id, beginsWith, res) => {
+  getById(id, (err, schedule) => {
+    if (err) throw err
+    pdf.generatePdfs(schedule, beginsWith, res)
   })
 }
 
@@ -161,5 +169,6 @@ module.exports = {
   getById,
   createSchedule,
   removeSchedule,
-  generateReport
+  generateXls,
+  generatePdfs
 }
