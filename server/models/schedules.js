@@ -150,17 +150,17 @@ const removeSchedule = (id, cb) => {
   })
 }
 
-const generateReport = (id, res) => {
+const generateXls = (id, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    sheets.generateSheet(schedule, res)
+    sheets.generateXls(schedule, res)
   })
 }
 
-const generatePdfs = (id, beginsWith, cb) => {
+const generatePdfs = (id, beginsWith, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    pdf.generateSchedule(schedule, beginsWith, cb)
+    pdf.generatePdfs(schedule, beginsWith, res)
   })
 }
 
@@ -169,6 +169,6 @@ module.exports = {
   getById,
   createSchedule,
   removeSchedule,
-  generateReport,
+  generateXls,
   generatePdfs
 }

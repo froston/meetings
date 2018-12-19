@@ -22,20 +22,15 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.get('/:id/generate', (req, res) => {
+router.get('/:id/downloadXls', (req, res) => {
   const id = req.params.id
-  model.generateReport(id, res)
+  model.generateXls(id, res)
 })
 
-router.get('/:id/generatePdfs', (req, res) => {
+router.get('/:id/downloadPdfs', (req, res) => {
   const id = req.params.id
   const beginsWith = req.query.beginsWith
-  model.generatePdfs(id, beginsWith, err => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.status(204).end()
-  })
+  model.generatePdfs(id, beginsWith, res)
 })
 
 router.post('/', (req, res) => {

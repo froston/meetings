@@ -1,26 +1,25 @@
 const path = require('path')
 const fs = require('fs')
+const os = require('os')
 const hummus = require('hummus')
 const { fillForm } = require('./pdf-form-fill')
 const moment = require('moment')
+const archiver = require('archiver')
 
-exports.generateSchedule = (schedule, firstDay = 1, cb) => {
-  const input = path.join(__dirname, './S-89-S.pdf')
+exports.generatePdfs = (schedule, firstDay = 1, res) => {
+  const input = path.join(__dirname, 'S-89-S.pdf')
   const fontPath = path.join(__dirname, 'courierb.ttf')
-  const folderName = path.join(__dirname, `../../public/${schedule.month}-${schedule.year}`)
+  const folderName = `${schedule.month}_${schedule.year}_${moment().unix()}`
+  const folderPath = path.join(os.tmpdir(), folderName)
 
-  if (!fs.existsSync(folderName)) {
-    fs.mkdirSync(folderName)
-  }
+  fs.mkdirSync(folderPath)
 
   schedule.tasks.forEach(task => {
-    const output = `${folderName}/${task.student_name}.pdf`
+    const output = `${folderPath}/${task.student_name}.pdf`
     const writer = hummus.createWriterToModify(input, {
       modifiedFilePath: output
     })
-
     const date = moment(`${firstDay} ${task.month} ${task.year}`, 'D M YYYY').add(task.week - 1, 'w')
-
     const data = {
       Name: task.student_name,
       Assistant: task.helper_name,
@@ -34,7 +33,6 @@ exports.generateSchedule = (schedule, firstDay = 1, cb) => {
       'Check Box08': task.hall === 'A' ? true : false,
       'Check Box09': task.hall === 'B' ? true : false
     }
-
     fillForm(writer, data, {
       defaultTextOptions: {
         font: writer.getFontForFile(fontPath),
@@ -43,5 +41,15 @@ exports.generateSchedule = (schedule, firstDay = 1, cb) => {
     })
     writer.end()
   })
-  cb(null)
+
+  res.attachment(`${folderName}.zip`)
+  res.set('Content-Type', 'application/zip')
+
+  const archive = archiver('zip')
+  archive.pipe(res)
+
+  archive.on('close', () => res.status(200).end())
+
+  archive.directory(`${folderPath}/`, false)
+  archive.finalize()
 }

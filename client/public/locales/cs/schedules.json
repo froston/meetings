@@ -14,5 +14,6 @@
   "new": "Nový Rozvrh",
   "exists": "Rozvrh již existuje",
   "warnings": "Varování rozvrhu",
-  "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci"
+  "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci",
+  "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:"
 }

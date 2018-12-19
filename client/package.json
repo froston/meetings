@@ -4,25 +4,25 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "file-saver": "^2.0.0",
     "grommet": "^1.11.0",
     "grommet-addons": "^0.6.0",
     "grommet-css": "^1.6.0",
-    "i18next": "^11.6.0",
-    "i18next-browser-languagedetector": "^2.2.3",
+    "i18next": "^13.0.0",
+    "i18next-browser-languagedetector": "^2.2.4",
     "i18next-xhr-backend": "^1.5.1",
     "prop-types": "^15.6.2",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-i18next": "^7.11.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-i18next": "^8.4.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.1",
-    "react-toastify": "^4.4.0"
+    "react-toastify": "^4.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom"
   },
   "browserslist": [
     ">0.2%",

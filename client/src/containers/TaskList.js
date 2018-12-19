@@ -61,7 +61,7 @@ class TaskList extends React.PureComponent {
                 <th>{t('common:date')}</th>
                 <th>{t('common:hall')}</th>
                 <th>{t('common:helper')}</th>
-                <th />
+                {showForm && <th />}
               </tr>
             </thead>
             <tbody>
