@@ -45,7 +45,6 @@ class TaskList extends React.PureComponent {
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
     const { tasks } = this.state
-    console.log(tasks)
     return (
       <div>
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>

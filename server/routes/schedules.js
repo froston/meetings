@@ -27,6 +27,17 @@ router.get('/:id/generate', (req, res) => {
   model.generateReport(id, res)
 })
 
+router.get('/:id/generatePdfs', (req, res) => {
+  const id = req.params.id
+  const beginsWith = req.query.beginsWith
+  model.generatePdfs(id, beginsWith, err => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(204).end()
+  })
+})
+
 router.post('/', (req, res) => {
   const newSchedule = req.body
   model.createSchedule(newSchedule, (err, schedule) => {

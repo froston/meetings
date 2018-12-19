@@ -15,8 +15,7 @@ import {
   Accordion,
   AccordionPanel,
   List,
-  ListItem,
-  Box
+  ListItem
 } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon } from 'grommet/components/icons/base'
@@ -89,8 +88,8 @@ class ScheduleForm extends React.PureComponent {
       // convert return visits
       let tasks = {}
       for (let week = 1; week <= this.state.weeks; week++) {
-        tasks[week] = this.state.tasks[week].map(
-          taskName => (taskName.includes('Return Visit') ? taskName.substring(3) : taskName)
+        tasks[week] = this.state.tasks[week].map(taskName =>
+          taskName.includes('Return Visit') ? taskName.substring(3) : taskName
         )
       }
       const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }

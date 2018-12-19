@@ -53,7 +53,6 @@ exports.generateSheet = (schedule, cb) => {
       if (tasks.length) {
         row = hallRow
         tasks.forEach(task => {
-          if (week === 1) console.log(task, row)
           ws.cell(row, 1).string(`${task.task}`)
           if (task.helper_id) {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)

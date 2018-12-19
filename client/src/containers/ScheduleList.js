@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
-import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentPdfIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver/FileSaver'
 import moment from 'moment'
@@ -58,6 +58,15 @@ class ScheduleList extends React.Component {
     })
   }
 
+  handlePdfReport = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const beginsWith = prompt('First meeting day of month:')
+    api.get(`/schedules/${id}/generatePdfs?beginsWith=${beginsWith}`).then(() => {
+      console.log('DONE')
+    })
+  }
+
   handleForm = () => {
     this.setState({ scheduleForm: !this.state.scheduleForm })
   }
@@ -104,6 +113,12 @@ class ScheduleList extends React.Component {
                 <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
               </Box>
               <Box direction="row">
+                <Button
+                  icon={<DocumentPdfIcon size="medium" />}
+                  onClick={e => this.handlePdfReport(e, schedule.id)}
+                  a11yTitle={t('report')}
+                  title={t('report')}
+                />
                 <Button
                   icon={<DocumentExcelIcon size="medium" />}
                   onClick={e => this.handleReport(e, schedule.id)}

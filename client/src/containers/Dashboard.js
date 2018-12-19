@@ -22,7 +22,6 @@ class Dashboard extends Component {
 
   loadData = () => {
     api.get(`/students`).then(res => {
-      console.log(res)
       const students = res || []
       const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER && s.participate == true)
       const sisters = students.filter(s => s.gender === consts.GENDER_SISTER && s.participate == true)
