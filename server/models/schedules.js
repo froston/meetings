@@ -20,8 +20,22 @@ const getById = (id, cb) => {
     let schedule = schedules[0]
     taskModel.getBySchedule(schedule.month, schedule.year, (err, tasks) => {
       if (err) throw err
-      schedule.tasks = tasks
-      cb(err, schedule)
+      async.map(
+        tasks,
+        (task, done) => {
+          if (task.student_id > 0 && task.helper_id > 0) {
+            taskModel.hasDuplicate(task.student_id, task.helper_id, (err, dup) => {
+              done(err, { dup, ...task })
+            })
+          } else {
+            done(null, task)
+          }
+        },
+        (err, tasks) => {
+          schedule.tasks = tasks
+          cb(err, schedule)
+        }
+      )
     })
   })
 }

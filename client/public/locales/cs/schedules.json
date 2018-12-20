@@ -15,5 +15,6 @@
   "exists": "Rozvrh již existuje",
   "warnings": "Varování rozvrhu",
   "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci",
+  "scheduleDup": "{{student_name}} a {{helper_name}} už spolu v minulosti měli úkol.",
   "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:"
 }

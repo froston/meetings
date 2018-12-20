@@ -33,6 +33,7 @@ class WeekTab extends React.PureComponent {
                 basis="1/4"
                 style={{ position: 'relative' }}
                 className={className}
+                style={{ backgroundColor: task.dup ? '#ffdbea' : null }}
               >
                 <Header size="small" pad={{ horizontal: 'small' }}>
                   <Heading tag="h4" strong={true} margin="none">
@@ -68,12 +69,11 @@ class WeekTab extends React.PureComponent {
                   <Anchor href="#" onClick={() => handleChangeTask(task)}>
                     {t('change')}
                   </Anchor>
-                  {task.task !== 'Reading' &&
-                    task.task !== 'Talk' && (
-                      <Anchor href="#" onClick={() => handleChangeTask(task, true)}>
-                        {t('changeHelper')}
-                      </Anchor>
-                    )}
+                  {task.task !== 'Reading' && task.task !== 'Talk' && (
+                    <Anchor href="#" onClick={() => handleChangeTask(task, true)}>
+                      {t('changeHelper')}
+                    </Anchor>
+                  )}
                 </Menu>
               </Tile>
             )

@@ -90,6 +90,7 @@ ALTER TABLE `students`
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`),
   ADD KEY `student_id` (`student_id`),
+  ADD KEY `helper_id` (`helper_id`),
   ADD KEY `schedule_id` (`schedule_id`);
 
 --

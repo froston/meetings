@@ -95,3 +95,17 @@ exports.removeByStudent = (studentId, cb) => {
 exports.removeBySchedule = (month, year, cb) => {
   getDb().query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year], cb)
 }
+
+exports.hasDuplicate = (studentId, helperId, cb) => {
+  getDb().query(
+    `
+    SELECT COUNT(*) as dupCount
+    FROM tasks
+    WHERE (student_id = ? AND helper_id = ?) OR (helper_id = ? AND student_id = ?) 
+  `,
+    [studentId, helperId, studentId, helperId],
+    (err, res) => {
+      cb(err, res[0] && res[0].dupCount > 1)
+    }
+  )
+}

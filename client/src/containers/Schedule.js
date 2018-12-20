@@ -67,6 +67,9 @@ class Schedule extends React.Component {
         warnings.push(t('scheduleWarn', { name: task.student_name }))
         names.push(task.student_name)
       }
+      if (task.dup) {
+        warnings.push(t('scheduleDup', { student_name: task.student_name, helper_name: task.helper_name }))
+      }
     })
     this.setState({ warnings })
   }
