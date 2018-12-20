@@ -3,7 +3,6 @@ export const AVAILABLE_INITIAL_CALL = 'Initial Call'
 export const AVAILABLE_RETURN_VISIT = 'Return Visit'
 export const AVAILABLE_RETURN_VISIT_1 = '1. Return Visit'
 export const AVAILABLE_RETURN_VISIT_2 = '2. Return Visit'
-export const AVAILABLE_RETURN_VISIT_3 = '3. Return Visit'
 export const AVAILABLE_BIBLE_STUDY = 'Bible Study'
 export const AVAILABLE_TALK = 'Talk'
 
@@ -26,7 +25,6 @@ export const scheduleOptions = [
   AVAILABLE_INITIAL_CALL,
   AVAILABLE_RETURN_VISIT_1,
   AVAILABLE_RETURN_VISIT_2,
-  AVAILABLE_RETURN_VISIT_3,
   AVAILABLE_BIBLE_STUDY,
   AVAILABLE_TALK
 ]
