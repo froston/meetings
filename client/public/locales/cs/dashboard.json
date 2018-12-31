@@ -4,6 +4,7 @@
   "dist": "Rozdělení Studentů",
   "brothers": "Bratři",
   "sisters": "Sestry",
+  "no-participate": "Neúčastní se",
   "messageWarnTitle": "Chybí Rozvrh - zbývá {{left}} dní",
   "messageWarnDesc": "Máte čas na vytvoření rozvrhu do {{until}}.",
   "messageOkTitle": "Rozvrh Připraven",
