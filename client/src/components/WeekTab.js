@@ -31,7 +31,6 @@ class WeekTab extends React.PureComponent {
                 separator="top"
                 align="start"
                 basis="1/4"
-                style={{ position: 'relative' }}
                 className={className}
                 style={{ backgroundColor: task.dup ? '#ffdbea' : null }}
               >
