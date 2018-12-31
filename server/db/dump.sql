@@ -52,7 +52,7 @@ CREATE TABLE `tasks` (
   `task` varchar(50) DEFAULT NULL,
   `week` int(11) DEFAULT NULL,
   `month` int(11) DEFAULT NULL,
-  `year` int(11) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -123,3 +123,5 @@ ALTER TABLE `tasks`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO `users` (`id`, `email`, `password`) VALUES ('1', 'muller.pav@gmail.com', '');

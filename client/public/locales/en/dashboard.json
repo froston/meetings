@@ -4,6 +4,7 @@
   "dist": "Students Distribution",
   "brothers": "Brothers",
   "sisters": "Sisters",
+  "no-participate": "Non-participating",
   "messageWarnTitle": "Schedule Missing - {{left}} days left",
   "messageWarnDesc": "You have time to create next schedule until {{until}}.",
   "messageOkTitle": "Schedule Ready",

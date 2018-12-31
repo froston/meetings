@@ -111,7 +111,7 @@ class Dashboard extends Component {
                 onClick: () => this.navigate('/students')
               },
               {
-                label: 'Non-participating',
+                label: t('no-participate'),
                 value: noParticipate,
                 colorIndex: 'graph-4',
                 onClick: () => this.navigate('/students')
