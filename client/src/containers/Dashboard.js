@@ -74,8 +74,8 @@ class Dashboard extends Component {
     return null
   }
 
-  navigate = to => {
-    this.props.history.push(to)
+  navigate = (to, state) => {
+    this.props.history.push(to, { ...state })
   }
 
   render() {
@@ -102,19 +102,19 @@ class Dashboard extends Component {
                 label: t('brothers'),
                 value: brothers,
                 colorIndex: 'graph-1',
-                onClick: () => this.navigate('/students')
+                onClick: () => this.navigate('/students', { gender: 'B' })
               },
               {
                 label: t('sisters'),
                 value: sisters,
                 colorIndex: 'graph-2',
-                onClick: () => this.navigate('/students')
+                onClick: () => this.navigate('/students', { gender: 'S' })
               },
               {
                 label: t('no-participate'),
                 value: noParticipate,
                 colorIndex: 'graph-4',
-                onClick: () => this.navigate('/students')
+                onClick: () => this.navigate('/students', { noParticipate: true })
               }
             ]}
           />

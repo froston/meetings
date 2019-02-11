@@ -4,8 +4,11 @@ const taskModel = require('./tasks')
 const consts = require('../helpers/consts')
 const sorting = require('../helpers/sorting')
 
-exports.getAll = (name, cb) => {
-  const like = name ? `WHERE name LIKE "%${name}%"` : ``
+exports.getAll = (filters, cb) => {
+  let like = 'WHERE 1 = 1 ' // to simplify dynamic conditions syntax
+  like += filters.name ? `AND name LIKE "%${filters.name}%"` : ``
+  like += !!filters.noParticipate ? `AND participate = "${filters.noParticipate}"` : ``
+  like += filters.gender ? `AND gender = "${filters.gender}"` : ``
   getDb().query(`SELECT * FROM students ${like} ORDER BY name`, (err, results) => {
     if (err) throw err
     results.forEach(student => {
