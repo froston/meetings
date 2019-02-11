@@ -54,42 +54,44 @@ class TaskList extends React.PureComponent {
             </Heading>
           </Header>
           {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} />}
-          <Table responsive={false} scrollable>
-            <thead>
-              <tr>
-                <th>{t('common:task')}</th>
-                <th>{t('common:date')}</th>
-                <th>{t('common:hall')}</th>
-                <th>{t('common:helper')}</th>
-                {showForm && <th />}
-              </tr>
-            </thead>
-            <tbody>
-              {tasks &&
-                tasks.map((task, index) => {
-                  const isHelper = task.helper_id === student.id
-                  return (
-                    <TableRow key={index}>
-                      <td>{isHelper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
-                      <td>{`(${task.week}) ${task.month}/${task.year}`}</td>
-                      <td>{t(`common:hall${task.hall}`)}</td>
-                      <td>{isHelper ? null : task.helper_name}</td>
-                      {showForm && (
-                        <td>
-                          <Box direction="row">
-                            <Button
-                              icon={<FormTrashIcon size="medium" />}
-                              onClick={e => this.handleRemove(e, task.id)}
-                              a11yTitle={t('remove')}
-                            />
-                          </Box>
-                        </td>
-                      )}
-                    </TableRow>
-                  )
-                })}
-            </tbody>
-          </Table>
+          <div style={{ overflowX: 'auto' }}>
+            <Table responsive={false} scrollable>
+              <thead>
+                <tr>
+                  <th>{t('common:task')}</th>
+                  <th>{t('common:date')}</th>
+                  <th>{t('common:hall')}</th>
+                  <th>{t('common:helper')}</th>
+                  {showForm && <th />}
+                </tr>
+              </thead>
+              <tbody>
+                {tasks &&
+                  tasks.map((task, index) => {
+                    const isHelper = task.helper_id === student.id
+                    return (
+                      <TableRow key={index}>
+                        <td>{isHelper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
+                        <td>{`(${task.week}) ${task.month}/${task.year}`}</td>
+                        <td>{t(`common:hall${task.hall}`)}</td>
+                        <td>{isHelper ? null : task.helper_name}</td>
+                        {showForm && (
+                          <td>
+                            <Box direction="row">
+                              <Button
+                                icon={<FormTrashIcon size="medium" />}
+                                onClick={e => this.handleRemove(e, task.id)}
+                                a11yTitle={t('remove')}
+                              />
+                            </Box>
+                          </td>
+                        )}
+                      </TableRow>
+                    )
+                  })}
+              </tbody>
+            </Table>
+          </div>
         </Layer>
       </div>
     )

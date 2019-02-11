@@ -10,8 +10,8 @@ class StudentFilters extends React.PureComponent {
     return (
       <Menu
         responsive
-        icon={<FilterIcon colorIndex={active ? 'brand' : 'plain'} size="medium" />}
-        closeOnClick={false}
+        icon={<FilterIcon colorIndex={active && 'brand'} size="medium" />}
+        closeOnClick
         size='medium'
       >
         <Box pad="medium">
@@ -45,7 +45,7 @@ class StudentFilters extends React.PureComponent {
           </Form>
 
         </Box>
-        <Anchor icon={<CloseIcon />} label='Reset Filters' onClick={resetFilters} />
+        <Anchor icon={<CloseIcon />} label='Reset Filters' onClick={resetFilters} style={{ margin: '15px 0' }} />
 
       </Menu>
     )

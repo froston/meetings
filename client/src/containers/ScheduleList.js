@@ -117,7 +117,7 @@ class ScheduleList extends React.Component {
               <Box>
                 <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
               </Box>
-              <Box direction="row">
+              <Box direction="row" responsive={false}>
                 <Button
                   icon={<DocumentPdfIcon size="medium" />}
                   onClick={e => this.downloadPdfs(e, schedule)}
@@ -131,7 +131,7 @@ class ScheduleList extends React.Component {
                   title={t('report')}
                 />
                 <Button
-                  icon={<FormTrashIcon size="large" />}
+                  icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, schedule.id)}
                   a11yTitle={t('remove')}
                   title={t('remove')}
@@ -140,8 +140,8 @@ class ScheduleList extends React.Component {
             </ListItem>
           ))}
           {loading && (
-            <div style={{ textAlign: 'center' }}>
-              <Spinning />
+            <div style={{ textAlign: 'center', marginTop: 30 }}>
+              <Spinning size="xlarge" />
             </div>
           )}
         </List>

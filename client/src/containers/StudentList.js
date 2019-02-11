@@ -109,7 +109,13 @@ class StudentList extends React.Component {
         <Box pad={{ vertical: 'medium' }}>
           <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
         </Box>
-        <Box direction='row' justify='between' align='stretch' pad={{ vertical: 'medium' }}>
+        <Box
+          direction='row'
+          justify='between'
+          align='stretch'
+          pad={{ vertical: 'medium' }}
+          responsive={false}
+        >
           <Search
             fill
             inline
@@ -126,7 +132,7 @@ class StudentList extends React.Component {
             handleFilter={this.handleFilter}
             resetFilters={this.resetFilters}
           />
-        </Box >
+        </Box>
 
         <List selectable onSelect={this.handleSelect}>
           {this.state.students.map((student, index) => (
@@ -148,7 +154,7 @@ class StudentList extends React.Component {
                   <strong> {student.name}</strong>
                 </div>
               </Box>
-              <Box direction="row">
+              <Box direction="row" responsive={false}>
                 <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={e => this.handleTasks(e, student)}
@@ -156,7 +162,7 @@ class StudentList extends React.Component {
                   title={t('tasks')}
                 />
                 <Button
-                  icon={<FormTrashIcon size="large" />}
+                  icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, student.id)}
                   a11yTitle={t('remove')}
                   title={t('remove')}
@@ -165,8 +171,8 @@ class StudentList extends React.Component {
             </ListItem>
           ))}
           {loading && (
-            <div style={{ textAlign: 'center' }}>
-              <Spinning />
+            <div style={{ textAlign: 'center', marginTop: 30 }}>
+              <Spinning size="xlarge" />
             </div>
           )}
         </List>
