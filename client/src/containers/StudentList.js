@@ -4,7 +4,7 @@ import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
 import { TaskList } from './'
-import { StudentForm } from '../components'
+import { StudentForm, StudentFilters } from '../components'
 import { api, consts } from '../utils'
 
 class StudentList extends React.Component {
@@ -14,16 +14,27 @@ class StudentList extends React.Component {
     studentForm: true,
     taskForm: true,
     student: {},
-    searchTerm: ''
+    searchTerm: '',
+    noParticipate: false,
+    gender: null
   }
 
   componentDidMount() {
-    this.loadData()
+    const { state } = this.props.history.location
+    if (state) {
+      this.setState({ ...state }, this.loadData)
+    } else {
+      this.loadData()
+    }
   }
 
-  loadData = searchTerm => {
+  loadData = () => {
     this.setState({ loading: true })
-    const filter = searchTerm ? `?name=${searchTerm}` : ''
+    const { searchTerm, noParticipate, gender } = this.state
+    let filter = '?'
+    filter += searchTerm ? `name=${searchTerm}&` : ''
+    filter += noParticipate ? `noParticipate=${noParticipate}&` : ''
+    filter += gender ? `gender=${gender}&` : ''
     api.get(`/students${filter}`).then(students => {
       this.setState({ students: students || [], loading: false })
     })
@@ -31,8 +42,7 @@ class StudentList extends React.Component {
 
   handleSearch = e => {
     const searchTerm = e.target.value
-    this.setState({ searchTerm })
-    this.loadData(searchTerm)
+    this.setState({ searchTerm }, this.loadData)
   }
 
   handleSelect = index => {
@@ -66,20 +76,30 @@ class StudentList extends React.Component {
   handleSubmit = (id, data) => {
     if (id) {
       api.patch('/students', id, data).then(() => {
-        this.setState({ studentForm: true })
-        this.loadData(this.state.searchTerm)
+        this.setState({ studentForm: true }, this.loadData)
       })
     } else {
       api.post('/students', data).then(() => {
-        this.setState({ studentForm: true })
-        this.loadData(this.state.searchTerm)
+        this.setState({ studentForm: true }, this.loadData)
       })
     }
   }
 
+  handleFilter = (name, val) => {
+    // allow null option
+    if (name === "gender" && this.state.gender === val) {
+      val = null
+    }
+    this.setState({ [name]: val }, this.loadData)
+  }
+
+  resetFilters = () => {
+    this.setState({ gender: null, noParticipate: false }, this.loadData)
+  }
+
   render() {
     const { t } = this.props
-    const { searchTerm, loading } = this.state
+    const { searchTerm, loading, noParticipate, gender } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -89,8 +109,15 @@ class StudentList extends React.Component {
         <Box pad={{ vertical: 'medium' }}>
           <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
         </Box>
-        <Box pad={{ vertical: 'medium' }}>
+        <Box
+          direction='row'
+          justify='between'
+          align='stretch'
+          pad={{ vertical: 'medium' }}
+          responsive={false}
+        >
           <Search
+            fill
             inline
             responsive={false}
             iconAlign="start"
@@ -98,7 +125,15 @@ class StudentList extends React.Component {
             onDOMChange={this.handleSearch}
             placeHolder={t('search')}
           />
+          <StudentFilters
+            searchTerm={searchTerm}
+            noParticipate={noParticipate}
+            gender={gender}
+            handleFilter={this.handleFilter}
+            resetFilters={this.resetFilters}
+          />
         </Box>
+
         <List selectable onSelect={this.handleSelect}>
           {this.state.students.map((student, index) => (
             <ListItem
@@ -119,7 +154,7 @@ class StudentList extends React.Component {
                   <strong> {student.name}</strong>
                 </div>
               </Box>
-              <Box direction="row">
+              <Box direction="row" responsive={false}>
                 <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={e => this.handleTasks(e, student)}
@@ -127,7 +162,7 @@ class StudentList extends React.Component {
                   title={t('tasks')}
                 />
                 <Button
-                  icon={<FormTrashIcon size="large" />}
+                  icon={<FormTrashIcon size="medium" />}
                   onClick={e => this.handleRemove(e, student.id)}
                   a11yTitle={t('remove')}
                   title={t('remove')}
@@ -136,8 +171,8 @@ class StudentList extends React.Component {
             </ListItem>
           ))}
           {loading && (
-            <div style={{ textAlign: 'center' }}>
-              <Spinning />
+            <div style={{ textAlign: 'center', marginTop: 30 }}>
+              <Spinning size="xlarge" />
             </div>
           )}
         </List>
@@ -152,7 +187,7 @@ class StudentList extends React.Component {
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
         />
-      </Section>
+      </Section >
     )
   }
 }

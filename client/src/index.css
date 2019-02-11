@@ -2,6 +2,14 @@
   margin: 24px 0 24px 0px;
 }
 
+.grommetux-button--plain .grommetux-button__icon {
+  padding: 6px;
+}
+
+.grommet.grommetux-drop {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
 @media screen and (min-width: 45em) {
   .grommetux-sidebar {
     animation: sidebarSlide 0.2s;
