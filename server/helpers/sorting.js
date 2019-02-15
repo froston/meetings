@@ -46,8 +46,8 @@ exports.sortStudents = (taskName, hall, month, year) => {
         return 1
       }
     }
-    /* LAST HALL TASK IN */
-    if (aLastTaskAll && bLastLastAll) {
+    /* LAST HALL TASK IN  (EXCEPT READING)*/
+    if (aLastTaskAll && bLastLastAll && taskName != 'Reading') {
       if (aLastTaskAll.hall === hall && bLastLastAll.hall !== hall) {
         return 1
       }
