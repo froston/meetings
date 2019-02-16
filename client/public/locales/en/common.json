@@ -39,5 +39,6 @@
   "hallAll": "Both",
   "hallA": "Main",
   "hallB": "Auxiliar",
-  "name": "Name"
+  "name": "Name",
+  "readingMain": "Assign reading only in main hall"
 }

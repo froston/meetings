@@ -39,5 +39,6 @@
   "hallAll": "Oba",
   "hallA": "Hlavní",
   "hallB": "Pomocný",
-  "name": "Jméno"
+  "name": "Jméno",
+  "readingMain": "Zadat čtení jen v hlavním sále"
 }

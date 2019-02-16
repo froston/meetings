@@ -15,12 +15,15 @@ import {
   Accordion,
   AccordionPanel,
   List,
-  ListItem
+  ListItem,
+  CheckBox
 } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
 import { consts } from '../utils'
+
+const availableHalls = [consts.HALLS_ALL, consts.HALLS_A]
 
 class ScheduleForm extends React.PureComponent {
   getState = () => ({
@@ -41,6 +44,7 @@ class ScheduleForm extends React.PureComponent {
       value: consts.HALLS_ALL,
       label: this.props.t(`common:hall${consts.HALLS_ALL}`)
     },
+    readingMain: false,
     submitting: false,
     errors: {}
   })
@@ -150,10 +154,10 @@ class ScheduleForm extends React.PureComponent {
   }
   render() {
     const { t, hidden, handleClose } = this.props
-    const { month, year, weeks, hall, errors, submitting } = this.state
+    const { month, year, weeks, hall, errors, submitting, readingMain } = this.state
     return (
       <div>
-        <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
+        <Layer closer overlayClose align="top" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
               {t('new')}
@@ -175,11 +179,20 @@ class ScheduleForm extends React.PureComponent {
             <FormField label={t('common:halls')} error={errors.hall}>
               <Select
                 placeHolder={t('common:halls')}
-                options={consts.hallsOptions.map(value => ({ value, label: t(`common:hall${value}`) }))}
+                options={availableHalls.map(value => ({ value, label: t(`common:hall${value}`) }))}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
+            {hall.value === consts.HALLS_ALL && (
+              <FormField label={t('common:Reading')} error={errors.hall}>
+                <CheckBox
+                  label={t('common:readingMain')}
+                  checked={!!readingMain}
+                  onChange={({ target }) => this.handleChange('readingMain', target.checked)}
+                />
+              </FormField>
+            )}
             <FormField label={t('common:weekNum')} error={errors.weeks}>
               <NumberInput value={weeks} onChange={e => this.handleChange('weeks', e.target.value)} />
             </FormField>

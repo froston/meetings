@@ -71,40 +71,47 @@ const createSchedule = (newSchedule, mainCB) => {
                 async.waterfall(
                   [
                     callbackFinal => {
-                      // sorting and query options
-                      const sortingOpt = {
-                        taskName,
-                        hall,
-                        month: scheduleMonth,
-                        year: scheduleYear
-                      }
-                      studentModel.getSortedAvailables('student', sortingOpt, (err, students) => {
-                        if (err) throw err
-                        if (students && students.length) {
-                          const limit = students.length > config.limit ? config.limit : students.length
-                          const flhsIndex = Math.floor(Math.random() * limit)
-                          const finalStudent = students[flhsIndex]
-                          // assign task
-                          const studentTask = {
-                            student_id: finalStudent.id,
-                            schedule_id: newSchedule.id,
-                            task: taskName,
-                            week: Number(week),
-                            month: Number(newSchedule.month),
-                            year: Number(newSchedule.year),
-                            hall: hall
-                          }
-                          taskModel.createTask(studentTask, (err, res) => {
-                            callbackFinal(err, {
-                              ...studentTask,
-                              id: res.insertId,
-                              gender: finalStudent.gender
-                            })
-                          })
-                        } else {
-                          callbackFinal('No students!')
+                      // dont generate reading if 'reading only in main' checked
+                      const onlyMain =
+                        taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
+                      if (!onlyMain) {
+                        // sorting and query options
+                        const sortingOpt = {
+                          taskName,
+                          hall,
+                          month: scheduleMonth,
+                          year: scheduleYear
                         }
-                      })
+                        studentModel.getSortedAvailables('student', sortingOpt, (err, students) => {
+                          if (err) throw err
+                          if (students && students.length) {
+                            const limit = students.length > config.limit ? config.limit : students.length
+                            const flhsIndex = Math.floor(Math.random() * limit)
+                            const finalStudent = students[flhsIndex]
+                            // assign task
+                            const studentTask = {
+                              student_id: finalStudent.id,
+                              schedule_id: newSchedule.id,
+                              task: taskName,
+                              week: Number(week),
+                              month: Number(newSchedule.month),
+                              year: Number(newSchedule.year),
+                              hall: hall
+                            }
+                            taskModel.createTask(studentTask, (err, res) => {
+                              callbackFinal(err, {
+                                ...studentTask,
+                                id: res.insertId,
+                                gender: finalStudent.gender
+                              })
+                            })
+                          } else {
+                            callbackFinal('No students!', {})
+                          }
+                        })
+                      } else {
+                        callbackFinal(null, {})
+                      }
                     },
                     (newTask, callbackHelper) => {
                       if (taskName !== 'Reading' && taskName !== 'Talk') {

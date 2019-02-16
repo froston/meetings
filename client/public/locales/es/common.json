@@ -39,5 +39,6 @@
   "hallAll": "Ambas",
   "hallA": "Principal",
   "hallB": "Auxiliar",
-  "name": "Nombre"
+  "name": "Nombre",
+  "readingMain": "Asignar la lectura sólo en la sala principal"
 }
