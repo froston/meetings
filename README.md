@@ -18,7 +18,8 @@ Life and Minsitry App - Schedule and Administrate Life and Minsitry Meetings.
 * [Express](https://expressjs.com/) - Web framework for Node
 * [MySQL](https://github.com/redblaze/node-mysql) - MySQL database
 * [Passport.js](https://github.com/redblaze/node-mysql) - Authentication for Node
-* [excel4node](https://github.com/natergj/excel4node) - Node module to allow for easy Excel file creation
+* [excel4node](https://github.com/natergj/excel4node) - Easy Excel file creation
+* [Hummus JS](https://github.com/galkahana/HummusJS) - High performance creation, modification and parsing of PDF files and streams
 * [Async](https://caolan.github.io/async/) - Async utilities for Node
 
 ## Author
