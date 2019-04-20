@@ -46,12 +46,13 @@ exports.generateXls = (schedule, cb) => {
     row++
 
     const halls = ['A', 'B']
+    const readingMainOnly = schedule.tasks.filter(a => a.week === week && a.task === 'Reading').length === 1
     const hallRow = row
 
     halls.forEach(hall => {
       const tasks = schedule.tasks.filter(a => a.week === week && a.hall === hall)
       if (tasks.length) {
-        row = hallRow
+        row = readingMainOnly && hall === 'B' ? hallRow + 1 : hallRow
         tasks.forEach(task => {
           ws.cell(row, 1).string(`${task.task}`)
           if (task.helper_id) {
