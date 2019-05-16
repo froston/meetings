@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import {
+  Anchor,
+  Box,
   Layer,
   Form,
   FormField,
@@ -14,6 +16,7 @@ import {
   CheckBox,
   Select
 } from 'grommet'
+import { CatalogIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
 
 const initState = {
@@ -86,7 +89,7 @@ class StudentForm extends React.PureComponent {
   }
 
   render() {
-    const { t, hidden, student } = this.props
+    const { t, hidden, student, handleTasks } = this.props
     const { name, available, hall, errors, gender, participate } = this.state
     return (
       <div>
@@ -139,7 +142,10 @@ class StudentForm extends React.PureComponent {
               />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
-              <Button label={t('common:submit')} type="submit" primary={true} />
+              <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false}>
+                <Button label={t('common:submit')} type="submit" primary />
+                <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />
+              </Box>
             </Footer>
           </Form>
         </Layer>
@@ -152,7 +158,8 @@ StudentForm.propTypes = {
   hidden: PropTypes.bool,
   student: PropTypes.object,
   handleSubmit: PropTypes.func,
-  handleClose: PropTypes.func
+  handleClose: PropTypes.func,
+  handleTasks: PropTypes.func
 }
 
 export default translate(['students', 'common'])(StudentForm)

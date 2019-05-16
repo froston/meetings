@@ -87,7 +87,7 @@ class StudentList extends React.Component {
 
   handleFilter = (name, val) => {
     // allow null option
-    if (name === "gender" && this.state.gender === val) {
+    if (name === 'gender' && this.state.gender === val) {
       val = null
     }
     this.setState({ [name]: val }, this.loadData)
@@ -109,13 +109,7 @@ class StudentList extends React.Component {
         <Box pad={{ vertical: 'medium' }}>
           <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
         </Box>
-        <Box
-          direction='row'
-          justify='between'
-          align='stretch'
-          pad={{ vertical: 'medium' }}
-          responsive={false}
-        >
+        <Box direction="row" justify="between" align="stretch" pad={{ vertical: 'medium' }} responsive={false}>
           <Search
             fill
             inline
@@ -180,6 +174,7 @@ class StudentList extends React.Component {
           hidden={this.state.studentForm}
           handleSubmit={this.handleSubmit}
           handleClose={() => this.handleForm('studentForm', true)}
+          handleTasks={e => this.handleTasks(e, this.state.student)}
           student={this.state.student}
         />
         <TaskList
@@ -187,7 +182,7 @@ class StudentList extends React.Component {
           student={this.state.student}
           handleClose={() => this.handleForm('taskForm', true)}
         />
-      </Section >
+      </Section>
     )
   }
 }
