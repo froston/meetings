@@ -63,7 +63,7 @@ const createSchedule = (newSchedule, mainCB) => {
         async.eachLimit(
           scheduleTasks[week],
           1,
-          (taskName, taskCB) => {
+          (task, taskCB) => {
             async.eachLimit(
               scheduleHalls,
               1,
@@ -71,6 +71,8 @@ const createSchedule = (newSchedule, mainCB) => {
                 async.waterfall(
                   [
                     callbackFinal => {
+                      const taskName = task.includes('Return Visit') ? task.substring(3) : task
+                      const rvNumber = task.includes('Return Visit') ? task[0] : null
                       // dont generate reading if 'reading only in main' checked
                       const onlyMain =
                         taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
@@ -93,6 +95,7 @@ const createSchedule = (newSchedule, mainCB) => {
                               student_id: finalStudent.id,
                               schedule_id: newSchedule.id,
                               task: taskName,
+                              rvNumber: Number(rvNumber),
                               week: Number(week),
                               month: Number(newSchedule.month),
                               year: Number(newSchedule.year),
