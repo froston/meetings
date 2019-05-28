@@ -4,6 +4,8 @@ const t = text => {
       return 'Lectura de la Bíblia'
     case 'Initial Call':
       return 'Primera conversación'
+    case 'Return Visit':
+      return 'Revisita'
     case '1. Return Visit':
       return 'Primera revisita'
     case '2. Return Visit':
