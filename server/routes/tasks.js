@@ -15,6 +15,11 @@ router.get('/:studentId', (req, res) => {
 
 router.post('/', (req, res) => {
   const newTask = req.body
+  const taskName = newTask.task
+  if (taskName.includes('Return Visit')) {
+    newTask.task = taskName.substring(3)
+    newTask.rv = Number(taskName[0])
+  }
   model.createTask(newTask, (err, task) => {
     if (err) {
       res.status(500).send(err)

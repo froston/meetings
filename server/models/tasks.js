@@ -72,6 +72,7 @@ exports.createTask = (task, cb) => {
     helper_id: task.helper_id,
     schedule_id: task.schedule_id,
     task: task.task,
+    rv: task.rv,
     hall: task.hall,
     week: task.week,
     month: task.month,

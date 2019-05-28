@@ -36,7 +36,7 @@ class WeekTab extends React.PureComponent {
               >
                 <Header size="small" pad={{ horizontal: 'small' }}>
                   <Heading tag="h4" strong={true} margin="none">
-                    {t(`common:${task.task}`)}
+                    {task.rv ? t(`common:${task.rv}. ${task.task}`) : t(`common:${task.task}`)}
                   </Heading>
                 </Header>
                 <Box pad="small">
