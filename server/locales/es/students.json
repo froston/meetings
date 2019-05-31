@@ -15,5 +15,10 @@
   "brother": "Hermano",
   "sister": "Hermana",
   "participate": "Participa",
-  "sort": "Los estudiantes están ordenados según la probabilidad de dar otro tema."
+  "sort": "Los estudiantes están ordenados según la probabilidad de dar otro tema.",
+  "filters": "Filtros",
+  "filtersNoParticipate": "Solo no participantes",
+  "filtersOnlyBrothers": "Solo hermanos",
+  "filtersOnlySisters": "Solo hermanas",
+  "filtersReset": "Reiniciar filtros"
 }

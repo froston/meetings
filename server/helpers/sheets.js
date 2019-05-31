@@ -1,10 +1,9 @@
 const moment = require('moment')
 const xl = require('excel4node')
-const t = require('./t')
 
-exports.generateXls = (schedule, cb) => {
+exports.generateXls = (schedule, lang, t, cb) => {
   var wb = new xl.Workbook({ defaultFont: { size: 10, name: 'Ubuntu' } })
-  var ws = wb.addWorksheet('Asignaciones')
+  var ws = wb.addWorksheet(t('tasks'))
   // set rows columns sizes
   ws.row(1).setHeight(30)
   ws.column(1).setWidth(20)
@@ -28,10 +27,10 @@ exports.generateXls = (schedule, cb) => {
   let row = 1
   // start generating worksheet
   const monthName = moment(schedule.month, 'MM')
-    .locale('es')
+    .locale(lang)
     .format('MMMM')
   ws.cell(row, 1, row, 3, true)
-    .string(`Seamos mejores maestros - ${monthName} ${schedule.year}`)
+    .string(`${t('lifeMinistry')} - ${monthName} ${schedule.year}`)
     .style(style.main)
   row++
 
@@ -57,7 +56,7 @@ exports.generateXls = (schedule, cb) => {
       if (tasks.length) {
         row = readingMainOnly && hall === 'B' ? hallRow + 1 : hallRow
         tasks.forEach(task => {
-          ws.cell(row, 1).string(task.rv ? t(`${task.rv}. ${task.task}`) : t(task.task))
+          ws.cell(row, 1).string(task.rv ? t(lang, `${task.rv}. ${task.task}`) : t(lang, task.task))
           if (task.helper_id) {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)
           } else {

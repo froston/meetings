@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { translate } from 'react-i18next'
 import { Box, Menu, CheckBox, RadioButton, Form, FormField, Title, Anchor } from 'grommet'
 import { FilterIcon, CloseIcon } from 'grommet/components/icons/base'
 
 class StudentFilters extends React.PureComponent {
   render() {
-    const { handleFilter, resetFilters, noParticipate, gender } = this.props
+    const { t, handleFilter, resetFilters, noParticipate, gender } = this.props
     const active = !!noParticipate || !!gender
     return (
       <Menu
@@ -15,11 +16,11 @@ class StudentFilters extends React.PureComponent {
         size="medium"
       >
         <Box pad="medium">
-          <Title style={{ marginBottom: 20 }}>Student Filters</Title>
+          <Title style={{ marginBottom: 20 }}>{t('filters')}</Title>
           <Form>
             <FormField>
               <CheckBox
-                label="Only non-participating"
+                label={t('filtersNoParticipate')}
                 onChange={e => handleFilter('noParticipate', e.target.checked)}
                 checked={noParticipate}
               />
@@ -28,7 +29,7 @@ class StudentFilters extends React.PureComponent {
               <RadioButton
                 id="B"
                 name="gender"
-                label="Only brothers"
+                label={t('filtersOnlyBrothers')}
                 onChange={() => handleFilter('gender', 'B')}
                 onClick={() => handleFilter('gender', 'B')}
                 checked={gender === 'B'}
@@ -36,7 +37,7 @@ class StudentFilters extends React.PureComponent {
               <RadioButton
                 id="S"
                 name="gender"
-                label="Only sisters"
+                label={t('filtersOnlySisters')}
                 onChange={() => handleFilter('gender', 'S')}
                 onClick={() => handleFilter('gender', 'S')}
                 checked={gender === 'S'}
@@ -44,7 +45,7 @@ class StudentFilters extends React.PureComponent {
             </FormField>
           </Form>
         </Box>
-        <Anchor icon={<CloseIcon />} label="Reset Filters" onClick={resetFilters} style={{ margin: '15px 0' }} />
+        <Anchor icon={<CloseIcon />} label={t('filtersReset')} onClick={resetFilters} style={{ margin: '15px 0' }} />
       </Menu>
     )
   }
@@ -56,4 +57,4 @@ StudentFilters.propTypes = {
   gender: PropTypes.string
 }
 
-export default StudentFilters
+export default translate('students')(StudentFilters)

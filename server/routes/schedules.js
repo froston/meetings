@@ -24,13 +24,16 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/downloadXls', (req, res) => {
   const id = req.params.id
-  model.generateXls(id, res)
+  const lang = req.query.lang
+  req.i18n.changeLanguage(lang)
+  model.generateXls(id, lang, req.t, res)
 })
 
 router.get('/:id/downloadPdfs', (req, res) => {
   const id = req.params.id
   const beginsWith = req.query.beginsWith
-  model.generatePdfs(id, beginsWith, res)
+  const lang = req.query.lang
+  model.generatePdfs(id, beginsWith, lang, res)
 })
 
 router.post('/', (req, res) => {

@@ -15,5 +15,10 @@
   "brother": "Brother",
   "sister": "Sister",
   "participate": "Participates",
-  "sort": "The students are ordered according to the probability of having next task."
+  "sort": "The students are ordered according to the probability of having next task.",
+  "filters": "Filters",
+  "filtersNoParticipate": "Only non-participating",
+  "filtersOnlyBrothers": "Only brothers",
+  "filtersOnlySisters": "Only sisters",
+  "filtersReset": "Reset filters"
 }
