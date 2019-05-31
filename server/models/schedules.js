@@ -63,7 +63,9 @@ const createSchedule = (newSchedule, mainCB) => {
         async.eachLimit(
           scheduleTasks[week],
           1,
-          (taskName, taskCB) => {
+          (task, taskCB) => {
+            const taskName = task.includes('Return Visit') ? task.substring(3) : task
+            const rvNumber = task.includes('Return Visit') ? Number(task[0]) : null
             async.eachLimit(
               scheduleHalls,
               1,
@@ -93,6 +95,7 @@ const createSchedule = (newSchedule, mainCB) => {
                               student_id: finalStudent.id,
                               schedule_id: newSchedule.id,
                               task: taskName,
+                              rv: rvNumber,
                               week: Number(week),
                               month: Number(newSchedule.month),
                               year: Number(newSchedule.year),

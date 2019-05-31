@@ -69,9 +69,10 @@ class TaskList extends React.PureComponent {
                 {tasks &&
                   tasks.map((task, index) => {
                     const isHelper = task.helper_id === student.id
+                    const taskName = task.rv ? t(`common:${task.rv}. ${task.task}`) : t(`common:${task.task}`)
                     return (
                       <TableRow key={index}>
-                        <td>{isHelper ? t('common:helper') : <b>{t(`common:${task.task}`)}</b>}</td>
+                        <td>{isHelper ? t('common:helper') : <b>{taskName}</b>}</td>
                         <td>{`(${task.week}) ${task.month}/${task.year}`}</td>
                         <td>{t(`common:hall${task.hall}`)}</td>
                         <td>{isHelper ? null : task.helper_name}</td>

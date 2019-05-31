@@ -50,6 +50,7 @@ CREATE TABLE `tasks` (
   `schedule_id` int(11) DEFAULT NULL,
   `hall` char(2) DEFAULT NULL,
   `task` varchar(50) DEFAULT NULL,
+  `rv` int(11) DEFAULT NULL,
   `week` int(11) DEFAULT NULL,
   `month` int(11) DEFAULT NULL,
   `year` int(11) DEFAULT NULL

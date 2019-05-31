@@ -1,5 +1,6 @@
 const moment = require('moment')
 const xl = require('excel4node')
+const t = require('./t')
 
 exports.generateXls = (schedule, cb) => {
   var wb = new xl.Workbook({ defaultFont: { size: 10, name: 'Ubuntu' } })
@@ -26,9 +27,11 @@ exports.generateXls = (schedule, cb) => {
   }
   let row = 1
   // start generating worksheet
-  const monthName = moment(schedule.month, 'MM').format('MMMM')
+  const monthName = moment(schedule.month, 'MM')
+    .locale('es')
+    .format('MMMM')
   ws.cell(row, 1, row, 3, true)
-    .string(`Seamos mejores maestros - ${monthName}  ${schedule.year}`)
+    .string(`Seamos mejores maestros - ${monthName} ${schedule.year}`)
     .style(style.main)
   row++
 
@@ -54,7 +57,7 @@ exports.generateXls = (schedule, cb) => {
       if (tasks.length) {
         row = readingMainOnly && hall === 'B' ? hallRow + 1 : hallRow
         tasks.forEach(task => {
-          ws.cell(row, 1).string(`${task.task}`)
+          ws.cell(row, 1).string(task.rv ? t(`${task.rv}. ${task.task}`) : t(task.task))
           if (task.helper_id) {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)
           } else {

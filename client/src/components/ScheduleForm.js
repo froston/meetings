@@ -90,12 +90,12 @@ class ScheduleForm extends React.PureComponent {
     this.setState({ submitting: true })
     this.validate(() => {
       // convert return visits
-      let tasks = {}
-      for (let week = 1; week <= this.state.weeks; week++) {
+      let tasks = this.state.tasks
+      /* for (let week = 1; week <= this.state.weeks; week++) {
         tasks[week] = this.state.tasks[week].map(taskName =>
           taskName.includes('Return Visit') ? taskName.substring(3) : taskName
         )
-      }
+      } */
       const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }
       this.props.handleSubmit(values, () => {
         this.setState({ ...this.getState() })

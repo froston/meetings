@@ -71,7 +71,7 @@ class TaskForm extends React.PureComponent {
           </FormField>
           <FormField label={t('common:talk')} error={errors.task}>
             <Select
-              options={consts.availableOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
+              options={consts.scheduleOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
               value={task}
               onChange={({ value }) => this.handleChange('task', value)}
             />
