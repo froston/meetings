@@ -32,7 +32,7 @@ class WeekTab extends React.PureComponent {
                 align="start"
                 basis="1/4"
                 className={className}
-                style={{ backgroundColor: task.dup ? '#ffdbea' : null }}
+                style={{ backgroundColor: task.dup ? '#ffeaec' : null }}
               >
                 <Header size="small" pad={{ horizontal: 'small' }}>
                   <Heading tag="h4" strong={true} margin="none">

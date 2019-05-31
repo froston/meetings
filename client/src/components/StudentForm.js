@@ -144,7 +144,7 @@ class StudentForm extends React.PureComponent {
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false}>
                 <Button label={t('common:submit')} type="submit" primary />
-                <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />
+                {student && <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />}
               </Box>
             </Footer>
           </Form>

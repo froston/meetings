@@ -7,7 +7,7 @@
 }
 
 .grommet.grommetux-drop {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 @media screen and (min-width: 45em) {
@@ -72,4 +72,71 @@
   border: none;
   border-left: 5px solid #49516f;
   position: relative;
+}
+
+.grommetux-form .grommetux-button--primary {
+  background: #0a64a0 !important;
+  border-color: #0a64a0 !important;
+}
+.grommetux-form .grommetux-button--primary:hover {
+  box-shadow: 0px 0px 0px 2px #0a64a0 !important;
+}
+
+.grommetux-check-box--toggle .grommetux-check-box__input:checked + .grommetux-check-box__control {
+  background-color: #0a64a0 !important;
+}
+
+.grommetux-check-box--toggle .grommetux-check-box__input:checked + .grommetux-check-box__control:after {
+  border-color: #0a64a0 !important;
+}
+
+.grommetux-radio-button__input:checked + .grommetux-radio-button__control {
+  border-color: #0a64a0;
+}
+.grommetux-radio-button__input:checked + .grommetux-radio-button__control:after {
+  background-color: #0a64a0;
+}
+
+.grommetux-check-box__input:checked + .grommetux-check-box__control {
+  border-color: #0a64a0;
+}
+
+.grommetux-check-box__control-check {
+  stroke: #0a64a0;
+}
+
+.grommet .week-tab a,
+.grommetux-menu__drop .grommetux-anchor {
+  color: #0a64a0 !important;
+}
+
+a.grommetux-button {
+  border-color: #0a64a0 !important;
+}
+a.grommetux-button:hover {
+  box-shadow: 0px 0px 0px 2px #0a64a0 !important;
+}
+
+.grommetux-anchor--primary,
+.grommetux-anchor--primary:hover {
+  color: #0a64a0;
+}
+
+.grommetux-anchor--primary .grommetux-control-icon {
+  fill: #0a64a0;
+  stroke: #0a64a0;
+}
+
+.grommetux-list-item--selected {
+  background: #eaf5fc;
+}
+
+.grommetux-date-time-drop__today {
+  border-color: #0a64a0;
+}
+.grommetux-date-time-drop__today:hover {
+  box-shadow: 0px 0px 0px 2px #0a64a0 !important;
+}
+.grommetux-date-time-drop__day--active {
+  background-color: #0a64a0;
 }
