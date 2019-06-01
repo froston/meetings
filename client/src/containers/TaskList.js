@@ -73,7 +73,10 @@ class TaskList extends React.PureComponent {
                     return (
                       <TableRow key={index}>
                         <td>{isHelper ? t('common:helper') : <b>{taskName}</b>}</td>
-                        <td>{`(${task.week}) ${task.month}/${task.year}`}</td>
+                        <td>
+                          <span style={{ color: '#a8a8a8' }}>({task.week})</span>
+                          {` ${task.month}/${task.year}`}
+                        </td>
                         <td>{t(`common:hall${task.hall}`)}</td>
                         <td>{isHelper ? null : task.helper_name}</td>
                         {showForm && (
