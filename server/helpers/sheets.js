@@ -36,27 +36,27 @@ exports.generateXls = (schedule, lang, t, cb) => {
 
   for (let week = 1; week <= schedule.weeks; week++) {
     ws.cell(row, 1, row, 3, true)
-      .string(`Semana ${week}`)
+      .string(`${t(`week`)} ${week}`)
       .style(style.week)
     row++
+
     ws.cell(row, 2)
-      .string(`Sala principal`)
+      .string(`${t(`hall`)}  ${t(`hallA`)}`)
       .style(style.hall)
     ws.cell(row, 3)
-      .string(`Sala auxiliar`)
+      .string(`${t(`hall`)}  ${t(`hallB`)}`)
       .style(style.hall)
     row++
 
     const halls = ['A', 'B']
     const readingMainOnly = schedule.tasks.filter(a => a.week === week && a.task === 'Reading').length === 1
     const hallRow = row
-
     halls.forEach(hall => {
       const tasks = schedule.tasks.filter(a => a.week === week && a.hall === hall)
       if (tasks.length) {
         row = readingMainOnly && hall === 'B' ? hallRow + 1 : hallRow
         tasks.forEach(task => {
-          ws.cell(row, 1).string(task.rv ? t(lang, `${task.rv}. ${task.task}`) : t(lang, task.task))
+          ws.cell(row, 1).string(task.rv ? t(`${task.rv}. ${task.task}`) : t(task.task))
           if (task.helper_id) {
             ws.cell(row, hall == 'A' ? 2 : 3).string(`${task.student_name} + ${task.helper_name}`)
           } else {

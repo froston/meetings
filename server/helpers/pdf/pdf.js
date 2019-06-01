@@ -19,6 +19,19 @@ const getFileName = lang => {
   }
 }
 
+const getDateFormat = lang => {
+  switch (lang) {
+    case 'es':
+      return 'DD-MM-YYYY'
+    case 'en':
+      return 'MM/DD/YYYY'
+    case 'cs':
+      return 'DD.MM.YYYY'
+    default:
+      return 'DD-MM-YYYY'
+  }
+}
+
 exports.generatePdfs = (schedule, firstDay = 1, lang, res) => {
   const input = path.join(__dirname, `./forms/${getFileName(lang)}`)
   const fontPath = path.join(__dirname, 'courierb.ttf')
@@ -36,7 +49,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, res) => {
     const data = {
       Name: task.student_name,
       Assistant: task.helper_name,
-      Date: date.format('DD-MM-YYYY'),
+      Date: date.format(getDateFormat(lang)),
       'Check Box01': task.task === 'Reading' ? true : false,
       'Check Box02': task.task === 'Initial Call' ? true : false,
       'Check Box03': task.task === 'Return Visit' && task.rv === 1 ? true : false,

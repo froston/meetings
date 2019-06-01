@@ -31,8 +31,9 @@ i18next
     },
     ns: ['common'],
     defaultNS: 'common',
-    fallbackLng: 'en',
-    preload: ['en', 'es', 'cs']
+    fallbackLng: 'es',
+    preload: ['en', 'es', 'cs'],
+    keySeparator: false // we use content as keys
   })
 
 app.use(i18nextMiddleware.handle(i18next))
