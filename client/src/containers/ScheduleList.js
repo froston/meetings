@@ -53,7 +53,8 @@ class ScheduleList extends React.Component {
   downloadXls = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    api.downloadFile(`/schedules/${id}/downloadXls`).then(blob => {
+    const lang = this.props.i18n.language
+    api.downloadFile(`/schedules/${id}/downloadXls?lang=${lang}`).then(blob => {
       saveAs(blob, 'report.xlsx')
     })
   }
@@ -66,7 +67,8 @@ class ScheduleList extends React.Component {
       1
     )
     if (beginsWith) {
-      api.downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}`).then(blob => {
+      const lang = this.props.i18n.language
+      api.downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}&lang=${lang}`).then(blob => {
         saveAs(blob, 'appointments.zip')
       })
     }

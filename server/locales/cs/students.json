@@ -15,5 +15,10 @@
   "brother": "Bratr",
   "sister": "Sestra",
   "participate": "Účastní se",
-  "sort": "Studenti jsou seřazeni podle šancí přednést další úkol."
+  "sort": "Studenti jsou seřazeni podle šancí přednést další úkol.",
+  "filters": "Filtry",
+  "filtersNoParticipate": "Pouze neučastnící se",
+  "filtersOnlyBrothers": "Pouze bratři",
+  "filtersOnlySisters": "Pouye sestry",
+  "filtersReset": "Resetovat filtry"
 }

@@ -1,4 +1,5 @@
 {
+  "lifeMinistry": "Kazatelská služba",
   "tasks": "Úkoly",
   "task": "Úkol",
   "talk": "Úkol",
@@ -19,9 +20,9 @@
   "Reading": "Čtení Bible",
   "Initial Call": "První rozhovor",
   "Return Visit": "Opětovná návštěva",
-  "1. Return Visit": "1. opětovná návštěva",
-  "2. Return Visit": "2. opětovná návštěva",
-  "3. Return Visit": "3. opětovná návštěva",
+  "1. Return Visit": "1. Opětovná návštěva",
+  "2. Return Visit": "2. Opětovná návštěva",
+  "3. Return Visit": "3. Opětovná návštěva",
   "Bible Study": "Biblické studium",
   "Talk": "Proslov",
   "month1": "leden",
@@ -40,5 +41,6 @@
   "hallA": "Hlavní",
   "hallB": "Pomocný",
   "name": "Jméno",
-  "readingMain": "Zadat čtení jen v hlavním sále"
+  "readingMain": "Zadat čtení jen v hlavním sále",
+  "dateFormat": "dd. MM. YYYY"
 }

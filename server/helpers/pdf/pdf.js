@@ -6,8 +6,34 @@ const { fillForm } = require('./pdf-form-fill')
 const moment = require('moment')
 const archiver = require('archiver')
 
-exports.generatePdfs = (schedule, firstDay = 1, res) => {
-  const input = path.join(__dirname, 'S-89-S.pdf')
+const getFileName = lang => {
+  switch (lang) {
+    case 'es':
+      return 'S-89-S.pdf'
+    case 'en':
+      return 'S-89-E.pdf'
+    case 'cs':
+      return 'S-89-E.pdf' // TODO get czech form
+    default:
+      return 'S-89-E.pdf'
+  }
+}
+
+const getDateFormat = lang => {
+  switch (lang) {
+    case 'es':
+      return 'DD-MM-YYYY'
+    case 'en':
+      return 'MM/DD/YYYY'
+    case 'cs':
+      return 'DD.MM.YYYY'
+    default:
+      return 'DD-MM-YYYY'
+  }
+}
+
+exports.generatePdfs = (schedule, firstDay = 1, lang, res) => {
+  const input = path.join(__dirname, `./forms/${getFileName(lang)}`)
   const fontPath = path.join(__dirname, 'courierb.ttf')
   const folderName = `${schedule.month}_${schedule.year}_${moment().unix()}`
   const folderPath = path.join(os.tmpdir(), folderName)
@@ -23,7 +49,7 @@ exports.generatePdfs = (schedule, firstDay = 1, res) => {
     const data = {
       Name: task.student_name,
       Assistant: task.helper_name,
-      Date: date.format('DD-MM-YYYY'),
+      Date: date.format(getDateFormat(lang)),
       'Check Box01': task.task === 'Reading' ? true : false,
       'Check Box02': task.task === 'Initial Call' ? true : false,
       'Check Box03': task.task === 'Return Visit' && task.rv === 1 ? true : false,

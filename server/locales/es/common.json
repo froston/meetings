@@ -1,4 +1,5 @@
 {
+  "lifeMinistry": "Seamos mejores maestros",
   "tasks": "Asignaciones",
   "task": "Asignación",
   "talk": "Tema",
@@ -19,9 +20,9 @@
   "Reading": "Lectura de la Bíblia",
   "Initial Call": "Primera conversación",
   "Return Visit": "Revisita",
-  "1. Return Visit": "1.ª revisita",
-  "2. Return Visit": "2.ª revisita",
-  "3. Return Visit": "3.ª revisita",
+  "1. Return Visit": "1.ª Revisita",
+  "2. Return Visit": "2.ª Revisita",
+  "3. Return Visit": "3.ª Revisita",
   "Bible Study": "Curso bíblico",
   "Talk": "Discruso",
   "month1": "enero",

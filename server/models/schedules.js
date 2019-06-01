@@ -174,17 +174,17 @@ const removeSchedule = (id, cb) => {
   })
 }
 
-const generateXls = (id, res) => {
+const generateXls = (id, lang, t, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    sheets.generateXls(schedule, res)
+    sheets.generateXls(schedule, lang, t, res)
   })
 }
 
-const generatePdfs = (id, beginsWith, res) => {
+const generatePdfs = (id, beginsWith, lang, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    pdf.generatePdfs(schedule, beginsWith, res)
+    pdf.generatePdfs(schedule, beginsWith, lang, res)
   })
 }
 

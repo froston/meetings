@@ -10,7 +10,7 @@ class LangMenu extends React.PureComponent {
   render() {
     const { lang } = this.props
     return (
-      <Menu responsive icon={<LocationIcon />} size="small">
+      <Menu responsive icon={<LocationIcon />} size="small" title="Language">
         <Anchor href="#" onClick={() => this.handleClick('en')} className={lang === 'en' ? 'active' : ''}>
           English
         </Anchor>
