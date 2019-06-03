@@ -6,6 +6,7 @@
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
   "report": "Generate XLS Schedule",
+  "reportPdf": "Generate PDF Assignments",
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
   "change": "Change Task",

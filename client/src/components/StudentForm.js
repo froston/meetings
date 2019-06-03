@@ -67,6 +67,9 @@ class StudentForm extends React.PureComponent {
 
   handleChange = (name, value) => {
     this.setState({ [name]: value, errors: {} })
+    if (name === 'gender') {
+      this.setState({ available: [] })
+    }
   }
 
   handleSubmit = e => {
@@ -91,6 +94,7 @@ class StudentForm extends React.PureComponent {
   render() {
     const { t, hidden, student, handleTasks } = this.props
     const { name, available, hall, errors, gender, participate } = this.state
+    const availableOptions = gender === consts.GENDER_SISTER ? consts.sisAvailableOptions : consts.availableOptions
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -128,7 +132,7 @@ class StudentForm extends React.PureComponent {
                 label={t('common:available')}
                 inline
                 multiple
-                options={consts.availableOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
+                options={availableOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
                 value={available}
                 onChange={({ value }) => this.handleChange('available', value)}
               />

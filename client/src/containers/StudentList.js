@@ -106,10 +106,10 @@ class StudentList extends React.Component {
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
-        <Box pad={{ vertical: 'medium' }}>
+        <Box pad={{ vertical: 'small' }}>
           <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
         </Box>
-        <Box direction="row" justify="between" align="stretch" pad={{ vertical: 'medium' }} responsive={false}>
+        <Box direction="row" justify="between" align="stretch" pad={{ vertical: 'small' }} responsive={false}>
           <Search
             fill
             inline

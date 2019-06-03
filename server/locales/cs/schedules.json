@@ -6,6 +6,7 @@
   "confirmRemove": "Opravdu smazat rozvrh?",
   "remove": "Smazat Rozvrh",
   "report": "Vygenerovat rozvrh v XLS",
+  "reportPdf": "Vygenerovat úkoly v PDF",
   "name": "Rozvrh",
   "reassigned": "Úkol byl předán ",
   "change": "Změnit Zadání",
