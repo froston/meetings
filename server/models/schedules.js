@@ -8,6 +8,9 @@ const pdf = require('../helpers/pdf/pdf')
 
 const getAll = (query, cb) => {
   let where = ''
+  if (query.year > 0) {
+    where = `WHERE year = ${query.year}`
+  }
   if (query.month > 0 && query.year > 0) {
     where = `WHERE month = ${query.month} AND year = ${query.year}`
   }

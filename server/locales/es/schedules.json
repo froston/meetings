@@ -7,6 +7,7 @@
   "new": "Nuevo Programa",
   "remove": "Eliminar Programa",
   "report": "Generar Programa XLS",
+  "reportPdf": "Generar Asignaciones en PDF",
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
   "change": "Cambiar Asignación",

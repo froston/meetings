@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
+import { Section, Box, Heading, List, ListItem, Button, Paragraph, Search } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentPdfIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
@@ -14,7 +14,8 @@ class ScheduleList extends React.Component {
   state = {
     loading: false,
     schedules: [],
-    scheduleForm: true
+    scheduleForm: true,
+    year: moment().year()
   }
 
   componentDidMount() {
@@ -23,7 +24,7 @@ class ScheduleList extends React.Component {
 
   loadData = () => {
     this.setState({ loading: true })
-    api.get('/schedules').then(schedules => {
+    api.get(`/schedules?year=${this.state.year}`).then(schedules => {
       this.setState({
         schedules: schedules || [],
         loading: false
@@ -78,6 +79,16 @@ class ScheduleList extends React.Component {
     this.setState({ scheduleForm: !this.state.scheduleForm })
   }
 
+  handleYearChange = e => {
+    this.setState({ year: e.target.value })
+  }
+
+  handleFilter = e => {
+    if (e.key === 'Enter' && this.state.year > 0) {
+      this.loadData()
+    }
+  }
+
   handleSubmit = (data, cb) => {
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
@@ -95,15 +106,36 @@ class ScheduleList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedules, scheduleForm, loading } = this.state
+    const { schedules, scheduleForm, loading, year } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
-        <Box pad={{ vertical: 'medium' }}>
-          <Button icon={<ScheduleIcon />} label={t('generate')} onClick={this.handleAdd} href="#" />
+        <Box pad={{ vertical: 'medium' }} direction="row" justify="between" align="center">
+          <Box>
+            <Button
+              icon={<ScheduleIcon />}
+              label={t('generate')}
+              onClick={this.handleAdd}
+              href="#"
+              style={{ minWidth: 400 }}
+            />
+          </Box>
+          <br />
+          <Box direction="row" responsive={false}>
+            <Search
+              fill
+              inline
+              responsive={false}
+              iconAlign="end"
+              value={year}
+              onDOMChange={this.handleYearChange}
+              onKeyDown={this.handleFilter}
+              placeHolder={t('common:year')}
+            />
+          </Box>
         </Box>
         <List selectable>
           {schedules.map((schedule, index) => (
@@ -123,8 +155,8 @@ class ScheduleList extends React.Component {
                 <Button
                   icon={<DocumentPdfIcon size="medium" />}
                   onClick={e => this.downloadPdfs(e, schedule)}
-                  a11yTitle={t('report')}
-                  title={t('report')}
+                  a11yTitle={t('reportPdf')}
+                  title={t('reportPdf')}
                 />
                 <Button
                   icon={<DocumentExcelIcon size="medium" />}
