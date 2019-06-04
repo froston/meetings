@@ -13,9 +13,9 @@ const getFileName = lang => {
     case 'en':
       return 'S-89-E.pdf'
     case 'cs':
-      return 'S-89-E.pdf' // TODO get czech form
+      return 'S-89-B.pdf'
     default:
-      return 'S-89-E.pdf'
+      return 'S-89-S.pdf'
   }
 }
 

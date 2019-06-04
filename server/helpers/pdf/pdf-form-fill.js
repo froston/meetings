@@ -299,8 +299,8 @@ function writeFieldWithAppearanceForText(
   inheritedProperties
 ) {
   // determine how to write appearance
-  var newAppearanceFormId = handles.objectsContext.allocateNewObjectID()
   if (appearanceInField) {
+    var newAppearanceFormId = handles.objectsContext.allocateNewObjectID()
     // Appearance in field - so write appearance dict in field
     targetFieldDict.writeKey('AP')
 
@@ -310,38 +310,43 @@ function writeFieldWithAppearanceForText(
       .endDictionary(apDict)
       .endDictionary(targetFieldDict)
       .endIndirectObject()
-  } else {
-    // finish the field object
-    handles.objectsContext.endDictionary(targetFieldDict).endIndirectObject()
 
+    // write the new stream xobject
+    writeAppearanceXObjectForText(handles, newAppearanceFormId, sourceFieldDictionary, textToWrite, inheritedProperties)
+  } else {
     // write in kid (there should be just one)
     var kidsArray = handles.reader.queryDictionaryObject(sourceFieldDictionary, 'Kids').toPDFArray()
+    // write the Kids key before we write the kids array
+    targetFieldDict.writeKey('Kids')
     var fieldsReferences = writeKidsAndEndObject(handles, targetFieldDict, kidsArray)
 
-    // recreate widget kid, with new stream reference
-    var fieldReference = fieldsReferences[0]
+    for (let i = 0; i < fieldsReferences.length; i++) {
+      var newAppearanceFormId = handles.objectsContext.allocateNewObjectID()
+      // recreate widget kid, with new stream reference
+      let fieldReference = fieldsReferences[i]
+      let sourceField
 
-    if (fieldReference.existing) {
-      handles.objectsContext.startModifiedIndirectObject(fieldReference.id)
-      sourceField = handles.reader.parseNewObject(fieldReference.id).toPDFDictionary()
-    } else {
-      handles.objectsContext.startNewIndirectObject(fieldReference.id)
-      sourceField = fieldReference.field.toPDFDictionary()
+      if (fieldReference.existing) {
+        handles.objectsContext.startModifiedIndirectObject(fieldReference.id)
+        sourceField = handles.reader.parseNewObject(fieldReference.id).toPDFDictionary()
+      } else {
+        handles.objectsContext.startNewIndirectObject(fieldReference.id)
+        sourceField = fieldReference.field.toPDFDictionary()
+      }
+
+      var modifiedDict = startModifiedDictionary(handles, sourceField, { AP: -1 })
+      modifiedDict.writeKey('AP')
+
+      var apDict = handles.objectsContext.startDictionary()
+      apDict.writeKey('N').writeObjectReferenceValue(newAppearanceFormId)
+      handles.objectsContext
+        .endDictionary(apDict)
+        .endDictionary(modifiedDict)
+        .endIndirectObject()
+      // write the new stream xobject
+      writeAppearanceXObjectForText(handles, newAppearanceFormId, sourceField, textToWrite, inheritedProperties)
     }
-
-    var modifiedDict = startModifiedDictionary(handles, sourceField, { AP: -1 })
-    modifiedDict.writeKey('AP')
-
-    var apDict = handles.objectsContext.startDictionary()
-    apDict.writeKey('N').writeObjectReferenceValue(newAppearanceFormId)
-    handles.objectsContext
-      .endDictionary(apDict)
-      .endDictionary(modifiedDict)
-      .endIndirectObject()
   }
-
-  // write the new stream xobject
-  writeAppearanceXObjectForText(handles, newAppearanceFormId, sourceFieldDictionary, textToWrite, inheritedProperties)
 }
 
 function updateTextValue(handles, fieldDictionary, value, isRich, inheritedProperties) {
@@ -352,7 +357,7 @@ function updateTextValue(handles, fieldDictionary, value, isRich, inheritedPrope
   var appearanceInField =
     (fieldDictionary.exists('Subtype') && fieldDictionary.queryObject('Subtype').toString() == 'Widget') ||
     !fieldDictionary.exists('Kids')
-  var fieldsToRemove = { V: -1 }
+  var fieldsToRemove = { V: -1, Kids: -1 }
   if (appearanceInField) {
     // add skipping AP if in field (and not in a child widget)
     fieldsToRemove['AP'] = -1
