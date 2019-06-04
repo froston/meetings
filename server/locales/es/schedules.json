@@ -17,5 +17,6 @@
   "warnings": "Advertencia de programa",
   "scheduleWarn": " {{name}} aparece más que una vez en el mes",
   "scheduleDup": "{{student_name}} y {{helper_name}} ya han tenido asignación juntos en el pasado.",
-  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asginaciones:"
+  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asginaciones:",
+  "scheduleRemoved": "Programa fue eliminado"
 }

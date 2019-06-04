@@ -3,14 +3,16 @@ import { translate } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
+import { toast } from 'react-toastify'
 import { TaskList } from './'
-import { StudentForm, StudentFilters } from '../components'
+import { StudentForm, StudentFilters, Undo } from '../components'
 import { api, consts } from '../utils'
 
 class StudentList extends React.Component {
   state = {
     loading: false,
     students: [],
+    toRemove: [],
     studentForm: true,
     taskForm: true,
     student: {},
@@ -28,8 +30,8 @@ class StudentList extends React.Component {
     }
   }
 
-  loadData = () => {
-    this.setState({ loading: true })
+  loadData = (showLoading = true, cb) => {
+    showLoading && this.setState({ loading: true })
     const { searchTerm, noParticipate, gender } = this.state
     let filter = '?'
     filter += searchTerm ? `name=${searchTerm}&` : ''
@@ -37,6 +39,7 @@ class StudentList extends React.Component {
     filter += gender ? `gender=${gender}&` : ''
     api.get(`/students${filter}`).then(students => {
       this.setState({ students: students || [], loading: false })
+      cb && cb()
     })
   }
 
@@ -59,12 +62,34 @@ class StudentList extends React.Component {
     this.setState({ taskForm: false, student })
   }
 
+  handleUndo = id => {
+    const { toRemove } = this.state
+    this.setState({ toRemove: toRemove.filter(s => s !== id) })
+  }
+
+  cleanSchedules = () => {
+    const { toRemove } = this.state
+    let requests = toRemove.map(
+      id =>
+        new Promise(resolve => {
+          api.remove('/students', id).then(resolve)
+        })
+    )
+    Promise.all(requests).then(() => {
+      this.loadData(false, () => {
+        this.setState({ toRemove: [] })
+      })
+    })
+  }
+
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    if (window.confirm(this.props.t('confirmRemove'))) {
-      api.remove('/students', id).then(() => {
-        this.loadData()
+    const { t } = this.props
+    if (window.confirm(t('confirmRemove'))) {
+      this.setState({ toRemove: [...this.state.toRemove, id] })
+      toast(<Undo data={id} text={t('studentRemoved')} undo={this.handleUndo} />, {
+        onClose: this.cleanSchedules
       })
     }
   }
@@ -99,7 +124,7 @@ class StudentList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { searchTerm, loading, noParticipate, gender } = this.state
+    const { students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -129,41 +154,43 @@ class StudentList extends React.Component {
         </Box>
 
         <List selectable onSelect={this.handleSelect}>
-          {this.state.students.map((student, index) => (
-            <ListItem
-              key={student.id}
-              pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
-              justify="between"
-              align="center"
-              responsive={false}
-              onClick={this.handleSelect}
-              separator={index === 0 ? 'horizontal' : 'bottom'}
-            >
-              <Box>
-                <div>
-                  <StopFillIcon
-                    size="xsmall"
-                    colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
+          {students
+            .filter(s => !toRemove.includes(s.id))
+            .map((student, index) => (
+              <ListItem
+                key={student.id}
+                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
+                justify="between"
+                align="center"
+                responsive={false}
+                onClick={this.handleSelect}
+                separator={index === 0 ? 'horizontal' : 'bottom'}
+              >
+                <Box>
+                  <div>
+                    <StopFillIcon
+                      size="xsmall"
+                      colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
+                    />
+                    <strong> {student.name}</strong>
+                  </div>
+                </Box>
+                <Box direction="row" responsive={false}>
+                  <Button
+                    icon={<CatalogIcon size="medium" />}
+                    onClick={e => this.handleTasks(e, student)}
+                    a11yTitle={t('tasks')}
+                    title={t('tasks')}
                   />
-                  <strong> {student.name}</strong>
-                </div>
-              </Box>
-              <Box direction="row" responsive={false}>
-                <Button
-                  icon={<CatalogIcon size="medium" />}
-                  onClick={e => this.handleTasks(e, student)}
-                  a11yTitle={t('tasks')}
-                  title={t('tasks')}
-                />
-                <Button
-                  icon={<FormTrashIcon size="medium" />}
-                  onClick={e => this.handleRemove(e, student.id)}
-                  a11yTitle={t('remove')}
-                  title={t('remove')}
-                />
-              </Box>
-            </ListItem>
-          ))}
+                  <Button
+                    icon={<FormTrashIcon size="medium" />}
+                    onClick={e => this.handleRemove(e, student.id)}
+                    a11yTitle={t('remove')}
+                    title={t('remove')}
+                  />
+                </Box>
+              </ListItem>
+            ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />

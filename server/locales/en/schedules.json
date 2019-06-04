@@ -17,5 +17,6 @@
   "warnings": "Schedule warnings",
   "scheduleWarn": " {{name}} appears more then once in the month",
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
-  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:"
+  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
+  "scheduleRemoved": "Schedule was removed"
 }

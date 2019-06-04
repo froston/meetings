@@ -3,7 +3,7 @@ import { translate } from 'react-i18next'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } from 'grommet'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { WeekTab, Available } from '../components'
+import { WeekTab, Available, Undo } from '../components'
 import { api, consts } from '../utils'
 
 class Schedule extends React.Component {
@@ -13,7 +13,8 @@ class Schedule extends React.Component {
     taskToChange: {},
     availableList: true,
     helpers: false,
-    warnings: []
+    warnings: [],
+    oldTask: {}
   }
 
   componentDidMount() {
@@ -44,11 +45,20 @@ class Schedule extends React.Component {
       })
   }
 
+  handleUndo = () => {
+    const { oldTask } = this.state
+    const task = { helper_id: oldTask.helper_id, student_id: oldTask.student_id }
+    api.patch(`/tasks`, oldTask.id, task).then(this.loadData)
+  }
+
   handleSelectNew = student => {
     const { taskToChange, helpers } = this.state
+    this.setState({ oldTask: taskToChange })
     const task = helpers ? { helper_id: student.id } : { student_id: student.id }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
-      toast.success(`${this.props.t('reassigned')} ${student.name}.`)
+      toast(<Undo text={`${this.props.t('reassigned')} ${student.name}.`} undo={this.handleUndo} />, {
+        onClose: () => this.setState({ oldTask: {} })
+      })
       this.setState({ availableList: true })
       this.loadData()
     })

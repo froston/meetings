@@ -3,7 +3,7 @@ import { Switch, Route, withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { translate } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
-import { MenuIcon } from 'grommet/components/icons/base'
+import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
 import { Dashboard, StudentList, ScheduleList, Schedule } from './'
 import { Nav } from '../components'
@@ -70,7 +70,17 @@ class Layout extends React.PureComponent {
             </Article>
           </Box>
         </Split>
-        <ToastContainer position="top-center" hideProgressBar pauseOnVisibilityChange draggable pauseOnHover />
+        <ToastContainer
+          position="bottom-center"
+          className="snackbar"
+          toastClassName="snackbar-toast"
+          bodyClassName="snackbar-body"
+          hideProgressBar
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+          closeButton={<CloseIcon colorIndex="light-1" style={{ margin: 15 }} />}
+        />
       </div>
     )
   }
