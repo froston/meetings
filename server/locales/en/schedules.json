@@ -6,6 +6,7 @@
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
   "report": "Generate XLS Schedule",
+  "reportPdf": "Generate PDF Assignments",
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
   "change": "Change Task",
@@ -16,5 +17,6 @@
   "warnings": "Schedule warnings",
   "scheduleWarn": " {{name}} appears more then once in the month",
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
-  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:"
+  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
+  "scheduleRemoved": "Schedule was removed"
 }

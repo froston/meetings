@@ -13,6 +13,7 @@ export const HALLS_B = 'B'
 export const GENDER_BROTHER = 'B'
 export const GENDER_SISTER = 'S'
 
+export const sisAvailableOptions = [AVAILABLE_INITIAL_CALL, AVAILABLE_RETURN_VISIT, AVAILABLE_BIBLE_STUDY]
 export const availableOptions = [
   AVAILABLE_READING,
   AVAILABLE_INITIAL_CALL,

@@ -20,5 +20,6 @@
   "filtersNoParticipate": "Solo no participantes",
   "filtersOnlyBrothers": "Solo hermanos",
   "filtersOnlySisters": "Solo hermanas",
-  "filtersReset": "Reiniciar filtros"
+  "filtersReset": "Reiniciar filtros",
+  "studentRemoved": "Estudiante se eliminó"
 }

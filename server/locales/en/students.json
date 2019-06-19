@@ -20,5 +20,6 @@
   "filtersNoParticipate": "Only non-participating",
   "filtersOnlyBrothers": "Only brothers",
   "filtersOnlySisters": "Only sisters",
-  "filtersReset": "Reset filters"
+  "filtersReset": "Reset filters",
+  "studentRemoved": "Student was removed"
 }

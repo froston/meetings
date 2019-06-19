@@ -1,33 +1,36 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import { Section, Box, Heading, List, ListItem, Button, Paragraph } from 'grommet'
+import { Section, Box, Heading, List, ListItem, Button, Paragraph, Search } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentPdfIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import moment from 'moment'
-import { ScheduleForm } from '../components'
+import { ScheduleForm, Undo } from '../components'
 import { api } from '../utils'
 
 class ScheduleList extends React.Component {
   state = {
     loading: false,
     schedules: [],
-    scheduleForm: true
+    toRemove: [],
+    scheduleForm: true,
+    year: moment().year()
   }
 
   componentDidMount() {
     this.loadData()
   }
 
-  loadData = () => {
-    this.setState({ loading: true })
-    api.get('/schedules').then(schedules => {
+  loadData = (showLoading = true, cb) => {
+    showLoading && this.setState({ loading: true })
+    api.get(`/schedules?year=${this.state.year}`).then(schedules => {
       this.setState({
         schedules: schedules || [],
         loading: false
       })
+      cb && cb()
     })
   }
 
@@ -40,12 +43,34 @@ class ScheduleList extends React.Component {
     this.props.history.push(`/schedules/${id}`)
   }
 
+  handleUndo = id => {
+    const { toRemove } = this.state
+    this.setState({ toRemove: toRemove.filter(s => s !== id) })
+  }
+
+  cleanSchedules = () => {
+    const { toRemove } = this.state
+    let requests = toRemove.map(
+      id =>
+        new Promise(resolve => {
+          api.remove('/schedules', id).then(resolve)
+        })
+    )
+    Promise.all(requests).then(() => {
+      this.loadData(false, () => {
+        this.setState({ toRemove: [] })
+      })
+    })
+  }
+
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    if (window.confirm(this.props.t('confirmRemove'))) {
-      api.remove('/schedules', id).then(() => {
-        this.loadData()
+    const { t } = this.props
+    if (window.confirm(t('confirmRemove'))) {
+      this.setState({ toRemove: [...this.state.toRemove, id] })
+      toast(<Undo data={id} text={t('scheduleRemoved')} undo={this.handleUndo} />, {
+        onClose: this.cleanSchedules
       })
     }
   }
@@ -78,10 +103,20 @@ class ScheduleList extends React.Component {
     this.setState({ scheduleForm: !this.state.scheduleForm })
   }
 
+  handleYearChange = e => {
+    this.setState({ year: e.target.value })
+  }
+
+  handleFilter = e => {
+    if (e.key === 'Enter' && this.state.year > 0) {
+      this.loadData()
+    }
+  }
+
   handleSubmit = (data, cb) => {
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
-      toast.success(this.props.t('newMessage'))
+      toast(this.props.t('newMessage'))
       this.loadData()
       cb()
     })
@@ -95,52 +130,75 @@ class ScheduleList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedules, scheduleForm, loading } = this.state
+    const { schedules, toRemove, scheduleForm, loading, year } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
-        <Box pad={{ vertical: 'medium' }}>
-          <Button icon={<ScheduleIcon />} label={t('generate')} onClick={this.handleAdd} href="#" />
+        <Box pad={{ vertical: 'medium' }} direction="row" justify="between" align="center">
+          <Box>
+            <Button
+              icon={<ScheduleIcon />}
+              label={t('generate')}
+              onClick={this.handleAdd}
+              href="#"
+              style={{ minWidth: 400 }}
+            />
+          </Box>
+          <br />
+          <Box direction="row" responsive={false}>
+            <Search
+              fill
+              inline
+              responsive={false}
+              iconAlign="end"
+              value={year}
+              onDOMChange={this.handleYearChange}
+              onKeyDown={this.handleFilter}
+              placeHolder={t('common:year')}
+            />
+          </Box>
         </Box>
         <List selectable>
-          {schedules.map((schedule, index) => (
-            <ListItem
-              key={schedule.id}
-              pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
-              justify="between"
-              align="center"
-              responsive={false}
-              onClick={e => this.handleSelect(e, schedule.id)}
-              separator={index === 0 ? 'horizontal' : 'bottom'}
-            >
-              <Box>
-                <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
-              </Box>
-              <Box direction="row" responsive={false}>
-                <Button
-                  icon={<DocumentPdfIcon size="medium" />}
-                  onClick={e => this.downloadPdfs(e, schedule)}
-                  a11yTitle={t('report')}
-                  title={t('report')}
-                />
-                <Button
-                  icon={<DocumentExcelIcon size="medium" />}
-                  onClick={e => this.downloadXls(e, schedule.id)}
-                  a11yTitle={t('report')}
-                  title={t('report')}
-                />
-                <Button
-                  icon={<FormTrashIcon size="medium" />}
-                  onClick={e => this.handleRemove(e, schedule.id)}
-                  a11yTitle={t('remove')}
-                  title={t('remove')}
-                />
-              </Box>
-            </ListItem>
-          ))}
+          {schedules
+            .filter(s => !toRemove.includes(s.id))
+            .map((schedule, index) => (
+              <ListItem
+                key={schedule.id}
+                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
+                justify="between"
+                align="center"
+                responsive={false}
+                onClick={e => this.handleSelect(e, schedule.id)}
+                separator={index === 0 ? 'horizontal' : 'bottom'}
+              >
+                <Box>
+                  <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
+                </Box>
+                <Box direction="row" responsive={false}>
+                  <Button
+                    icon={<DocumentPdfIcon size="medium" />}
+                    onClick={e => this.downloadPdfs(e, schedule)}
+                    a11yTitle={t('reportPdf')}
+                    title={t('reportPdf')}
+                  />
+                  <Button
+                    icon={<DocumentExcelIcon size="medium" />}
+                    onClick={e => this.downloadXls(e, schedule.id)}
+                    a11yTitle={t('report')}
+                    title={t('report')}
+                  />
+                  <Button
+                    icon={<FormTrashIcon size="medium" />}
+                    onClick={e => this.handleRemove(e, schedule.id)}
+                    a11yTitle={t('remove')}
+                    title={t('remove')}
+                  />
+                </Box>
+              </ListItem>
+            ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />

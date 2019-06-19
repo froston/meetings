@@ -20,5 +20,6 @@
   "filtersNoParticipate": "Pouze neučastnící se",
   "filtersOnlyBrothers": "Pouze bratři",
   "filtersOnlySisters": "Pouye sestry",
-  "filtersReset": "Resetovat filtry"
+  "filtersReset": "Resetovat filtry",
+  "studentRemoved": "Student byl smazán"
 }
