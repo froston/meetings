@@ -184,10 +184,10 @@ const generateXls = (id, lang, t, res) => {
   })
 }
 
-const generatePdfs = (id, beginsWith, lang, res) => {
+const generatePdfs = (id, beginsWith, lang, t, res) => {
   getById(id, (err, schedule) => {
     if (err) throw err
-    pdf.generatePdfs(schedule, beginsWith, lang, res)
+    pdf.generatePdfs(schedule, beginsWith, lang, t, res)
   })
 }
 
