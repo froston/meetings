@@ -22,7 +22,8 @@
     "node-mysql": "^0.4.2",
     "nodemon": "^1.18.10",
     "passport": "^0.4.0",
-    "passport-http": "^0.3.0"
+    "passport-http": "^0.3.0",
+    "pdf-image": "^2.0.0"
   },
   "devDependencies": {
     "husky": "^2.4.1",
