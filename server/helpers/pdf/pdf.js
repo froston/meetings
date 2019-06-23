@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const os = require('os')
 const hummus = require('hummus')
-const { PDFImage } = require('pdf-image')
+const { PDFImage } = require('./pdf-image')
 const { fillForm } = require('./pdf-form-fill')
 const moment = require('moment')
 const archiver = require('archiver')
@@ -74,7 +74,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
 
     const pdfImage = new PDFImage(output, {
       combinedImage: true,
-      graphicsMagick: true,
+      //graphicsMagick: true,
       outputDirectory: folderPath,
       convertExtension: 'jpg',
       convertOptions: {
