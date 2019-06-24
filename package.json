@@ -1,10 +1,10 @@
 {
   "name": "meeting",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "server/index.js",
   "license": "MIT",
   "engines": {
-    "node": "8.11.1"
+    "node": "10.10.0"
   },
   "dependencies": {
     "archiver": "^3.0.0",
@@ -22,7 +22,8 @@
     "node-mysql": "^0.4.2",
     "nodemon": "^1.18.10",
     "passport": "^0.4.0",
-    "passport-http": "^0.3.0"
+    "passport-http": "^0.3.0",
+    "pdf-image": "^2.0.0"
   },
   "devDependencies": {
     "husky": "^2.4.1",
@@ -31,7 +32,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon --inspect server/index.js",
+    "dev": "nodemon server/index.js",
     "heroku-postbuild": "cd client && npm i && npm run build"
   },
   "husky": {

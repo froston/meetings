@@ -33,7 +33,8 @@ router.get('/:id/downloadPdfs', (req, res) => {
   const id = req.params.id
   const beginsWith = req.query.beginsWith
   const lang = req.query.lang
-  model.generatePdfs(id, beginsWith, lang, res)
+  req.i18n.changeLanguage(lang)
+  model.generatePdfs(id, beginsWith, lang, req.t, res)
 })
 
 router.post('/', (req, res) => {

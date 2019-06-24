@@ -173,6 +173,9 @@ class StudentList extends React.Component {
                       colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
                     />
                     <strong> {student.name}</strong>
+                    <Paragraph size="small" style={{ display: 'inline', marginLeft: 10 }}>
+                      {student.notes && `${student.notes.substring(0, 150)}...`}
+                    </Paragraph>
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>

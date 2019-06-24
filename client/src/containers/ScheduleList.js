@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph, Search } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
-import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentPdfIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentTextIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import moment from 'moment'
@@ -137,16 +137,14 @@ class ScheduleList extends React.Component {
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
-        <Box pad={{ vertical: 'medium' }} direction="row" justify="between" align="center">
-          <Box>
-            <Button
-              icon={<ScheduleIcon />}
-              label={t('generate')}
-              onClick={this.handleAdd}
-              href="#"
-              style={{ minWidth: 400 }}
-            />
-          </Box>
+        <Box pad={{ vertical: 'medium' }} direction="row" justify="between" align="center" wrap>
+          <Button
+            icon={<ScheduleIcon />}
+            label={t('generate')}
+            onClick={this.handleAdd}
+            href="#"
+            style={{ width: '100%' }}
+          />
           <br />
           <Box direction="row" responsive={false}>
             <Search
@@ -179,7 +177,7 @@ class ScheduleList extends React.Component {
                 </Box>
                 <Box direction="row" responsive={false}>
                   <Button
-                    icon={<DocumentPdfIcon size="medium" />}
+                    icon={<DocumentTextIcon size="medium" />}
                     onClick={e => this.downloadPdfs(e, schedule)}
                     a11yTitle={t('reportPdf')}
                     title={t('reportPdf')}

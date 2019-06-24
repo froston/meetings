@@ -25,6 +25,7 @@ const initState = {
   gender: consts.GENDER_SISTER,
   hall: {},
   available: [],
+  notes: '',
   errors: {}
 }
 
@@ -60,6 +61,7 @@ class StudentForm extends React.PureComponent {
       participate: !!student.participate,
       gender: student.gender,
       available: student.available,
+      notes: student.notes || '',
       hall: { value: student.hall, label: t(`common:hall${student.hall}`) }
     }
     this.setState({ ...state })
@@ -93,7 +95,7 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { t, hidden, student, handleTasks } = this.props
-    const { name, available, hall, errors, gender, participate } = this.state
+    const { name, available, hall, errors, gender, participate, notes } = this.state
     const availableOptions = gender === consts.GENDER_SISTER ? consts.sisAvailableOptions : consts.availableOptions
     return (
       <div>
@@ -145,8 +147,18 @@ class StudentForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
             </FormField>
+            <FormField label={t('common:notes')}>
+              <textarea
+                rows={3}
+                type="text"
+                placeHolder={t('common:notes')}
+                value={notes}
+                onChange={e => this.handleChange('notes', e.target.value)}
+                maxLength={500}
+              />
+            </FormField>
             <Footer pad={{ vertical: 'medium' }}>
-              <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false}>
+              <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
                 <Button label={t('common:submit')} type="submit" primary />
                 {student && <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />}
               </Box>

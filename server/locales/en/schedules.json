@@ -5,8 +5,8 @@
   "newMessage": "The schedule was created.",
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
-  "report": "Generate XLS Schedule",
-  "reportPdf": "Generate PDF Assignments",
+  "report": "Generate schedule",
+  "reportPdf": "Generate assignments",
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
   "change": "Change Task",
@@ -17,6 +17,7 @@
   "warnings": "Schedule warnings",
   "scheduleWarn": " {{name}} appears more then once in the month",
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
+  "scheduleGender": "The assistant for {{task}} should not be someone of the opposite sex. (km 5/97 p. 2).",
   "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
   "scheduleRemoved": "Schedule was removed"
 }

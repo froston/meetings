@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const os = require('os')
 const hummus = require('hummus')
+const { PDFImage } = require('pdf-image')
 const { fillForm } = require('./pdf-form-fill')
 const moment = require('moment')
 const archiver = require('archiver')
@@ -32,16 +33,20 @@ const getDateFormat = lang => {
   }
 }
 
-exports.generatePdfs = (schedule, firstDay = 1, lang, res) => {
+exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
   const input = path.join(__dirname, `./forms/${getFileName(lang)}`)
   const fontPath = path.join(__dirname, 'courierb.ttf')
   const folderName = `${schedule.month}_${schedule.year}_${moment().unix()}`
   const folderPath = path.join(os.tmpdir(), folderName)
 
+  let toConvert = []
+
   fs.mkdirSync(folderPath)
 
   schedule.tasks.forEach(task => {
-    const output = `${folderPath}/${task.student_name}.pdf`
+    const fileName = `${task.student_name} ${t(task.task)}`
+
+    const output = `${folderPath}/${fileName.replace(/\s/g, '_')}.pdf`
     const writer = hummus.createWriterToModify(input, {
       modifiedFilePath: output
     })
@@ -66,16 +71,32 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, res) => {
       }
     })
     writer.end()
+
+    const pdfImage = new PDFImage(output, {
+      combinedImage: true,
+      outputDirectory: folderPath,
+      convertOptions: {
+        '-colorspace': 'RGB',
+        '-interlace': 'none',
+        '-density': '200',
+        '-quality': '75'
+      }
+    })
+
+    toConvert.push(pdfImage.convertFile())
   })
 
-  res.attachment(`${folderName}.zip`)
-  res.set('Content-Type', 'application/zip')
+  Promise.all(toConvert)
+    .then(() => {
+      res.attachment(`${folderName}.zip`)
+      res.set('Content-Type', 'application/zip')
 
-  const archive = archiver('zip')
-  archive.pipe(res)
+      const archive = archiver('zip')
+      archive.pipe(res)
 
-  archive.on('close', () => res.status(200).end())
-
-  archive.directory(`${folderPath}/`, false)
-  archive.finalize()
+      archive.on('close', () => res.status(200).end())
+      archive.directory(`${folderPath}/`, false)
+      archive.finalize()
+    })
+    .catch(console.error)
 }
