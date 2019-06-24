@@ -16,6 +16,7 @@
   "required": "Requerido",
   "gender": "Genero",
   "available": "Disponible",
+  "notes": "Notas",
   "submit": "Guardar",
   "undo": "Deshacer",
   "Reading": "Lectura de la Bíblia",

@@ -5,8 +5,8 @@
   "newMessage": "Rozvrh byl vytvořen",
   "confirmRemove": "Opravdu smazat rozvrh?",
   "remove": "Smazat Rozvrh",
-  "report": "Vygenerovat rozvrh v XLS",
-  "reportPdf": "Vygenerovat úkoly v PDF",
+  "report": "Vygenerovat rozvrh",
+  "reportPdf": "Vygenerovat zadání",
   "name": "Rozvrh",
   "reassigned": "Úkol byl předán ",
   "change": "Změnit Zadání",
@@ -17,6 +17,7 @@
   "warnings": "Varování rozvrhu",
   "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci",
   "scheduleDup": "{{student_name}} a {{helper_name}} už spolu v minulosti měli úkol.",
+  "scheduleGender": "Partner pro {{task}} by měl být stejného pohlaví (km 5/97 str. 2).",
   "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:",
   "scheduleRemoved": "Rozvrh byl odstraněn"
 }

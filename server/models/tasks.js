@@ -6,7 +6,9 @@ exports.getBySchedule = (month, year, cb) => {
     SELECT 
       tasks.*,
       students.name as student_name,
-      helpers.name as helper_name
+      students.gender as student_gender,
+      helpers.name as helper_name,
+      helpers.gender as helper_gender
     FROM tasks 
     LEFT JOIN students students ON students.id = tasks.student_id
     LEFT JOIN students helpers ON helpers.id = tasks.helper_id

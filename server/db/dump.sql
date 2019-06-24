@@ -30,6 +30,7 @@ CREATE TABLE `students` (
   `participate` tinyint(1) DEFAULT NULL,
   `gender` char(2) DEFAULT NULL,
   `hall` varchar(5) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL,
   `reading` tinyint(1) DEFAULT NULL,
   `initial_call` tinyint(1) DEFAULT NULL,
   `return_visit` tinyint(1) DEFAULT NULL,

@@ -32,6 +32,7 @@ exports.createStudent = (newStudent, cb) => {
     participate: newStudent.participate,
     gender: newStudent.gender,
     hall: newStudent.hall,
+    notes: newStudent.notes,
     ...consts.setAvailable(newStudent.available)
   }
   getDb().query('INSERT INTO students SET ?', studentToInsert, cb)
@@ -43,6 +44,7 @@ exports.updateStudent = (id, student, cb) => {
     participate: student.participate,
     gender: student.gender,
     hall: student.hall,
+    notes: student.notes,
     ...consts.setAvailable(student.available)
   }
   getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)

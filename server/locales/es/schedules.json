@@ -6,8 +6,8 @@
   "confirmRemove": "Seguro de eliminar el programa?",
   "new": "Nuevo Programa",
   "remove": "Eliminar Programa",
-  "report": "Generar Programa XLS",
-  "reportPdf": "Generar Asignaciones en PDF",
+  "report": "Generar programa",
+  "reportPdf": "Generar asignaciones",
   "name": "Programa",
   "reassigned": "La Asignación fue reasignada a ",
   "change": "Cambiar Asignación",
@@ -17,6 +17,7 @@
   "warnings": "Advertencia de programa",
   "scheduleWarn": " {{name}} aparece más que una vez en el mes",
   "scheduleDup": "{{student_name}} y {{helper_name}} ya han tenido asignación juntos en el pasado.",
+  "scheduleGender": "El ayudante para {{task}} debe ser una persona del mismo sexo (km 5/97 2).",
   "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asginaciones:",
   "scheduleRemoved": "Programa fue eliminado"
 }
