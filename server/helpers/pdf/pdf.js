@@ -73,7 +73,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
     writer.end()
 
     const pdfImage = new PDFImage(output, {
-      //combinedImage: true,
+      combinedImage: true,
       //graphicsMagick: true,
       outputDirectory: folderPath,
       //convertExtension: 'jpg',
