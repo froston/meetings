@@ -79,7 +79,8 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
         '-colorspace': 'RGB',
         '-interlace': 'none',
         '-density': '200',
-        '-quality': '75'
+        '-quality': '75',
+        '-layers': 'flatten'
       }
     })
 
