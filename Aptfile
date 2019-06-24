@@ -1,9 +1,0 @@
-:repo:deb http://http.us.debian.org/debian stretch main
-
-libgraphicsmagick1-dev
-libgraphicsmagick++1-dev
-libjpeg-turbo
-libpng-dev
-zlib1g-dev
-libjasper-dev
-libjasper1
