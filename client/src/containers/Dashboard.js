@@ -9,7 +9,7 @@ class Dashboard extends Component {
   state = {
     brothers: 0,
     sisters: 0,
-    noParticipate: [],
+    noParticipate: 0,
     scheduleExists: false
   }
   day = moment().date()
@@ -23,9 +23,9 @@ class Dashboard extends Component {
   loadData = () => {
     api.get(`/students`).then(res => {
       const students = res || []
-      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER && s.participate == true)
-      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER && s.participate == true)
-      const noParticipate = students.filter(s => s.participate == false)
+      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER && s.participate)
+      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER && s.participate)
+      const noParticipate = students.filter(s => !s.participate)
       this.setState({
         brothers: brothers.length,
         sisters: sisters.length,

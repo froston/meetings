@@ -50,7 +50,7 @@ class Nav extends React.PureComponent {
             </Link>
           </Menu>
         </Box>
-        <Footer style={{ padding: 15 }}>
+        <Footer style={{ padding: 15, marginTop: 40 }}>
           <Button title="Logout" icon={<LogoutIcon />} onClick={this.logout} a11yTitle="Logout" plain />
           <LangMenu lang={i18n.language} setLang={this.setLang} />
         </Footer>

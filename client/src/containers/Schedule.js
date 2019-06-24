@@ -81,6 +81,11 @@ class Schedule extends React.Component {
         warnings.push(t('scheduleDup', { student_name: task.student_name, helper_name: task.helper_name }))
         names.push(`${task.student_name}-${task.helper_name}`)
       }
+      if (task.helper_gender && task.student_gender !== task.helper_gender) {
+        if (task.task !== consts.AVAILABLE_INITIAL_CALL) {
+          warnings.push(t('scheduleGender', { task: t(`common:${task.task}`) }))
+        }
+      }
     })
     this.setState({ warnings })
   }
