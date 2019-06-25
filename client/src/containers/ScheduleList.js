@@ -16,7 +16,7 @@ class ScheduleList extends React.Component {
     schedules: [],
     toRemove: [],
     scheduleForm: true,
-    year: moment().year()
+    year: String(moment().year())
   }
 
   componentDidMount() {
@@ -107,7 +107,7 @@ class ScheduleList extends React.Component {
           const monthName = moment(schedule.month, 'MM')
             .locale(lang)
             .format('MMMM')
-          const fileName = `${t('tasks')}_${monthName}_${schedule.year}`
+          const fileName = `${t('common:tasks')}_${monthName}_${schedule.year}`
           saveAs(blob, `${fileName}.zip`)
         })
         .catch(alert)

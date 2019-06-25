@@ -8,6 +8,7 @@ import 'moment/locale/cs'
 import '../node_modules/grommet-css'
 import 'react-toastify/dist/ReactToastify.min.css'
 import './index.css'
+import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
   <I18nextProvider i18n={i18n}>
@@ -15,3 +16,5 @@ ReactDOM.render(
   </I18nextProvider>,
   document.getElementById('root')
 )
+
+serviceWorker.register()
