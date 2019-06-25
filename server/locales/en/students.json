@@ -21,5 +21,7 @@
   "filtersOnlyBrothers": "Only brothers",
   "filtersOnlySisters": "Only sisters",
   "filtersReset": "Reset filters",
-  "studentRemoved": "Student was removed"
+  "studentRemoved": "Student was removed.",
+  "studentCreated": "Student {{name}} was created.",
+  "studentUpdated": "Student {{name}} was updated."
 }

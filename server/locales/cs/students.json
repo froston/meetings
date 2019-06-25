@@ -21,5 +21,7 @@
   "filtersOnlyBrothers": "Pouze bratři",
   "filtersOnlySisters": "Pouye sestry",
   "filtersReset": "Resetovat filtry",
-  "studentRemoved": "Student byl smazán"
+  "studentRemoved": "Student byl smazán.",
+  "studentCreated": "Student {{name}} byl vytvořen.",
+  "studentUpdated": "Student {{name}} byl upraven."
 }

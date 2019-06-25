@@ -75,12 +75,18 @@ class ScheduleList extends React.Component {
     }
   }
 
-  downloadXls = (e, id) => {
+  downloadXls = (e, schedule) => {
     e.preventDefault()
     e.stopPropagation()
     const lang = this.props.i18n.language
-    api.downloadFile(`/schedules/${id}/downloadXls?lang=${lang}`).then(blob => {
-      saveAs(blob, 'report.xlsx')
+    const { t } = this.props
+    toast(t('xlsMessage'))
+    api.downloadFile(`/schedules/${schedule.id}/downloadXls?lang=${lang}`).then(blob => {
+      const monthName = moment(schedule.month, 'MM')
+        .locale(lang)
+        .format('MMMM')
+      const fileName = `${t('schedules:name')}_${monthName}_${schedule.year}`
+      saveAs(blob, `${fileName}.xlsx`)
     })
   }
 
@@ -92,10 +98,19 @@ class ScheduleList extends React.Component {
       1
     )
     if (beginsWith) {
+      const { t } = this.props
       const lang = this.props.i18n.language
-      api.downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}&lang=${lang}`).then(blob => {
-        saveAs(blob, 'appointments.zip')
-      })
+      toast(t('pdfMessage'))
+      api
+        .downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}&lang=${lang}`)
+        .then(blob => {
+          const monthName = moment(schedule.month, 'MM')
+            .locale(lang)
+            .format('MMMM')
+          const fileName = `${t('tasks')}_${monthName}_${schedule.year}`
+          saveAs(blob, `${fileName}.zip`)
+        })
+        .catch(alert)
     }
   }
 
@@ -184,7 +199,7 @@ class ScheduleList extends React.Component {
                   />
                   <Button
                     icon={<DocumentExcelIcon size="medium" />}
-                    onClick={e => this.downloadXls(e, schedule.id)}
+                    onClick={e => this.downloadXls(e, schedule)}
                     a11yTitle={t('report')}
                     title={t('report')}
                   />

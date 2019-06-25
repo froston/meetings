@@ -3,6 +3,9 @@
   "desc": "Generate, update and remove schedules.",
   "generate": "Generate New Schedule",
   "newMessage": "The schedule was created.",
+  "scheduleRemoved": "The schedule was removed.",
+  "xlsMessage": "The schedule is being generated ...",
+  "pdfMessage": "The assignments are being generated ...",
   "confirmRemove": "Sure to remove the schedule?",
   "remove": "Remove Schedule",
   "report": "Generate schedule",
@@ -18,6 +21,5 @@
   "scheduleWarn": " {{name}} appears more then once in the month",
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
   "scheduleGender": "The assistant for {{task}} should not be someone of the opposite sex. (km 5/97 p. 2).",
-  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
-  "scheduleRemoved": "Schedule was removed"
+  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:"
 }

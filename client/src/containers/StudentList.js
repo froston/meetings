@@ -99,12 +99,15 @@ class StudentList extends React.Component {
   }
 
   handleSubmit = (id, data) => {
+    const { t } = this.props
     if (id) {
       api.patch('/students', id, data).then(() => {
+        toast(t('studentUpdated', { name: data.name }))
         this.setState({ studentForm: true }, this.loadData)
       })
     } else {
       api.post('/students', data).then(() => {
+        toast(t('studentCreated', { name: data.name }))
         this.setState({ studentForm: true }, this.loadData)
       })
     }

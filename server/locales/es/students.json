@@ -21,5 +21,7 @@
   "filtersOnlyBrothers": "Solo hermanos",
   "filtersOnlySisters": "Solo hermanas",
   "filtersReset": "Reiniciar filtros",
-  "studentRemoved": "Estudiante se eliminó"
+  "studentRemoved": "Estudiante se eliminó.",
+  "studentCreated": "Estudiante {{name}} se creó.",
+  "studentUpdated": "Estudiante {{name}} se actualizó."
 }

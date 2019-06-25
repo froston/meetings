@@ -2,7 +2,10 @@
   "title": "Rozvrhy",
   "desc": "Vytvářejte, upravujte a odstraňujte rozvrhy.",
   "generate": "Vygenerovat Nový Rozvrh",
-  "newMessage": "Rozvrh byl vytvořen",
+  "newMessage": "Rozvrh byl vytvořen.",
+  "scheduleRemoved": "Rozvrh byl odstraněn.",
+  "xlsMessage": "Generuje se rozvrh ...",
+  "pdfMessage": "Generujou se zadání ...",
   "confirmRemove": "Opravdu smazat rozvrh?",
   "remove": "Smazat Rozvrh",
   "report": "Vygenerovat rozvrh",
@@ -18,6 +21,5 @@
   "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci",
   "scheduleDup": "{{student_name}} a {{helper_name}} už spolu v minulosti měli úkol.",
   "scheduleGender": "Partner pro {{task}} by měl být stejného pohlaví (km 5/97 str. 2).",
-  "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:",
-  "scheduleRemoved": "Rozvrh byl odstraněn"
+  "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:"
 }
