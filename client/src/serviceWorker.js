@@ -10,6 +10,7 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 import { toast } from 'react-toastify'
+import i18n from './i18n'
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -31,7 +32,8 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
+      //const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
+      const swUrl = `${process.env.PUBLIC_URL}/sw.js`
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -82,7 +84,19 @@ function registerValidSW(swUrl, config) {
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
               console.log('Content is cached for offline use.')
-              toast('Content is cached for offline use.')
+              switch (i18n.language) {
+                case 'es':
+                  toast('La pagina se almacena en caché para su uso sin conexión.')
+                  break
+                case 'en':
+                  toast('This web app is cached for offline use.')
+                  break
+                case 'cs':
+                  toast('Tato apliakce je uložen do mezipaměti pro offline použití.')
+                  break
+                default:
+                  toast('This web app is cached for offline use.')
+              }
 
               // Execute callback
               if (config && config.onSuccess) {
