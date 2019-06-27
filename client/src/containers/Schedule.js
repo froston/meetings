@@ -8,6 +8,7 @@ import { api, consts } from '../utils'
 
 class Schedule extends React.Component {
   state = {
+    online: navigator.onLine,
     schedule: {},
     availables: [],
     taskToChange: {},
@@ -19,6 +20,24 @@ class Schedule extends React.Component {
 
   componentDidMount() {
     this.loadData()
+    window.addEventListener('online', this.handleConnection)
+    window.addEventListener('offline', this.handleConnection)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('online', this.handleConnection)
+    window.removeEventListener('offline', this.handleConnection)
+  }
+
+  handleConnection = e => {
+    if (e.type === 'offline') {
+      toast('You are offline.')
+      this.setState({ online: false })
+    }
+    if (e.type === 'online') {
+      toast('You are now back online.')
+      this.setState({ online: true })
+    }
   }
 
   loadData = () => {
@@ -92,7 +111,7 @@ class Schedule extends React.Component {
 
   renderWeeks = () => {
     const { t } = this.props
-    const { schedule } = this.state
+    const { schedule, online } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
       const tasksA = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_A)
@@ -103,6 +122,7 @@ class Schedule extends React.Component {
             {tasksA.length && (
               <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_A}`)}`}>
                 <WeekTab
+                  online={online}
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
                   handleChangeHelper={this.handleChangeHelper}
@@ -112,6 +132,7 @@ class Schedule extends React.Component {
             {tasksB.length && (
               <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_B}`)}`}>
                 <WeekTab
+                  online={online}
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}
                   handleChangeHelper={this.handleChangeHelper}

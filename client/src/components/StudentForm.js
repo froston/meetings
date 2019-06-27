@@ -94,7 +94,7 @@ class StudentForm extends React.PureComponent {
   }
 
   render() {
-    const { t, hidden, student, handleTasks } = this.props
+    const { t, hidden, student, handleTasks, online } = this.props
     const { name, available, hall, errors, gender, participate, notes } = this.state
     const availableOptions = gender === consts.GENDER_SISTER ? consts.sisAvailableOptions : consts.availableOptions
     return (
@@ -159,7 +159,7 @@ class StudentForm extends React.PureComponent {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} type="submit" primary />
+                <Button label={t('common:submit')} type={online ? 'submit' : undefined} primary disabled={!online} />
                 {student && <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />}
               </Box>
             </Footer>
@@ -171,6 +171,7 @@ class StudentForm extends React.PureComponent {
 }
 
 StudentForm.propTypes = {
+  online: PropTypes.bool,
   hidden: PropTypes.bool,
   student: PropTypes.object,
   handleSubmit: PropTypes.func,

@@ -33,23 +33,12 @@ if ('function' === typeof importScripts) {
       })
     )
 
-    const matchCb = ({ url, event }) => {
-      console.log(url, event)
-      return url.pathname === '/api'
-    }
-
-    workbox.routing.registerRoute(matchCb, new workbox.strategies.CacheFirst())
-    /*     workbox.routing.registerRoute(
-          new RegExp('/api/.*\.json'),
-          new workbox.strategies.CacheFirst({
-            cacheName: 'api-cache',
-            plugins: [
-              new workbox.cacheableResponse.Plugin({
-                statuses: [0, 200],
-              })
-            ]
-          })
-        ); */
+    workbox.routing.registerRoute(
+      new RegExp('/api/.*'),
+      new workbox.strategies.NetworkFirst({
+        cacheName: 'api-cache '
+      })
+    )
   } else {
     console.log('Workbox could not be loaded. No Offline support')
   }

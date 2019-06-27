@@ -10,6 +10,7 @@ import { api, consts } from '../utils'
 
 class StudentList extends React.Component {
   state = {
+    online: navigator.onLine,
     loading: false,
     students: [],
     toRemove: [],
@@ -27,6 +28,24 @@ class StudentList extends React.Component {
       this.setState({ ...state }, this.loadData)
     } else {
       this.loadData()
+    }
+    window.addEventListener('online', this.handleConnection)
+    window.addEventListener('offline', this.handleConnection)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('online', this.handleConnection)
+    window.removeEventListener('offline', this.handleConnection)
+  }
+
+  handleConnection = e => {
+    if (e.type === 'offline') {
+      toast('You are offline.')
+      this.setState({ online: false })
+    }
+    if (e.type === 'online') {
+      toast('You are now back online.')
+      this.setState({ online: true })
     }
   }
 
@@ -127,7 +146,7 @@ class StudentList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
+    const { online, students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -135,7 +154,14 @@ class StudentList extends React.Component {
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         <Box pad={{ vertical: 'small' }}>
-          <Button icon={<AddIcon />} label={t('add')} onClick={this.handleAdd} href="#" />
+          <Button
+            icon={<AddIcon />}
+            label={t('add')}
+            a11yTitle={t('add')}
+            onClick={online ? this.handleAdd : undefined}
+            href={online ? '#' : undefined}
+            disabled={!online}
+          />
         </Box>
         <Box direction="row" justify="between" align="stretch" pad={{ vertical: 'small' }} responsive={false}>
           <Search
@@ -190,9 +216,10 @@ class StudentList extends React.Component {
                   />
                   <Button
                     icon={<FormTrashIcon size="medium" />}
-                    onClick={e => this.handleRemove(e, student.id)}
+                    onClick={online ? e => this.handleRemove(e, student.id) : undefined}
                     a11yTitle={t('remove')}
                     title={t('remove')}
+                    disabled={!online}
                   />
                 </Box>
               </ListItem>
@@ -204,6 +231,7 @@ class StudentList extends React.Component {
           )}
         </List>
         <StudentForm
+          online={online}
           hidden={this.state.studentForm}
           handleSubmit={this.handleSubmit}
           handleClose={() => this.handleForm('studentForm', true)}
