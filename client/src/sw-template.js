@@ -4,6 +4,13 @@ if ('function' === typeof importScripts) {
   if (workbox) {
     console.log('Workbox is loaded')
 
+    workbox.core.setCacheNameDetails({
+      prefix: 'meetings',
+      suffix: 'v1',
+      precache: 'meetings-precache',
+      runtime: 'meetings-runtime'
+    })
+
     /* injection point for manifest files.  */
     workbox.precaching.precacheAndRoute([])
 
