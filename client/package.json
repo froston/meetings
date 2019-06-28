@@ -17,7 +17,8 @@
     "react-i18next": "^8.4.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
-    "react-toastify": "^4.5.2"
+    "react-toastify": "^4.5.2",
+    "workbox-build": "^4.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,8 +32,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "workbox-build": "^4.3.1"
-  }
+  ]
 }
