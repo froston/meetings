@@ -4,7 +4,7 @@
   "dist": "Distribución de los Estudiantes",
   "brothers": "Hermanos",
   "sisters": "Hermanas",
-  "no-participate": "No partcipan",
+  "no-participate": "No participan",
   "messageWarnTitle": "Falta Programa - quedan {{left}} días",
   "messageWarnDesc": "Tiene tiempo para crear el programa hasta {{until}}.",
   "messageOkTitle": "Programa Hecho",

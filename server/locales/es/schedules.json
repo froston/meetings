@@ -21,5 +21,5 @@
   "scheduleWarn": " {{name}} aparece más que una vez en el mes",
   "scheduleDup": "{{student_name}} y {{helper_name}} ya han tenido asignación juntos en el pasado.",
   "scheduleGender": "El ayudante para {{task}} debe ser una persona del mismo sexo (km 5/97 2).",
-  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asginaciones:"
+  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asignaciones:"
 }

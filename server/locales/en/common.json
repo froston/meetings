@@ -28,7 +28,7 @@
   "Bible Study": "Bible Study",
   "Talk": "Talk",
   "month1": "January",
-  "month2": "Febuary",
+  "month2": "February",
   "month3": "March",
   "month4": "April",
   "month5": "May",
@@ -41,7 +41,7 @@
   "month12": "December",
   "hallAll": "Both",
   "hallA": "Main",
-  "hallB": "Auxiliar",
+  "hallB": "Auxiliary",
   "name": "Name",
-  "readingMain": "Assign reading only in main hall"
+  "readingMain": "Only in the main hall"
 }

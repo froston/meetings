@@ -26,7 +26,7 @@
   "2. Return Visit": "2.ª Revisita",
   "3. Return Visit": "3.ª Revisita",
   "Bible Study": "Curso bíblico",
-  "Talk": "Discruso",
+  "Talk": "Discurso",
   "month1": "enero",
   "month2": "febrero",
   "month3": "marzo",
@@ -43,5 +43,5 @@
   "hallA": "Principal",
   "hallB": "Auxiliar",
   "name": "Nombre",
-  "readingMain": "Asignar la lectura sólo en la sala principal"
+  "readingMain": "Sólo en la sala principal"
 }
