@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "archiver": "^3.0.0",
-    "async": "^2.6.1",
+    "async": "^3.1.0",
     "body-parser": "^1.18.3",
     "btoa": "^1.2.1",
     "excel4node": "^1.7.0",
@@ -20,14 +20,14 @@
     "moment": "^2.24.0",
     "mysql": "^2.16.0",
     "node-mysql": "^0.4.2",
-    "nodemon": "^1.18.10",
+    "nodemon": "^1.19.1",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0"
   },
   "devDependencies": {
-    "husky": "^2.4.1",
-    "lint-staged": "^8.2.1",
-    "prettier": "^1.16.4"
+    "husky": "^3.0.4",
+    "lint-staged": "^9.2.4",
+    "prettier": "^1.18.2"
   },
   "scripts": {
     "start": "node server/index.js",
