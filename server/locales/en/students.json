@@ -15,6 +15,7 @@
   "brother": "Brother",
   "sister": "Sister",
   "participate": "Participates",
+  "non-participate": "Non-participating",
   "sort": "The students are ordered according to the probability of having next task.",
   "filters": "Filters",
   "filtersNoParticipate": "Only non-participating",

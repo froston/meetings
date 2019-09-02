@@ -11,6 +11,7 @@ class Schedule extends React.Component {
     online: navigator.onLine,
     schedule: {},
     availables: [],
+    noParticipate: [],
     taskToChange: {},
     availableList: true,
     helpers: false,
@@ -60,6 +61,9 @@ class Schedule extends React.Component {
           taskToChange,
           availableList: false,
           helpers: helper
+        })
+        api.get(`/students?noParticipate=true`).then(noParticipate => {
+          this.setState({ noParticipate })
         })
       })
   }
@@ -148,7 +152,7 @@ class Schedule extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedule, availables, helpers, availableList, warnings } = this.state
+    const { schedule, availables, noParticipate, helpers, availableList, warnings } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -172,6 +176,7 @@ class Schedule extends React.Component {
         <Available
           hidden={availableList}
           availables={availables}
+          noParticipate={noParticipate}
           handleSelect={this.handleSelectNew}
           handleClose={this.handleCloseAvailable}
           helpers={helpers}
