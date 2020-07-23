@@ -5,13 +5,13 @@ import { translate } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
-import { Dashboard, StudentList, ScheduleList, Schedule } from './'
+import { Dashboard, StudentList, ScheduleList, Schedule, Territories } from './'
 import { Nav } from '../components'
 
 class Layout extends React.PureComponent {
   state = {
     navActive: true,
-    responsive: 'multiple'
+    responsive: 'multiple',
   }
 
   componentDidMount() {
@@ -22,11 +22,11 @@ class Layout extends React.PureComponent {
     this.setState({ navActive: !this.state.navActive })
   }
 
-  handleResponsive = responsive => {
+  handleResponsive = (responsive) => {
     this.setState({ responsive })
   }
 
-  setLang = lang => {
+  setLang = (lang) => {
     moment.locale(lang)
     this.props.i18n.changeLanguage(lang)
   }
@@ -66,6 +66,7 @@ class Layout extends React.PureComponent {
                 <Route exact path="/students" component={StudentList} />
                 <Route exact path="/schedules" component={ScheduleList} />
                 <Route exact path="/schedules/:id" component={Schedule} />
+                <Route exact path="/territories" component={Territories} />
               </Switch>
             </Article>
           </Box>

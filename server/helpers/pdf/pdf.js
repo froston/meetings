@@ -7,7 +7,7 @@ const { fillForm } = require('./pdf-form-fill')
 const moment = require('moment')
 const archiver = require('archiver')
 
-const getFileName = lang => {
+const getFileName = (lang) => {
   switch (lang) {
     case 'es':
       return 'S-89-S.pdf'
@@ -20,7 +20,7 @@ const getFileName = lang => {
   }
 }
 
-const getDateFormat = lang => {
+const getDateFormat = (lang) => {
   switch (lang) {
     case 'es':
       return 'DD-MM-YYYY'
@@ -43,12 +43,12 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
 
   fs.mkdirSync(folderPath)
 
-  schedule.tasks.forEach(task => {
+  schedule.tasks.forEach((task) => {
     const fileName = `${task.student_name} ${t(task.task)}`
 
     const output = `${folderPath}/${fileName.replace(/\s/g, '_')}.pdf`
     const writer = hummus.createWriterToModify(input, {
-      modifiedFilePath: output
+      modifiedFilePath: output,
     })
     const date = moment(`${firstDay} ${task.month} ${task.year}`, 'D M YYYY').add(task.week - 1, 'w')
     const data = {
@@ -62,13 +62,13 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
       'Check Box05': task.task === 'Bible Study' ? true : false,
       'Check Box06': task.task === 'Talk' ? true : false,
       'Check Box08': task.hall === 'A' ? true : false,
-      'Check Box09': task.hall === 'B' ? true : false
+      'Check Box09': task.hall === 'B' ? true : false,
     }
     fillForm(writer, data, {
       defaultTextOptions: {
         font: writer.getFontForFile(fontPath),
-        size: 14
-      }
+        size: 14,
+      },
     })
     writer.end()
 
@@ -80,8 +80,8 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
         '-interlace': 'none',
         '-density': '200',
         '-quality': '75',
-        '-layers': 'flatten'
-      }
+        '-layers': 'flatten',
+      },
     })
 
     toConvert.push(pdfImage.convertFile())
@@ -99,7 +99,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
       archive.directory(`${folderPath}/`, false)
       archive.finalize()
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).end()
       throw err
     })

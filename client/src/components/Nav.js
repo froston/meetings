@@ -7,9 +7,9 @@ import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
 
 class Nav extends React.PureComponent {
-  getParentUrl = path => path.split('/')[1] || '/' // the menu key is always parent url
+  getParentUrl = (path) => path.split('/')[1] || '/' // the menu key is always parent url
 
-  isActive = link => {
+  isActive = (link) => {
     const { location } = this.props
     if (location && location.pathname) {
       const path = this.getParentUrl(location.pathname)
@@ -21,7 +21,7 @@ class Nav extends React.PureComponent {
       this.props.handleClose()
     }
   }
-  setLang = lang => {
+  setLang = (lang) => {
     this.props.setLang(lang)
   }
   logout = () => {
@@ -48,6 +48,9 @@ class Nav extends React.PureComponent {
             <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
               {t('schedules')}
             </Link>
+            <Link to="/territories" className={this.isActive('territories')} onClick={this.handleClick}>
+              {t('territories')}
+            </Link>
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>
@@ -63,7 +66,7 @@ Nav.propTypes = {
   responsive: PropTypes.string,
   location: PropTypes.object,
   setLang: PropTypes.func,
-  logout: PropTypes.func
+  logout: PropTypes.func,
 }
 
 export default translate('nav')(Nav)
