@@ -25,4 +25,57 @@ router.get('/:id', (req, res) => {
   })
 })
 
+router.post('/', (req, res) => {
+  const body = req.body
+  model.createTerritory(body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.patch('/:id', (req, res) => {
+  const id = req.params.id
+  const body = req.body
+  model.updateTerritory(id, body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.delete('/:id', (req, res) => {
+  const id = req.params.id
+  model.removeTerritory(id, (err) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(204).end()
+  })
+})
+
+router.post('/:id/history', (req, res) => {
+  const id = req.params.id
+  const body = req.body
+  model.createAssignment(id, body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.patch('/:id/history', (req, res) => {
+  const id = req.params.id
+  const body = req.body
+  model.updateAssignment(id, body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
 module.exports = router

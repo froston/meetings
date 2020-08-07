@@ -1,0 +1,21 @@
+{
+  "title": "Territorios",
+  "desc": "Maneje los territorio aquí.",
+  "add": "Crear Nuevo Territorio",
+  "new": "Nuevo territorio",
+  "number": "Número de ter.",
+  "submit": "Listo",
+  "territory": "Territorio",
+  "assigned": "Asignado",
+  "assign": "Asignar el territorio",
+  "finish": "Terminar el territorio",
+  "assigneTo": "Asignar a",
+  "date_from": "Fecha de asignación",
+  "date_to": "Fecha de finalización",
+  "remove": "Eliminar Territorio",
+  "numbers": "Números del territorio",
+  "confirmRemove": "Seguro de eliminar el territorio?",
+  "territoryRemoved": "El territorio fue eliminado.",
+  "territoryCreated": "El territorio fue creado.",
+  "territoryUpdated": "El territorio fue modificado."
+}

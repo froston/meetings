@@ -7,5 +7,21 @@ import Available from './Available'
 import LangMenu from './LangMenu'
 import StudentFilters from './StudentFilters'
 import Undo from './Undo'
+import TerritoryForm from './TerritoryForm'
+import NumberForm from './NumberForm'
+import AssignForm from './AssignForm'
 
-export { Nav, StudentForm, ScheduleForm, TaskForm, WeekTab, Available, LangMenu, StudentFilters, Undo }
+export {
+  Nav,
+  StudentForm,
+  ScheduleForm,
+  TaskForm,
+  WeekTab,
+  Available,
+  LangMenu,
+  StudentFilters,
+  Undo,
+  TerritoryForm,
+  NumberForm,
+  AssignForm,
+}

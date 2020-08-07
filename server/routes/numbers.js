@@ -25,4 +25,34 @@ router.get('/:id', (req, res) => {
   })
 })
 
+router.post('/', (req, res) => {
+  model.createNumber(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.patch('/:id', (req, res) => {
+  const id = req.params.id
+  const body = req.body
+  model.updateNumber(id, body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.delete('/:id', (req, res) => {
+  const id = req.params.id
+  model.removeNumber(id, (err) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.status(204).end()
+  })
+})
+
 module.exports = router

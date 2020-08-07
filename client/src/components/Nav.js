@@ -51,6 +51,9 @@ class Nav extends React.PureComponent {
             <Link to="/territories" className={this.isActive('territories')} onClick={this.handleClick}>
               {t('territories')}
             </Link>
+            <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+              {t('numbers')}
+            </Link>
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>

@@ -5,7 +5,7 @@ import { translate } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
-import { Dashboard, StudentList, ScheduleList, Schedule, Territories } from './'
+import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList } from './'
 import { Nav } from '../components'
 
 class Layout extends React.PureComponent {
@@ -66,7 +66,8 @@ class Layout extends React.PureComponent {
                 <Route exact path="/students" component={StudentList} />
                 <Route exact path="/schedules" component={ScheduleList} />
                 <Route exact path="/schedules/:id" component={Schedule} />
-                <Route exact path="/territories" component={Territories} />
+                <Route exact path="/territories" component={TerritoryList} />
+                <Route exact path="/numbers" component={NumberList} />
               </Switch>
             </Article>
           </Box>

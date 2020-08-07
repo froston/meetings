@@ -1,0 +1,11 @@
+{
+  "title": "Números",
+  "desc": "Maneje los numeros aquí.",
+  "number": "Número telefónico",
+  "name": "Persona",
+  "status": "Estado",
+  "territory": "Teritorio",
+  "details": "Observación",
+  "remove": "Eliminar Número",
+  "confirmRemove": "Seguro de eliminar el número?"
+}
