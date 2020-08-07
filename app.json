@@ -1,0 +1,31 @@
+{
+  "name": "Vida y Ministerio Autodromo",
+  "description": "Vida y Ministerio Autodromo",
+  "repository": "https://git.heroku.com/vida-ministerio-autodromo.git",
+  "env": {
+    "DB_HOST": {
+      "description": "Database host url."
+    },
+    "DB_NAME": {
+      "description": "Database name."
+    },
+    "DB_USERNAME": {
+      "description": "Database username."
+    },
+    "DB_PASSWORD": {
+      "description": "Database password."
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": [
+    {
+      "plan": "jawsdb-maria-rectangular-33560",
+      "as": "JAWSDB_MARIA"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/ello/heroku-buildpack-imagemagick"
+    }
+  ]
+}
