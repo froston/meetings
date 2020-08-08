@@ -7,5 +7,10 @@
   "territory": "Teritorio",
   "details": "Observación",
   "remove": "Eliminar Número",
-  "confirmRemove": "Seguro de eliminar el número?"
+  "add": "Añadir Número",
+  "new": "Nuevo número",
+  "confirmRemove": "Seguro de eliminar el número?",
+  "numberRemoved": "El número se eliminó.",
+  "numberCreated": "El número {{number}} se creó.",
+  "numberUpdated": "El número {{number}} se actualizó."
 }

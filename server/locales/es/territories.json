@@ -16,6 +16,6 @@
   "numbers": "Números del territorio",
   "confirmRemove": "Seguro de eliminar el territorio?",
   "territoryRemoved": "El territorio fue eliminado.",
-  "territoryCreated": "El territorio fue creado.",
-  "territoryUpdated": "El territorio fue modificado."
+  "territoryCreated": "El territorio {{number}} fue creado.",
+  "territoryUpdated": "El territorio {{number}} fue modificado."
 }

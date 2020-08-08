@@ -2,11 +2,11 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label } from 'grommet'
-import { FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, StopFillIcon, AddIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import { Undo, NumberForm } from '../components'
-import { api, consts } from '../utils'
+import { api, functions } from '../utils'
 
 class NumberList extends React.Component {
   state = {
@@ -71,6 +71,25 @@ class NumberList extends React.Component {
     this.setState({ toRemove: toRemove.filter((t) => t !== id) })
   }
 
+  handleSubmit = (id, values) => {
+    const { t } = this.props
+    const data = {
+      ...this.state.number,
+      ...values,
+    }
+    if (id) {
+      api.patch('/numbers', id, data).then(() => {
+        toast(t('numberUpdated', { number: data.number }))
+        this.setState({ numberForm: true }, this.loadData)
+      })
+    } else {
+      api.post('/numbers', data).then(() => {
+        toast(t('numberCreated', { number: data.number }))
+        this.setState({ numberForm: true }, this.loadData)
+      })
+    }
+  }
+
   cleanTerritories = () => {
     const { toRemove } = this.state
     let requests = toRemove.map(
@@ -92,33 +111,9 @@ class NumberList extends React.Component {
     const { t } = this.props
     if (window.confirm(t('confirmRemove'))) {
       this.setState({ toRemove: [...this.state.toRemove, id] })
-      toast(<Undo data={id} text={t('territoryRemoved')} undo={this.handleUndo} />, {
+      toast(<Undo data={id} text={t('numberRemoved')} undo={this.handleUndo} />, {
         onClose: this.cleanTerritories,
       })
-    }
-  }
-
-  getColorIndex = (status) => {
-    console.log(status)
-    switch (status) {
-      case 'NC':
-        return 'brand'
-      case 'NI':
-        return 'warning'
-      case 'O':
-        return 'accent-2'
-      case 'C':
-        return 'neutral-3'
-      case 'A':
-        return 'neutral-1'
-      case 'RV':
-        return 'ok'
-      case 'X':
-        return 'critical'
-      case 'FS':
-        return 'grey-1'
-      default:
-        return 'unknown'
     }
   }
 
@@ -131,6 +126,16 @@ class NumberList extends React.Component {
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
+        <Box pad={{ vertical: 'small' }}>
+          <Button
+            icon={<AddIcon />}
+            label={t('add')}
+            a11yTitle={t('add')}
+            onClick={online ? this.handleAdd : undefined}
+            href={online ? '#' : undefined}
+            disabled={!online}
+          />
+        </Box>
         <List selectable onSelect={this.handleSelect}>
           {numbers
             .filter((t) => !toRemove.includes(t.id))
@@ -146,9 +151,9 @@ class NumberList extends React.Component {
               >
                 <Box>
                   <div title={num.status}>
-                    <StopFillIcon size="xsmall" colorIndex={this.getColorIndex(num.status)} />
+                    <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
                     <strong> {num.number}</strong>
-                    <Label size="small"> | {num.name}</Label>
+                    {num.name && <Label size="small"> | {num.name}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>

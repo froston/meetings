@@ -2,10 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { translate } from 'react-i18next'
 import { Box, Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, Select } from 'grommet'
-import { consts } from '../utils'
+import { StopFillIcon } from 'grommet/components/icons/base'
+import { consts, functions } from '../utils'
 
 const initState = {
   number: '',
+  name: '',
+  status: '',
+  details: '',
   errors: {},
 }
 
@@ -36,11 +40,16 @@ class NumberForm extends React.PureComponent {
   loadForm = () => {
     const { t, number } = this.props
     const state = {
-      number: number.number,
-      name: number.name,
-      territory: number.territory,
-      status: number.status,
-      details: number.details,
+      number: number.number || '',
+      name: number.name || '',
+      territory: number.territory || '',
+      status: number.status
+        ? {
+            value: number.status,
+            label: t(`common:status${number.status}`),
+          }
+        : '',
+      details: number.details || '',
     }
     this.setState({ ...state })
   }
@@ -55,7 +64,8 @@ class NumberForm extends React.PureComponent {
       const { number } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
-      newValues.number = this.state.number.value
+      newValues.status = this.state.status.value
+      newValues.territory = this.state.territory > 0 ? this.state.territory : null
       if (number && number.id) {
         this.props.handleSubmit(number && number.id, newValues)
       } else {
@@ -78,6 +88,7 @@ class NumberForm extends React.PureComponent {
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
+              {numberObj && <StopFillIcon size="small" colorIndex={functions.getNumberStatusColor(numberObj.status)} />}
               <Heading>{numberObj ? numberObj.number : t('new')}</Heading>
             </Header>
             <FormField label={t('number')} error={errors.number}>
@@ -92,19 +103,14 @@ class NumberForm extends React.PureComponent {
             </FormField>
             <FormField label={t('status')} error={errors.status}>
               <Select
-                id="status"
                 label={t('common:status')}
-                options={statusOptions.map((s) => ({ value: s, label: t(`common:status${s}`) }))}
+                options={statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
                 value={status}
-                disabled
+                onChange={({ value }) => this.handleChange('status', value)}
               />
             </FormField>
             <FormField label={t('territory')} error={errors.teritorry}>
-              <TextInput
-                value={territory}
-                onDOMChange={(e) => this.handleChange('territory', e.target.value)}
-                disabled
-              />
+              <NumberInput value={territory} onChange={(e) => this.handleChange('territory', e.target.value)} />
             </FormField>
             <FormField label={t('details')}>
               <textarea
@@ -114,7 +120,6 @@ class NumberForm extends React.PureComponent {
                 value={details}
                 onChange={(e) => this.handleChange('details', e.target.value)}
                 maxLength={500}
-                disabled
               />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>

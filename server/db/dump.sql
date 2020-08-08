@@ -1,15 +1,20 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
---
--- Database: `meeting`
---
+CREATE TABLE `numbers` (
+  `id` int(11) NOT NULL,
+  `number` varchar(20) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `territory` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `schedules`
---
+CREATE TABLE `numbers_hist` (
+  `id` int(11) NOT NULL,
+  `number_id` int(11) DEFAULT NULL,
+  `status` varchar(5) DEFAULT NULL,
+  `details` varchar(1000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schedules` (
   `id` int(11) NOT NULL,
@@ -17,12 +22,6 @@ CREATE TABLE `schedules` (
   `year` int(11) DEFAULT NULL,
   `weeks` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `students`
---
 
 CREATE TABLE `students` (
   `id` int(11) NOT NULL,
@@ -38,12 +37,6 @@ CREATE TABLE `students` (
   `talk` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tasks`
---
-
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `student_id` int(11) DEFAULT NULL,
@@ -57,12 +50,18 @@ CREATE TABLE `tasks` (
   `year` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `territories` (
+  `id` int(11) NOT NULL,
+  `number` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
+CREATE TABLE `territories_hist` (
+  `id` int(11) NOT NULL,
+  `territory_id` int(11) DEFAULT NULL,
+  `assigned` varchar(20) DEFAULT NULL,
+  `date_from` datetime DEFAULT NULL,
+  `date_to` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
@@ -70,60 +69,58 @@ CREATE TABLE `users` (
   `password` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `schedules`
---
+ALTER TABLE `numbers`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `numbers_hist`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `students`
---
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `tasks`
---
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`),
   ADD KEY `student_id` (`student_id`),
   ADD KEY `helper_id` (`helper_id`),
   ADD KEY `schedule_id` (`schedule_id`);
 
---
--- Indexes for table `users`
---
+ALTER TABLE `territories`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `territories_hist`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `schedules`
---
+ALTER TABLE `numbers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `numbers_hist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `schedules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `students`
---
+
 ALTER TABLE `students`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `tasks`
---
+
 ALTER TABLE `tasks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `users`
---
+
+ALTER TABLE `territories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `territories_hist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
 
 INSERT INTO `users` (`id`, `email`, `password`) VALUES ('1', 'muller.pav@gmail.com', '');

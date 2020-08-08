@@ -43,7 +43,19 @@ exports.createTerritory = (data, cb) => {
   const obj = {
     number: data.number,
   }
-  getDb().query('INSERT INTO territories SET ?', obj, cb)
+  getDb().query('INSERT INTO territories SET ?', obj, (err, res) => {
+    if (err) throw err
+    const newHistroy = {
+      territory_id: res.insertId,
+      assigned: data.assigned,
+      date_from: data.date_from,
+      date_to: data.date_to,
+    }
+    getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
+      if (err) throw err
+      cb(null)
+    })
+  })
 }
 
 exports.updateTerritory = (id, data, cb) => {
@@ -69,5 +81,11 @@ exports.updateTerritory = (id, data, cb) => {
 }
 
 exports.removeTerritory = (id, cb) => {
-  getDb().query('DELETE FROM territories WHERE id = ?', id, cb)
+  getDb().query('DELETE FROM territories WHERE id = ?', id, (err) => {
+    if (err) throw err
+    getDb().query('DELETE FROM territories_hist WHERE territory_id = ?', id, (err) => {
+      if (err) throw err
+      cb(null)
+    })
+  })
 }

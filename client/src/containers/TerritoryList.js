@@ -179,10 +179,9 @@ class TerritoryList extends React.Component {
                       colorIndex={ter.status === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
                     />
                     <strong>
-                      {' '}
-                      {t('territory')} {ter.number}{' '}
+                      {t('territory')} {ter.number}
                     </strong>
-                    <Label size="small"> | {ter.assigned}</Label>
+                    {ter.assigned && <Label size="small"> | {ter.assigned}</Label>}
                     {ter.date_to && <Label size="small"> | {moment(ter.date_to).format(consts.DATE_FORMAT)}</Label>}
                   </div>
                 </Box>

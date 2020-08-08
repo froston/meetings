@@ -76,6 +76,8 @@ class TerritoryForm extends React.PureComponent {
       const { territory } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
+      newValues.date_from = moment(newValues.date_from).isValid() ? newValues.date_from : null
+      newValues.date_to = moment(newValues.date_to).isValid() ? newValues.date_to : null
       if (territory && territory.id) {
         this.props.handleSubmit(territory && territory.id, newValues)
       } else {
@@ -101,27 +103,23 @@ class TerritoryForm extends React.PureComponent {
             <FormField label={t('number')} error={errors.number}>
               <NumberInput value={number} onChange={(e) => this.handleChange('number', e.target.value)} />
             </FormField>
-            {!!territory && !!territory.assigned && (
-              <>
-                <FormField label={t('assigned')} error={errors.assigned}>
-                  <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
-                </FormField>
-                <FormField label={t('date_from')} error={errors.date_from}>
-                  <DateTime
-                    value={date_from}
-                    onChange={(val) => this.handleChange('date_from', val)}
-                    format={consts.DATE_FORMAT}
-                  />
-                </FormField>
-                <FormField label={t('date_to')} error={errors.date_to}>
-                  <DateTime
-                    value={date_to}
-                    onChange={(val) => this.handleChange('date_to', val)}
-                    format={consts.DATE_FORMAT}
-                  />
-                </FormField>
-              </>
-            )}
+            <FormField label={t('assigned')} error={errors.assigned}>
+              <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
+            </FormField>
+            <FormField label={t('date_from')} error={errors.date_from}>
+              <DateTime
+                value={date_from}
+                onChange={(val) => this.handleChange('date_from', val)}
+                format={consts.DATE_FORMAT}
+              />
+            </FormField>
+            <FormField label={t('date_to')} error={errors.date_to}>
+              <DateTime
+                value={date_to}
+                onChange={(val) => this.handleChange('date_to', val)}
+                format={consts.DATE_FORMAT}
+              />
+            </FormField>
             {territory && territory.numbers && !!territory.numbers.length && (
               <>
                 <br />
