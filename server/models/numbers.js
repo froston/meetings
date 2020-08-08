@@ -1,11 +1,19 @@
 const { getDb } = require('../db')
 
-exports.getAll = (query, cb) => {
-  let where = ''
+exports.getAll = (filters, cb) => {
+  const query = filters.q ? filters.q.trim() : null
+  let where = '' // to simplify dynamic conditions syntax
+  where += query ? `AND N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%"` : ``
+  where += filters.status ? `AND H.status = "${filters.status}"` : ''
   getDb().query(
-    `
-    SELECT H.*, N.*, H.id AS history_id FROM numbers N 
+    `SELECT H.*, N.*, H.id AS history_id
+      FROM numbers N 
       LEFT JOIN numbers_hist H ON N.id = H.number_id
+      WHERE H.id = (
+        SELECT MAX(H2.id) 
+        FROM numbers_hist H2 
+        WHERE H2.number_id = H.number_id
+      )
       ${where} 
       ORDER BY N.id DESC`,
     cb

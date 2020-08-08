@@ -6,7 +6,6 @@ export const formatDateValue = (date) => {
 }
 
 export const getNumberStatusColor = (status) => {
-  console.log(status)
   switch (status) {
     case 'NC':
       return 'brand'

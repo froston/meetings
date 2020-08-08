@@ -3,17 +3,24 @@ const { getDb } = require('../db')
 const numberModel = require('./numbers')
 const consts = require('../helpers/consts')
 
-exports.getAll = (query, cb) => {
+exports.getAll = (filters, cb) => {
+  const query = filters.q ? filters.q.trim() : null
   let where = ''
+  where += query ? `AND T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%"` : ``
+  where += filters.orderBy ? `AND H.date_to IS NOT NULL` : ''
+  const order = filters.orderBy ? `ORDER BY H.date_to ${filters.orderBy}` : 'ORDER BY T.id DESC'
   getDb().query(
-    `
-    SELECT H.*, T.*, H.id AS history_id
-      FROM territories T 
-      LEFT JOIN (
-        SELECT * FROM territories_hist ORDER BY id DESC LIMIT 1
-      ) H ON T.id = H.territory_id
+    `SELECT H.*, T.*, H.id AS history_id
+      FROM territories T
+      LEFT JOIN territories_hist H ON T.id = H.territory_id
+      WHERE H.id = (
+        SELECT MAX(H2.id) 
+        FROM territories_hist H2 
+        WHERE H2.territory_id = H.territory_id
+      )
       ${where} 
-      ORDER BY T.id DESC`,
+      ${order}
+    `,
     (err, ters) => {
       if (err) throw err
 
@@ -64,19 +71,15 @@ exports.updateTerritory = (id, data, cb) => {
   }
   getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
     if (err) throw err
-    if (data.history_id > 0) {
-      const updatedHist = {
-        assigned: data.assigned,
-        date_from: consts.formatDateTime(data.date_from),
-        date_to: consts.formatDateTime(data.date_to),
-      }
-      getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
-        if (err) throw err
-        cb(null)
-      })
-    } else {
-      cb(null)
+    const updatedHist = {
+      assigned: data.assigned,
+      date_from: consts.formatDateTime(data.date_from),
+      date_to: consts.formatDateTime(data.date_to),
     }
+    getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
+      if (err) throw err
+      cb(null)
+    })
   })
 }
 

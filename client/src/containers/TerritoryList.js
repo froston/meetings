@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button } from 'grommet'
+import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Columns, Search } from 'grommet'
 import { AddIcon, UserIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -18,6 +18,8 @@ class TerritoryList extends React.Component {
     territoryForm: true,
     assignForm: true,
     territory: {},
+    searchTerm: '',
+    orderBy: null,
   }
 
   componentDidMount() {
@@ -49,8 +51,11 @@ class TerritoryList extends React.Component {
 
   loadData = (showLoading = true, cb) => {
     showLoading && this.setState({ loading: true })
-    const { searchTerm, noParticipate, gender } = this.state
-    api.get(`/territories`).then((data) => {
+    const { searchTerm, orderBy } = this.state
+    let filter = '?'
+    filter += searchTerm ? `q=${searchTerm}&` : ''
+    filter += orderBy ? `orderBy=${orderBy}&` : ''
+    api.get(`/territories${filter}`).then((data) => {
       this.setState({ territories: data || [], loading: false })
       cb && cb()
     })
@@ -122,6 +127,13 @@ class TerritoryList extends React.Component {
     }
   }
 
+  handleFilter = (name, val) => this.setState({ [name]: val }, this.loadData)
+
+  handleSearch = (e) => {
+    const searchTerm = e.target.value
+    this.setState({ searchTerm }, this.loadData)
+  }
+
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
@@ -142,7 +154,7 @@ class TerritoryList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territories, online, loading, toRemove } = this.state
+    const { territories, online, loading, toRemove, searchTerm, orderBy } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -159,6 +171,31 @@ class TerritoryList extends React.Component {
             disabled={!online}
           />
         </Box>
+        <Columns size="large">
+          <Box justify="between" align="stretch" margin="small">
+            <Search
+              fill
+              inline
+              responsive={false}
+              iconAlign="start"
+              value={searchTerm}
+              onDOMChange={this.handleSearch}
+              placeHolder={t('search')}
+            />
+          </Box>
+          <Box justify="between" align="stretch" margin="small">
+            <Select
+              label={t('common:orderBy')}
+              options={[
+                { value: 'DESC', label: 'Ultimo' },
+                { value: 'ASC', label: 'Primero' },
+              ]}
+              value={orderBy}
+              onChange={({ value }) => this.handleFilter('orderBy', value.value)}
+              placeHolder={t('common:orderBy')}
+            />
+          </Box>
+        </Columns>
         <List selectable onSelect={this.handleSelect}>
           {territories
             .filter((t) => !toRemove.includes(t.id))
@@ -178,9 +215,7 @@ class TerritoryList extends React.Component {
                       size="xsmall"
                       colorIndex={ter.status === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
                     />
-                    <strong>
-                      {t('territory')} {ter.number}
-                    </strong>
+                    <strong>{`  ${t('territory')} ${ter.number}`}</strong>
                     {ter.assigned && <Label size="small"> | {ter.assigned}</Label>}
                     {ter.date_to && <Label size="small"> | {moment(ter.date_to).format(consts.DATE_FORMAT)}</Label>}
                   </div>

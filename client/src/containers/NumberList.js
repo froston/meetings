@@ -1,12 +1,12 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label } from 'grommet'
+import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label, Search, Columns, Select } from 'grommet'
 import { FormTrashIcon, StopFillIcon, AddIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import { Undo, NumberForm } from '../components'
-import { api, functions } from '../utils'
+import { api, functions, consts } from '../utils'
 
 class NumberList extends React.Component {
   state = {
@@ -16,6 +16,8 @@ class NumberList extends React.Component {
     toRemove: [],
     numberForm: true,
     number: {},
+    searchTerm: '',
+    status: null,
   }
 
   componentDidMount() {
@@ -45,10 +47,18 @@ class NumberList extends React.Component {
     }
   }
 
+  handleSearch = (e) => {
+    const searchTerm = e.target.value
+    this.setState({ searchTerm }, this.loadData)
+  }
+
   loadData = (showLoading = true, cb) => {
     showLoading && this.setState({ loading: true })
-    const { searchTerm, noParticipate, gender } = this.state
-    api.get(`/numbers`).then((data) => {
+    const { searchTerm, status } = this.state
+    let filter = '?'
+    filter += searchTerm ? `q=${searchTerm}&` : ''
+    filter += status ? `status=${status}&` : ''
+    api.get(`/numbers${filter}`).then((data) => {
       this.setState({ numbers: data || [], loading: false })
       cb && cb()
     })
@@ -105,6 +115,8 @@ class NumberList extends React.Component {
     })
   }
 
+  handleFilter = (name, val) => this.setState({ [name]: val }, this.loadData)
+
   handleRemove = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
@@ -119,7 +131,7 @@ class NumberList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { numbers, online, loading, toRemove } = this.state
+    const { numbers, online, loading, toRemove, searchTerm, status } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -136,6 +148,30 @@ class NumberList extends React.Component {
             disabled={!online}
           />
         </Box>
+
+        <Columns size="large">
+          <Box justify="between" align="stretch" margin="small">
+            <Search
+              fill
+              inline
+              responsive={false}
+              iconAlign="start"
+              value={searchTerm}
+              onDOMChange={this.handleSearch}
+              placeHolder={t('search')}
+            />
+          </Box>
+          <Box justify="between" align="stretch" margin="small">
+            <Select
+              label={t('common:status')}
+              options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
+              value={status}
+              onChange={({ value }) => this.handleFilter('status', value.value)}
+              placeHolder={t('status')}
+            />
+          </Box>
+        </Columns>
+
         <List selectable onSelect={this.handleSelect}>
           {numbers
             .filter((t) => !toRemove.includes(t.id))

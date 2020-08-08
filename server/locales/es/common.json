@@ -44,6 +44,7 @@
   "hallB": "Auxiliar",
   "name": "Nombre",
   "readingMain": "Sólo en la sala principal",
+  "statusNA": "Sin estado",
   "statusNC": "No en casa",
   "statusNI": "No interesado",
   "statusO": "Ocupado",
