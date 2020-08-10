@@ -82,3 +82,10 @@ exports.removeNumber = (id, cb) => {
     })
   })
 }
+
+exports.getNumberHist = (id, cb) => {
+  getDb().query('SELECT * FROM numbers_hist WHERE number_id = ? ORDER BY id DESC', id, (err, hist) => {
+    if (err) throw err
+    cb(err, hist)
+  })
+}

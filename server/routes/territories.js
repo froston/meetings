@@ -67,15 +67,4 @@ router.post('/:id/history', (req, res) => {
   })
 })
 
-router.patch('/:id/history', (req, res) => {
-  const id = req.params.id
-  const body = req.body
-  model.updateAssignment(id, body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(data)
-  })
-})
-
 module.exports = router

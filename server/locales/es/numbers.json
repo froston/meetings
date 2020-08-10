@@ -13,5 +13,7 @@
   "numberRemoved": "El número se eliminó.",
   "numberCreated": "El número {{number}} se creó.",
   "numberUpdated": "El número {{number}} se actualizó.",
-  "search": "Buscar números"
+  "search": "Buscar números",
+  "history": "Historia",
+  "changedDate": "Fecha"
 }

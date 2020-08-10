@@ -39,3 +39,5 @@ export const statusOptions = ['NC', 'NI', 'O', 'C', 'A', 'RV', 'X', 'FS']
 
 export const DATE_FORMAT = 'D/M/YYYY'
 export const DATETIME_FORMAT = 'D/M/YYYY HH:mm'
+
+export const orderByOpt = ['numberDesc', 'numberAsc', 'dateDesc', 'dateAsc']

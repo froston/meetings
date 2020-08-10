@@ -2,10 +2,10 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label, Search, Columns, Select } from 'grommet'
-import { FormTrashIcon, StopFillIcon, AddIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, StopFillIcon, AddIcon, HistoryIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
-import { Undo, NumberForm } from '../components'
+import { Undo, NumberForm, NumberHistory } from '../components'
 import { api, functions, consts } from '../utils'
 
 class NumberList extends React.Component {
@@ -15,6 +15,7 @@ class NumberList extends React.Component {
     numbers: [],
     toRemove: [],
     numberForm: true,
+    numberHist: true,
     number: {},
     searchTerm: '',
     status: null,
@@ -76,6 +77,12 @@ class NumberList extends React.Component {
     this.setState({ numberForm: false, number: null })
   }
 
+  handleHistory = (e, number) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.setState({ number, numberHist: false })
+  }
+
   handleUndo = (id) => {
     const { toRemove } = this.state
     this.setState({ toRemove: toRemove.filter((t) => t !== id) })
@@ -132,6 +139,7 @@ class NumberList extends React.Component {
   render() {
     const { t } = this.props
     const { numbers, online, loading, toRemove, searchTerm, status } = this.state
+    const statusOptions = ['', ...consts.statusOptions]
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -149,8 +157,8 @@ class NumberList extends React.Component {
           />
         </Box>
 
-        <Columns size="large">
-          <Box justify="between" align="stretch" margin="small">
+        <Columns size="medium">
+          <Box justify="between" align="stretch" pad="small">
             <Search
               fill
               inline
@@ -161,11 +169,11 @@ class NumberList extends React.Component {
               placeHolder={t('search')}
             />
           </Box>
-          <Box justify="between" align="stretch" margin="small">
+          <Box justify="between" align="stretch" pad="small">
             <Select
-              label={t('common:status')}
-              options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
-              value={status}
+              label={t('status')}
+              options={statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
+              value={{ value: status, label: status && t(`common:status${status}`) }}
               onChange={({ value }) => this.handleFilter('status', value.value)}
               placeHolder={t('status')}
             />
@@ -193,6 +201,14 @@ class NumberList extends React.Component {
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>
+                  {num.history_id > 0 && (
+                    <Button
+                      icon={<HistoryIcon size="small" />}
+                      onClick={(e) => this.handleHistory(e, num)}
+                      a11yTitle={t('remove')}
+                      title={t('remove')}
+                    />
+                  )}
                   <Button
                     icon={<FormTrashIcon size="medium" />}
                     onClick={online ? (e) => this.handleRemove(e, num.id) : undefined}
@@ -214,6 +230,11 @@ class NumberList extends React.Component {
           hidden={this.state.numberForm}
           handleSubmit={this.handleSubmit}
           handleClose={() => this.handleForm('numberForm', true)}
+          number={this.state.number}
+        />
+        <NumberHistory
+          hidden={this.state.numberHist}
+          handleClose={() => this.handleForm('numberHist', true)}
           number={this.state.number}
         />
       </Section>

@@ -13,7 +13,8 @@ CREATE TABLE `numbers_hist` (
   `id` int(11) NOT NULL,
   `number_id` int(11) DEFAULT NULL,
   `status` varchar(5) DEFAULT NULL,
-  `details` varchar(1000) DEFAULT NULL
+  `details` varchar(1000) DEFAULT NULL,
+  `changed_date` DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schedules` (

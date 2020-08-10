@@ -10,6 +10,7 @@ import Undo from './Undo'
 import TerritoryForm from './TerritoryForm'
 import NumberForm from './NumberForm'
 import AssignForm from './AssignForm'
+import NumberHistory from './NumberHistory'
 
 export {
   Nav,
@@ -24,4 +25,5 @@ export {
   TerritoryForm,
   NumberForm,
   AssignForm,
+  NumberHistory,
 }

@@ -55,4 +55,14 @@ router.delete('/:id', (req, res) => {
   })
 })
 
+router.get('/:id/history', (req, res) => {
+  const id = req.params.id
+  model.getNumberHist(id, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
 module.exports = router

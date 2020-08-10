@@ -5,10 +5,28 @@ const consts = require('../helpers/consts')
 
 exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
+
   let where = ''
   where += query ? `AND T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%"` : ``
-  where += filters.orderBy ? `AND H.date_to IS NOT NULL` : ''
-  const order = filters.orderBy ? `ORDER BY H.date_to ${filters.orderBy}` : 'ORDER BY T.id DESC'
+
+  let order
+  switch (filters.orderBy) {
+    case 'numberDesc':
+      order = 'ORDER BY number DESC'
+      break
+    case 'numberAsc':
+      order = 'ORDER BY number ASC'
+      break
+    case 'dateDesc':
+      order = 'ORDER BY H.date_to DESC'
+      break
+    case 'dateAsc':
+      order = 'ORDER BY H.date_to ASC'
+      break
+    default:
+      order = 'ORDER BY T.id'
+  }
+
   getDb().query(
     `SELECT H.*, T.*, H.id AS history_id
       FROM territories T
@@ -90,5 +108,17 @@ exports.removeTerritory = (id, cb) => {
       if (err) throw err
       cb(null)
     })
+  })
+}
+
+exports.createAssignment = (id, data, cb) => {
+  const newHistroy = {
+    territory_id: id,
+    assigned: data.assigned,
+    date_from: consts.formatDateTime(data.date_from),
+  }
+  getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
+    if (err) throw err
+    cb(null)
   })
 }

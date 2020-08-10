@@ -52,5 +52,6 @@
   "statusA": "Atendió",
   "statusRV": "Revisita",
   "statusX": "No llamar",
-  "statusFS": "Fuera de servicio"
+  "statusFS": "Fuera de servicio",
+  "status": "Seleccionar ..."
 }

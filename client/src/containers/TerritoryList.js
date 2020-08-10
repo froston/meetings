@@ -114,17 +114,10 @@ class TerritoryList extends React.Component {
 
   handleAssignment = (id, data) => {
     const { t } = this.props
-    if (data.mode === 'assign') {
-      api.post(`/territories/${id}/history`, id, data).then(() => {
-        toast(t('territoryAssigned', { assigned: data.assigned }))
-        this.setState({ assignForm: true }, this.loadData)
-      })
-    } else {
-      api.patch(`/territories/${id}/history`, id, data).then(() => {
-        toast(t('territoryAssigned', { assigned: data.assigned }))
-        this.setState({ assignForm: true }, this.loadData)
-      })
-    }
+    api.post(`/territories/${id}/history`, data).then(() => {
+      toast(t('territoryAssigned', { assigned: data.assigned }))
+      this.setState({ assignForm: true }, this.loadData)
+    })
   }
 
   handleFilter = (name, val) => this.setState({ [name]: val }, this.loadData)
@@ -171,8 +164,8 @@ class TerritoryList extends React.Component {
             disabled={!online}
           />
         </Box>
-        <Columns size="large">
-          <Box justify="between" align="stretch" margin="small">
+        <Columns size="medium">
+          <Box justify="between" align="stretch" pad="small">
             <Search
               fill
               inline
@@ -183,16 +176,13 @@ class TerritoryList extends React.Component {
               placeHolder={t('search')}
             />
           </Box>
-          <Box justify="between" align="stretch" margin="small">
+          <Box justify="between" align="stretch" pad="small">
             <Select
-              label={t('common:orderBy')}
-              options={[
-                { value: 'DESC', label: 'Ultimo' },
-                { value: 'ASC', label: 'Primero' },
-              ]}
-              value={orderBy}
+              label={t('orderBy')}
+              options={consts.orderByOpt.map((o) => ({ value: o, label: t(`orderBy${o}`) }))}
+              value={{ value: orderBy, label: orderBy && t(`orderBy${orderBy}`) }}
               onChange={({ value }) => this.handleFilter('orderBy', value.value)}
-              placeHolder={t('common:orderBy')}
+              placeHolder={t('orderBy')}
             />
           </Box>
         </Columns>
