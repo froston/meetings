@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Columns, Search } from 'grommet'
 import { AddIcon, UserIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
@@ -261,4 +261,4 @@ class TerritoryList extends React.Component {
   }
 }
 
-export default withRouter(translate('territories')(TerritoryList))
+export default withRouter(withTranslation('territories')(TerritoryList))

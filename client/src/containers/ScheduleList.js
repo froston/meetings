@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, List, ListItem, Button, Paragraph, Search } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentTextIcon } from 'grommet/components/icons/base'
@@ -17,7 +17,7 @@ class ScheduleList extends React.Component {
     schedules: [],
     toRemove: [],
     scheduleForm: true,
-    year: String(moment().year())
+    year: String(moment().year()),
   }
 
   componentDidMount() {
@@ -31,7 +31,7 @@ class ScheduleList extends React.Component {
     window.removeEventListener('offline', this.handleConnection)
   }
 
-  handleConnection = e => {
+  handleConnection = (e) => {
     if (e.type === 'offline') {
       toast('You are offline.')
       this.setState({ online: false })
@@ -44,10 +44,10 @@ class ScheduleList extends React.Component {
 
   loadData = (showLoading = true, cb) => {
     showLoading && this.setState({ loading: true })
-    api.get(`/schedules?year=${this.state.year}`).then(schedules => {
+    api.get(`/schedules?year=${this.state.year}`).then((schedules) => {
       this.setState({
         schedules: schedules || [],
-        loading: false
+        loading: false,
       })
       cb && cb()
     })
@@ -62,16 +62,16 @@ class ScheduleList extends React.Component {
     this.props.history.push(`/schedules/${id}`)
   }
 
-  handleUndo = id => {
+  handleUndo = (id) => {
     const { toRemove } = this.state
-    this.setState({ toRemove: toRemove.filter(s => s !== id) })
+    this.setState({ toRemove: toRemove.filter((s) => s !== id) })
   }
 
   cleanSchedules = () => {
     const { toRemove } = this.state
     let requests = toRemove.map(
-      id =>
-        new Promise(resolve => {
+      (id) =>
+        new Promise((resolve) => {
           api.remove('/schedules', id).then(resolve)
         })
     )
@@ -89,7 +89,7 @@ class ScheduleList extends React.Component {
     if (window.confirm(t('confirmRemove'))) {
       this.setState({ toRemove: [...this.state.toRemove, id] })
       toast(<Undo data={id} text={t('scheduleRemoved')} undo={this.handleUndo} />, {
-        onClose: this.cleanSchedules
+        onClose: this.cleanSchedules,
       })
     }
   }
@@ -100,10 +100,8 @@ class ScheduleList extends React.Component {
     const lang = this.props.i18n.language
     const { t } = this.props
     toast(t('xlsMessage'))
-    api.downloadFile(`/schedules/${schedule.id}/downloadXls?lang=${lang}`).then(blob => {
-      const monthName = moment(schedule.month, 'MM')
-        .locale(lang)
-        .format('MMMM')
+    api.downloadFile(`/schedules/${schedule.id}/downloadXls?lang=${lang}`).then((blob) => {
+      const monthName = moment(schedule.month, 'MM').locale(lang).format('MMMM')
       const fileName = `${t('schedules:name')}_${monthName}_${schedule.year}`
       saveAs(blob, `${fileName}.xlsx`)
     })
@@ -122,10 +120,8 @@ class ScheduleList extends React.Component {
       toast(t('pdfMessage'))
       api
         .downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}&lang=${lang}`)
-        .then(blob => {
-          const monthName = moment(schedule.month, 'MM')
-            .locale(lang)
-            .format('MMMM')
+        .then((blob) => {
+          const monthName = moment(schedule.month, 'MM').locale(lang).format('MMMM')
           const fileName = `${t('common:tasks')}_${monthName}_${schedule.year}`
           saveAs(blob, `${fileName}.zip`)
         })
@@ -137,11 +133,11 @@ class ScheduleList extends React.Component {
     this.setState({ scheduleForm: !this.state.scheduleForm })
   }
 
-  handleYearChange = e => {
+  handleYearChange = (e) => {
     this.setState({ year: e.target.value })
   }
 
-  handleFilter = e => {
+  handleFilter = (e) => {
     if (e.key === 'Enter' && this.state.year > 0) {
       this.loadData()
     }
@@ -157,7 +153,7 @@ class ScheduleList extends React.Component {
   }
 
   checkScheduleExists = (month, year, cb) => {
-    api.get(`/schedules?month=${month}&year=${year}`).then(res => {
+    api.get(`/schedules?month=${month}&year=${year}`).then((res) => {
       cb(res.length > 0)
     })
   }
@@ -195,7 +191,7 @@ class ScheduleList extends React.Component {
         </Box>
         <List selectable>
           {schedules
-            .filter(s => !toRemove.includes(s.id))
+            .filter((s) => !toRemove.includes(s.id))
             .map((schedule, index) => (
               <ListItem
                 key={schedule.id}
@@ -203,7 +199,7 @@ class ScheduleList extends React.Component {
                 justify="between"
                 align="center"
                 responsive={false}
-                onClick={e => this.handleSelect(e, schedule.id)}
+                onClick={(e) => this.handleSelect(e, schedule.id)}
                 separator={index === 0 ? 'horizontal' : 'bottom'}
               >
                 <Box>
@@ -212,19 +208,19 @@ class ScheduleList extends React.Component {
                 <Box direction="row" responsive={false}>
                   <Button
                     icon={<DocumentTextIcon size="medium" />}
-                    onClick={e => this.downloadPdfs(e, schedule)}
+                    onClick={(e) => this.downloadPdfs(e, schedule)}
                     a11yTitle={t('reportPdf')}
                     title={t('reportPdf')}
                   />
                   <Button
                     icon={<DocumentExcelIcon size="medium" />}
-                    onClick={e => this.downloadXls(e, schedule)}
+                    onClick={(e) => this.downloadXls(e, schedule)}
                     a11yTitle={t('report')}
                     title={t('report')}
                   />
                   <Button
                     icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? e => this.handleRemove(e, schedule.id) : undefined}
+                    onClick={online ? (e) => this.handleRemove(e, schedule.id) : undefined}
                     a11yTitle={t('remove')}
                     title={t('remove')}
                     disabled={!online}
@@ -249,4 +245,4 @@ class ScheduleList extends React.Component {
   }
 }
 
-export default withRouter(translate('schedules')(ScheduleList))
+export default withRouter(withTranslation('schedules')(ScheduleList))

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import moment from 'moment'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
@@ -88,4 +88,4 @@ class Layout extends React.PureComponent {
   }
 }
 
-export default withRouter(translate()(Layout))
+export default withRouter(withTranslation()(Layout))

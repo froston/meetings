@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { translate, Trans } from 'react-i18next'
+import { withTranslation, Trans } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import moment from 'moment'
 import { api, consts } from '../utils'
@@ -10,7 +10,7 @@ class Dashboard extends Component {
     brothers: 0,
     sisters: 0,
     noParticipate: 0,
-    scheduleExists: false
+    scheduleExists: false,
   }
   day = moment().date()
   month = moment().month() + 1
@@ -21,20 +21,20 @@ class Dashboard extends Component {
   }
 
   loadData = () => {
-    api.get(`/students`).then(res => {
+    api.get(`/students`).then((res) => {
       const students = res || []
-      const brothers = students.filter(s => s.gender === consts.GENDER_BROTHER && s.participate)
-      const sisters = students.filter(s => s.gender === consts.GENDER_SISTER && s.participate)
-      const noParticipate = students.filter(s => !s.participate)
+      const brothers = students.filter((s) => s.gender === consts.GENDER_BROTHER && s.participate)
+      const sisters = students.filter((s) => s.gender === consts.GENDER_SISTER && s.participate)
+      const noParticipate = students.filter((s) => !s.participate)
       this.setState({
         brothers: brothers.length,
         sisters: sisters.length,
-        noParticipate: noParticipate.length
+        noParticipate: noParticipate.length,
       })
     })
-    api.get(`/schedules`).then(schedules => {
+    api.get(`/schedules`).then((schedules) => {
       const scheduleExists = schedules.find(
-        schedule => schedule.month === this.month + 1 && schedule.year === this.year
+        (schedule) => schedule.month === this.month + 1 && schedule.year === this.year
       )
       this.setState({ scheduleExists })
     })
@@ -62,7 +62,7 @@ class Dashboard extends Component {
               message={t('messageWarnTitle', { left: 15 - this.day })}
               state={t('messageWarnDesc', {
                 until: `15/${this.month}/${this.year}`,
-                interpolation: { escapeValue: false }
+                interpolation: { escapeValue: false },
               })}
               size="medium"
               status="warning"
@@ -102,20 +102,20 @@ class Dashboard extends Component {
                 label: t('brothers'),
                 value: brothers,
                 colorIndex: 'graph-1',
-                onClick: () => this.navigate('/students', { gender: 'B' })
+                onClick: () => this.navigate('/students', { gender: 'B' }),
               },
               {
                 label: t('sisters'),
                 value: sisters,
                 colorIndex: 'graph-2',
-                onClick: () => this.navigate('/students', { gender: 'S' })
+                onClick: () => this.navigate('/students', { gender: 'S' }),
               },
               {
                 label: t('no-participate'),
                 value: noParticipate,
                 colorIndex: 'graph-4',
-                onClick: () => this.navigate('/students', { noParticipate: true })
-              }
+                onClick: () => this.navigate('/students', { noParticipate: true }),
+              },
             ]}
           />
         </Box>
@@ -124,4 +124,4 @@ class Dashboard extends Component {
   }
 }
 
-export default withRouter(translate('dashboard')(Dashboard))
+export default withRouter(withTranslation('dashboard')(Dashboard))

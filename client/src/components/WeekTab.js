@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Box, Tiles, Tile, Paragraph, Header, Heading, Menu, Anchor } from 'grommet'
 import { UserSettingsIcon } from 'grommet/components/icons/base'
 import { TaskList } from '../containers'
@@ -8,13 +8,13 @@ import { TaskList } from '../containers'
 class WeekTab extends React.PureComponent {
   state = {
     taskForm: true,
-    student: {}
+    student: {},
   }
   showTasks = (id, name) => {
     const student = { id, name }
     this.setState({
       taskForm: false,
-      student
+      student,
     })
   }
 
@@ -22,7 +22,7 @@ class WeekTab extends React.PureComponent {
     const { t, tasks, handleChangeTask, online } = this.props
     return (
       <Tiles fill flush selectable className="week-tab">
-        {tasks.map(task => {
+        {tasks.map((task) => {
           if (task) {
             const className = task.task && task.task.split(' ').join('')
             return (
@@ -95,7 +95,7 @@ WeekTab.propTypes = {
   online: PropTypes.bool,
   tasks: PropTypes.array,
   handleChangeTask: PropTypes.func,
-  handleChangeHelper: PropTypes.func
+  handleChangeHelper: PropTypes.func,
 }
 
-export default translate(['schedules', 'common'])(WeekTab)
+export default withTranslation(['schedules', 'common'])(WeekTab)

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Layer, Heading, List, ListItem, Paragraph } from 'grommet'
 
 class Available extends React.PureComponent {
@@ -20,7 +20,7 @@ class Available extends React.PureComponent {
         <List
           selectable
           style={{ minWidth: 550 }}
-          ref={ref => {
+          ref={(ref) => {
             this.list = ref
           }}
         >
@@ -51,7 +51,7 @@ class Available extends React.PureComponent {
             {t('non-participate')}
           </Heading>
           <hr />
-          {noParticipate.map(student => (
+          {noParticipate.map((student) => (
             <ListItem
               key={student.id}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
@@ -77,7 +77,7 @@ Available.propTypes = {
   hidden: PropTypes.bool,
   handleSelect: PropTypes.func,
   handleClose: PropTypes.func,
-  helpers: PropTypes.bool
+  helpers: PropTypes.bool,
 }
 
-export default translate('students')(Available)
+export default withTranslation('students')(Available)

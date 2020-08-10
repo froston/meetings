@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Layer, Form, FormField, DateTime, TextInput, Header, Heading, Footer, Button } from 'grommet'
 import moment from 'moment'
 import { api, consts, functions } from '../utils'
@@ -138,4 +138,4 @@ AssignForm.propTypes = {
   handleSubmit: PropTypes.func,
 }
 
-export default translate(['territories', 'common'])(AssignForm)
+export default withTranslation(['territories', 'common'])(AssignForm)

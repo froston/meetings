@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import {
   Layer,
   Header,
@@ -204,4 +204,4 @@ ScheduleForm.propTypes = {
   handleClose: PropTypes.func,
 }
 
-export default translate(['schedules', 'tasks', 'common'])(ScheduleForm)
+export default withTranslation(['schedules', 'tasks', 'common'])(ScheduleForm)

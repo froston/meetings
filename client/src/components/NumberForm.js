@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Box, Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, Select } from 'grommet'
 import { StopFillIcon } from 'grommet/components/icons/base'
 import { consts, functions } from '../utils'
@@ -116,7 +116,7 @@ class NumberForm extends React.PureComponent {
               <textarea
                 rows={3}
                 type="text"
-                placeHolder={t('details')}
+                placeholder={t('details')}
                 value={details}
                 onChange={(e) => this.handleChange('details', e.target.value)}
                 maxLength={500}
@@ -142,4 +142,4 @@ NumberForm.propTypes = {
   handleClose: PropTypes.func,
 }
 
-export default translate(['numbers', 'common'])(NumberForm)
+export default withTranslation(['numbers', 'common'])(NumberForm)

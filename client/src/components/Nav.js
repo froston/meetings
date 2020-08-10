@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Sidebar, Header, Title, Box, Menu, Button, Footer } from 'grommet'
 import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
@@ -72,4 +72,4 @@ Nav.propTypes = {
   logout: PropTypes.func,
 }
 
-export default translate('nav')(Nav)
+export default withTranslation('nav')(Nav)

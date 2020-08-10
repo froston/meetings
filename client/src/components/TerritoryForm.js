@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import {
   Box,
   Layer,
@@ -153,4 +153,4 @@ TerritoryForm.propTypes = {
   handleClose: PropTypes.func,
 }
 
-export default translate(['territories', 'common'])(TerritoryForm)
+export default withTranslation(['territories', 'common'])(TerritoryForm)

@@ -25,7 +25,7 @@
   ],
   "buildpacks": [
     {
-      "url": "https://github.com/ello/heroku-buildpack-imagemagick"
+      "url": "https://github.com/Fieldwire/heroku-buildpack-poppler"
     }
   ]
 }

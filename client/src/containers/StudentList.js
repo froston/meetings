@@ -1,5 +1,5 @@
 import React from 'react'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -248,4 +248,4 @@ class StudentList extends React.Component {
   }
 }
 
-export default translate('students')(StudentList)
+export default withTranslation('students')(StudentList)

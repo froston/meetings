@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import { api } from '../utils'
@@ -8,7 +8,7 @@ import { TaskForm } from '../components'
 
 class TaskList extends React.PureComponent {
   state = {
-    tasks: []
+    tasks: [],
   }
 
   componentDidUpdate(prevProps) {
@@ -18,7 +18,7 @@ class TaskList extends React.PureComponent {
   }
 
   loadData = () => {
-    api.get(`/tasks/${this.props.student.id}`).then(tasks => {
+    api.get(`/tasks/${this.props.student.id}`).then((tasks) => {
       this.setState({ tasks })
     })
   }
@@ -27,7 +27,7 @@ class TaskList extends React.PureComponent {
     this.setState({ [name]: value })
   }
 
-  handleSubmit = newTask => {
+  handleSubmit = (newTask) => {
     api.post(`/tasks`, newTask).then(() => {
       this.loadData()
     })
@@ -84,7 +84,7 @@ class TaskList extends React.PureComponent {
                             <Box direction="row">
                               <Button
                                 icon={<FormTrashIcon size="medium" />}
-                                onClick={e => this.handleRemove(e, task.id)}
+                                onClick={(e) => this.handleRemove(e, task.id)}
                                 a11yTitle={t('remove')}
                               />
                             </Box>
@@ -106,11 +106,11 @@ TaskList.propTypes = {
   hidden: PropTypes.bool,
   student: PropTypes.object,
   handleClose: PropTypes.func,
-  showForm: PropTypes.bool
+  showForm: PropTypes.bool,
 }
 
 TaskList.defaultProps = {
-  showForm: true
+  showForm: true,
 }
 
-export default translate(['tasks', 'common'])(TaskList)
+export default withTranslation(['tasks', 'common'])(TaskList)

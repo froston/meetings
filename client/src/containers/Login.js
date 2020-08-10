@@ -1,12 +1,12 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Split, Article, Section, Footer, Sidebar, LoginForm } from 'grommet'
 import { api } from '../utils'
 
 class Login extends React.PureComponent {
   state = {
-    loginError: null
+    loginError: null,
   }
   handleSubmit = ({ username, password }) => {
     api.authenticate(username, password, (err, auth) => {
@@ -43,4 +43,4 @@ class Login extends React.PureComponent {
   }
 }
 
-export default withRouter(translate('login')(Login))
+export default withRouter(withTranslation('login')(Login))

@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label, Search, Columns, Select } from 'grommet'
 import { FormTrashIcon, StopFillIcon, AddIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
@@ -221,4 +221,4 @@ class NumberList extends React.Component {
   }
 }
 
-export default withRouter(translate('numbers')(NumberList))
+export default withRouter(withTranslation('numbers')(NumberList))
