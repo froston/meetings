@@ -51,8 +51,14 @@ PDFImage.prototype = {
     return promise
   },
   numberOfPages: function () {
-    return this.getInfo().then(function (info) {
-      return info['Pages']
+    var pdfImage = this
+    return new Promise(function (resolve, reject) {
+      pdfImage
+        .getInfo()
+        .then(function (info) {
+          resolve(info['Pages'])
+        })
+        .catch(reject)
     })
   },
   getOutputImagePathForPage: function (pageNumber) {

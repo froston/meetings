@@ -100,7 +100,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
       archive.finalize()
     })
     .catch((err) => {
-      res.status(500).end()
+      res.status(500).send(err)
       throw err
     })
 }
