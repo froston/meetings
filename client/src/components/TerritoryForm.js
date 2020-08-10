@@ -52,7 +52,7 @@ class TerritoryForm extends React.PureComponent {
   }
 
   loadForm = () => {
-    const { t, territory } = this.props
+    const { territory } = this.props
 
     const dateFrom = functions.formatDateValue(territory.date_from)
     const dateTo = functions.formatDateValue(territory.date_to)

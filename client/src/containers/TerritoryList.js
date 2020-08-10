@@ -114,7 +114,7 @@ class TerritoryList extends React.Component {
 
   handleAssignment = (id, data) => {
     const { t } = this.props
-    if (data.mode == 'assign') {
+    if (data.mode === 'assign') {
       api.post(`/territories/${id}/history`, id, data).then(() => {
         toast(t('territoryAssigned', { assigned: data.assigned }))
         this.setState({ assignForm: true }, this.loadData)
@@ -221,12 +221,14 @@ class TerritoryList extends React.Component {
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>
-                  <Button
-                    icon={<UserIcon size="small" />}
-                    onClick={(e) => this.handleAssign(e, ter)}
-                    a11yTitle={t('assign')}
-                    title={t('assign')}
-                  />
+                  {ter.date_to && (
+                    <Button
+                      icon={<UserIcon size="small" />}
+                      onClick={(e) => this.handleAssign(e, ter)}
+                      a11yTitle={t('assign')}
+                      title={t('assign')}
+                    />
+                  )}
                   <Button
                     icon={<FormTrashIcon size="medium" />}
                     onClick={online ? (e) => this.handleRemove(e, ter.id) : undefined}
