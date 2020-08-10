@@ -37,4 +37,5 @@ export const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 export const statusOptions = ['NC', 'NI', 'O', 'C', 'A', 'RV', 'X', 'FS']
 
-export const DATE_FORMAT = 'D/M/YYYY HH:mm'
+export const DATE_FORMAT = 'D/M/YYYY'
+export const DATETIME_FORMAT = 'D/M/YYYY HH:mm'

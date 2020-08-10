@@ -110,14 +110,14 @@ class TerritoryForm extends React.PureComponent {
               <DateTime
                 value={date_from}
                 onChange={(val) => this.handleChange('date_from', val)}
-                format={consts.DATE_FORMAT}
+                format={consts.DATETIME_FORMAT}
               />
             </FormField>
             <FormField label={t('date_to')} error={errors.date_to}>
               <DateTime
                 value={date_to}
                 onChange={(val) => this.handleChange('date_to', val)}
-                format={consts.DATE_FORMAT}
+                format={consts.DATETIME_FORMAT}
               />
             </FormField>
             {territory && territory.numbers && !!territory.numbers.length && (

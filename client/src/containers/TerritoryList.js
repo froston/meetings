@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { Undo, TerritoryForm, AssignForm } from '../components'
-import { api, consts } from '../utils'
+import { api, consts, functions } from '../utils'
 
 class TerritoryList extends React.Component {
   state = {
@@ -211,17 +211,14 @@ class TerritoryList extends React.Component {
               >
                 <Box>
                   <div>
-                    <StopFillIcon
-                      size="xsmall"
-                      colorIndex={ter.status === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
-                    />
+                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter)} />
                     <strong>{`  ${t('territory')} ${ter.number}`}</strong>
                     {ter.assigned && <Label size="small"> | {ter.assigned}</Label>}
                     {ter.date_to && <Label size="small"> | {moment(ter.date_to).format(consts.DATE_FORMAT)}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>
-                  {ter.date_to && (
+                  {ter.assigned && ter.date_to && (
                     <Button
                       icon={<UserIcon size="small" />}
                       onClick={(e) => this.handleAssign(e, ter)}

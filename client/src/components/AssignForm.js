@@ -7,7 +7,7 @@ import { consts } from '../utils'
 
 const initState = {
   assigned: '',
-  date_from: moment().format(consts.DATE_FORMAT),
+  date_from: moment().format(consts.DATETIME_FORMAT),
   errors: {},
 }
 
@@ -71,7 +71,7 @@ class AssignForm extends React.PureComponent {
               <DateTime
                 value={date_from}
                 onChange={(val) => this.handleChange('date_from', val)}
-                format={consts.DATE_FORMAT}
+                format={consts.DATETIME_FORMAT}
               />
             </FormField>
           </>
