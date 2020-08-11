@@ -51,7 +51,7 @@ class NumberForm extends React.PureComponent {
         : '',
       details: number.details || '',
     }
-    this.setState({ ...state })
+    this.setState({ ...state, errors: {} })
   }
 
   handleChange = (name, value) => {

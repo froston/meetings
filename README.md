@@ -8,6 +8,26 @@ Life and Minsitry App - Schedule and Administrate Life and Minsitry Meetings.
 
 **Schedules** - Generate, update and remove schedules. Set amount of weeks and tasks for each week. The app will generate the tasks for different students according to complex algorythms. However you can change them later manually.
 
+## Installation
+
+- Install `Git` and `Node JS` + `npm` locally
+
+```
+git clone <repo>
+cd meetings
+npm i
+cd client
+npm i
+```
+
+## Getting Started
+
+```
+npm run dev
+cd client
+npm start
+```
+
 ## Built With
 
 - [React](https://facebook.github.io/react/) - JavaScript UI library

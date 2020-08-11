@@ -41,9 +41,15 @@ class TerritoryForm extends React.PureComponent {
   }
 
   validate = (cb) => {
-    const { number } = this.state
+    const { number, assigned, date_from } = this.state
     let errors = {}
     if (!number) errors.number = this.props.t('common:required')
+    if (assigned || date_from) {
+      const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
+      if (!fromValid) errors.date_from = this.props.t('common:dateNotValid')
+      if (!date_from) errors.date_from = this.props.t('common:required')
+      if (!assigned) errors.assigned = this.props.t('common:required')
+    }
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
@@ -63,7 +69,7 @@ class TerritoryForm extends React.PureComponent {
       date_from: dateFrom,
       date_to: dateTo,
     }
-    this.setState({ ...state })
+    this.setState({ ...state, errors: {} })
   }
 
   handleChange = (name, value) => {
@@ -76,8 +82,8 @@ class TerritoryForm extends React.PureComponent {
       const { territory } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
-      newValues.date_from = moment(newValues.date_from).isValid() ? newValues.date_from : null
-      newValues.date_to = moment(newValues.date_to).isValid() ? newValues.date_to : null
+      newValues.date_from = moment(newValues.date_from, consts.DATETIME_FORMAT).isValid() ? newValues.date_from : null
+      newValues.date_to = moment(newValues.date_to, consts.DATETIME_FORMAT).isValid() ? newValues.date_to : null
       if (territory && territory.id) {
         this.props.handleSubmit(territory && territory.id, newValues)
       } else {
@@ -103,27 +109,23 @@ class TerritoryForm extends React.PureComponent {
             <FormField label={t('number')} error={errors.number}>
               <NumberInput value={number} onChange={(e) => this.handleChange('number', e.target.value)} />
             </FormField>
-            <FormField label={t('assigned')} error={errors.assigned}>
-              <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
-            </FormField>
-            {territory && territory.id ? (
+            {(!territory || (territory && territory.isAssigned)) && (
               <>
-                <FormField label={t('date_from')}>
-                  <TextInput value={date_from} disabled />
+                <FormField label={t('assigned')} error={errors.assigned}>
+                  <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
                 </FormField>
-                {date_to && (
-                  <FormField label={t('date_to')}>
-                    <TextInput value={date_to} disabled />
-                  </FormField>
-                )}
+                <FormField label={t('date_from')} error={errors.date_from}>
+                  <DateTime
+                    value={date_from}
+                    onChange={(val) => this.handleChange('date_from', val)}
+                    format={consts.DATETIME_FORMAT}
+                  />
+                </FormField>
               </>
-            ) : (
-              <FormField label={t('date_from')} error={errors.date_from}>
-                <DateTime
-                  value={date_from}
-                  onChange={(val) => this.handleChange('date_from', val)}
-                  format={consts.DATETIME_FORMAT}
-                />
+            )}
+            {territory && territory.last_worked && (
+              <FormField label={t('last_worked')}>
+                <TextInput value={functions.formatDateValue(territory.last_worked)} disabled />
               </FormField>
             )}
             {territory && territory.numbers && !!territory.numbers.length && (

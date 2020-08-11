@@ -21,6 +21,8 @@ import { consts, api } from '../utils'
 
 const initState = {
   territory: {},
+  assigned: '',
+  date_from: '',
   date_to: '',
   numbers: {},
   errors: {},
@@ -39,16 +41,31 @@ class Work extends React.Component {
           numbers[n.number] = n
         })
       }
-      this.setState({ territory, numbers })
+      // set territory to state
+      let terState = { territory, numbers }
+      if (territory.isAssigned) {
+        terState.assigned = territory.assigned
+        terState.date_from = territory.date_from
+      }
+      this.setState(terState)
     } else {
       history.push('territories')
     }
   }
 
   validate = (cb) => {
-    const { date_to } = this.state
+    const { territory, assigned, date_from, date_to } = this.state
     let errors = {}
-    if (!date_to || date_to === '') errors.date_to = this.props.t('common:required')
+    if (!territory.isAssigned) {
+      const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
+      if (!fromValid) errors.date_from = this.props.t('common:dateNotValid')
+      if (!assigned) errors.assigned = this.props.t('common:required')
+      if (!date_from) errors.date_from = this.props.t('common:required')
+    }
+    const toValid = moment(date_to, consts.DATETIME_FORMAT).isValid()
+    console.log(toValid, date_to)
+    if (!toValid) errors.date_to = this.props.t('common:dateNotValid')
+    if (!date_to) errors.date_to = this.props.t('common:required')
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
@@ -57,7 +74,7 @@ class Work extends React.Component {
   }
 
   handleChange = (name, value) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value, errors: {} })
   }
 
   handleNumChange = (name, value, number) => {
@@ -89,7 +106,7 @@ class Work extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territory, date_to, errors } = this.state
+    const { territory, assigned, date_from, date_to, errors } = this.state
     return (
       <Section>
         <Header>
@@ -97,17 +114,34 @@ class Work extends React.Component {
             {t('workTerritory')} {territory.number}
           </Heading>
         </Header>
-        <Columns size="medium" maxCount={2}>
+        <Columns masonry maxCount={2}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <FormField label={t('number')}>
               <TextInput value={territory.number} />
             </FormField>
-            <FormField label={t('assigned')}>
-              <TextInput value={territory.assigned} disabled />
-            </FormField>
-            <FormField label={t('date_from')}>
-              <TextInput value={moment(territory.date_from).format(consts.DATETIME_FORMAT)} disabled />
-            </FormField>
+            {territory.isAssigned ? (
+              <>
+                <FormField label={t('assigned')}>
+                  <TextInput value={territory.assigned} disabled />
+                </FormField>
+                <FormField label={t('date_from')}>
+                  <TextInput value={moment(territory.date_from).format(consts.DATETIME_FORMAT)} disabled />
+                </FormField>
+              </>
+            ) : (
+              <>
+                <FormField label={t('assigned')} error={errors.assigned}>
+                  <TextInput value={assigned} onDOMChange={(val) => this.handleChange('assigned', val)} />
+                </FormField>
+                <FormField label={t('date_from')} error={errors.date_from}>
+                  <DateTime
+                    value={date_from}
+                    onChange={(val) => this.handleChange('date_from', val)}
+                    format={consts.DATETIME_FORMAT}
+                  />
+                </FormField>
+              </>
+            )}
             <FormField label={t('date_to')} error={errors.date_to}>
               <DateTime
                 value={date_to}
@@ -142,6 +176,7 @@ class Work extends React.Component {
                           options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
                           value={{ value: status, label: status && t(`common:status${status}`) }}
                           onChange={({ value }) => this.handleNumChange('status', value.value, num.number)}
+                          placeHolder={t('numbers:status')}
                         />
                       </FormField>
                       <FormField label={t('numbers:details')}>
@@ -158,12 +193,12 @@ class Work extends React.Component {
                   </Box>
                 )
               })}
+            {territory.numbers && territory.numbers.length === 0 && (
+              <Box align="center" pad="medium" margin="medium" colorIndex="light-2">
+                <Heading tag="h3">{t('noNumbers')}</Heading>
+              </Box>
+            )}
           </div>
-          {territory.numbers && territory.numbers.length === 0 && (
-            <Box align="center" pad="medium" margin="medium" colorIndex="light-2">
-              <Heading tag="h3">{t('noNumbers')}</Heading>
-            </Box>
-          )}
         </Columns>
       </Section>
     )

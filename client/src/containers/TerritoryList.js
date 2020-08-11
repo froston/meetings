@@ -2,20 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
-import {
-  Section,
-  Box,
-  Heading,
-  Paragraph,
-  Label,
-  List,
-  ListItem,
-  Button,
-  Select,
-  Columns,
-  Search,
-  CheckBox,
-} from 'grommet'
+import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Search, CheckBox } from 'grommet'
 import { AddIcon, UserExpertIcon, FormTrashIcon, StopFillIcon, SettingsOptionIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -130,10 +117,18 @@ class TerritoryList extends React.Component {
 
   handleAssignment = (id, data) => {
     const { t } = this.props
-    api.post(`/territories/${id}/history`, data).then(() => {
-      toast(t('territoryAssigned', { assigned: data.assigned }))
-      this.setState({ assignForm: true }, this.loadData)
-    })
+    const { territory } = this.state
+    if (!territory.date_from && !territory.date_to) {
+      api.patch(`/territories/${id}/history`, territory.history_id, data).then(() => {
+        toast(t('territoryAssigned', { assigned: data.assigned }))
+        this.setState({ assignForm: true }, this.loadData)
+      })
+    } else {
+      api.post(`/territories/${id}/history`, data).then(() => {
+        toast(t('territoryAssigned', { assigned: data.assigned }))
+        this.setState({ assignForm: true }, this.loadData)
+      })
+    }
   }
 
   handleFilter = (name, val) => this.setState({ [name]: val }, this.loadData)
@@ -190,8 +185,8 @@ class TerritoryList extends React.Component {
             disabled={!online}
           />
         </Box>
-        <Columns size="medium">
-          <Box justify="between" align="stretch" pad="small">
+        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+          <Box justify="between" pad="small">
             <Search
               fill
               inline
@@ -202,7 +197,7 @@ class TerritoryList extends React.Component {
               placeHolder={t('search')}
             />
           </Box>
-          <Box justify="between" align="stretch" pad="small">
+          <Box justify="between" pad="small">
             <Select
               label={t('orderBy')}
               options={consts.orderByOpt.map((o) => ({ value: o, label: t(`orderBy${o}`) }))}
@@ -211,7 +206,7 @@ class TerritoryList extends React.Component {
               placeHolder={t('orderBy')}
             />
           </Box>
-          <Box justify="center" align="stretch" pad="small">
+          <Box justify="center" pad="small">
             <CheckBox
               label={t('noAssigned')}
               toggle
@@ -219,7 +214,8 @@ class TerritoryList extends React.Component {
               onChange={(e) => this.handleFilter('noAssigned', e.target.checked)}
             />
           </Box>
-        </Columns>
+        </div>
+        <br />
         <List selectable onSelect={this.handleSelect}>
           {territories
             .filter((t) => !toRemove.includes(t.id))
@@ -237,12 +233,14 @@ class TerritoryList extends React.Component {
                   <div>
                     <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter)} />
                     <strong>{`  ${t('territory')} ${ter.number}`}</strong>
-                    {ter.assigned && <Label size="small"> | {ter.assigned}</Label>}
-                    {ter.date_to && <Label size="small"> | {moment(ter.date_to).format(consts.DATE_FORMAT)}</Label>}
+                    {ter.last_worked && (
+                      <Label size="small"> | {moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
+                    )}
+                    {ter.isAssigned && <Label size="small"> | {ter.assigned}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>
-                  {((ter.assigned && ter.date_to) || (!ter.assigned && !ter.date_from)) && (
+                  {!ter.isAssigned && (
                     <Button
                       icon={<UserExpertIcon size="small" />}
                       onClick={(e) => this.handleAssignForm(e, ter)}

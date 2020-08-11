@@ -8,7 +8,9 @@ exports.getAll = (filters, cb) => {
 
   let where = ''
   where += query ? `AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
-  where += filters.noAssigned ? `AND (H.date_from IS NOT NULL AND H.date_to IS NOT NULL)` : ``
+  where += filters.noAssigned
+    ? `AND ((H.date_from IS NOT NULL AND H.date_to IS NOT NULL) OR (H.date_from IS NULL))`
+    : ``
 
   let order
   switch (filters.orderBy) {
@@ -19,10 +21,10 @@ exports.getAll = (filters, cb) => {
       order = 'ORDER BY T.number ASC'
       break
     case 'dateDesc':
-      order = 'ORDER BY H.date_to DESC'
+      order = 'ORDER BY T.last_worked DESC'
       break
     case 'dateAsc':
-      order = 'ORDER BY H.date_to ASC'
+      order = 'ORDER BY T.last_worked ASC'
       break
     default:
       order = 'ORDER BY T.id'
@@ -48,6 +50,7 @@ exports.getAll = (filters, cb) => {
         (ter, done) => {
           numberModel.getByTerritoryNumber(ter.number, (err, numbers) => {
             if (err) throw err
+            ter.isAssigned = !!ter.date_from && !ter.date_to
             ter.numbers = numbers
             done(null, ter)
           })
@@ -123,26 +126,45 @@ exports.createAssignment = (id, data, cb) => {
   })
 }
 
+exports.updateAssignment = (history_id, data, cb) => {
+  const updatedHist = {
+    assigned: data.assigned,
+    date_from: consts.formatDateTime(data.date_from),
+  }
+  getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, history_id], (err) => {
+    if (err) throw err
+    cb(null)
+  })
+}
+
 exports.workTerritory = (id, data, cb) => {
   const updatedTer = {
-    date_to: consts.formatDateTime(data.date_to),
+    last_worked: consts.formatDateTime(data.date_to),
   }
-  getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedTer, data.history_id], (err) => {
+  getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
     if (err) throw err
-    async.each(
-      data.numbers,
-      (num, numCb) => {
-        const newHistroy = {
-          number_id: num.id,
-          status: num.status,
-          details: num.details,
-        }
-        getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
-          if (err) throw err
-          numCb(err)
-        })
-      },
-      cb
-    )
+    const updatedTerHist = {
+      assigned: data.assigned,
+      date_from: consts.formatDateTime(data.date_to),
+      date_to: consts.formatDateTime(data.date_to),
+    }
+    getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedTerHist, data.history_id], (err) => {
+      if (err) throw err
+      async.each(
+        data.numbers,
+        (num, numCb) => {
+          const newHistroy = {
+            number_id: num.id,
+            status: num.status,
+            details: num.details,
+          }
+          getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+            if (err) throw err
+            numCb(err)
+          })
+        },
+        cb
+      )
+    })
   })
 }

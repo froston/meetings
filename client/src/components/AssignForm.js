@@ -24,8 +24,10 @@ class AssignForm extends React.PureComponent {
     const { t } = this.props
     const { assigned, date_from } = this.state
     let errors = {}
-    if (!assigned || assigned === '') errors.assigned = t('common:required')
-    if (!date_from || date_from === '') errors.date_from = t('common:required')
+    const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
+    if (!assigned) errors.assigned = t('common:required')
+    if (!fromValid) errors.date_from = t('common:dateNotValid')
+    if (!date_from) errors.date_from = t('common:required')
     if (Object.keys(errors).length) {
       this.setState({
         errors: Object.assign({}, this.state.errors, errors),
@@ -40,12 +42,11 @@ class AssignForm extends React.PureComponent {
     this.validate(() => {
       const { territory } = this.props
       this.props.handleSubmit(territory.id, { ...this.state })
-      this.setState(initState)
     })
   }
 
   handleChange = (name, value) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value, errors: {} })
   }
 
   render() {

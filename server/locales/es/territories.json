@@ -12,6 +12,7 @@
   "assigneTo": "Asignar a",
   "date_from": "Fecha de asignación",
   "date_to": "Fecha de finalización",
+  "last_worked": "Trabajdo por última vez",
   "remove": "Eliminar Territorio",
   "numbers": "Números del territorio",
   "confirmRemove": "Seguro de eliminar el territorio?",

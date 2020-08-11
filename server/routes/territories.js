@@ -67,6 +67,17 @@ router.post('/:id/history', (req, res) => {
   })
 })
 
+router.patch('/:id/history/:history_id', (req, res) => {
+  const id = req.params.history_id
+  const body = req.body
+  model.updateAssignment(id, body, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
 router.post('/:id/work', (req, res) => {
   const id = req.params.id
   const body = req.body
