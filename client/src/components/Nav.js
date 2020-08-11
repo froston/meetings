@@ -48,7 +48,11 @@ class Nav extends React.PureComponent {
             <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
               {t('schedules')}
             </Link>
-            <Link to="/territories" className={this.isActive('territories')} onClick={this.handleClick}>
+            <Link
+              to="/territories"
+              className={this.isActive('territories') || this.isActive('work')}
+              onClick={this.handleClick}
+            >
               {t('territories')}
             </Link>
             <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>

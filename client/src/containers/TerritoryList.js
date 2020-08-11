@@ -1,8 +1,22 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Columns, Search } from 'grommet'
-import { AddIcon, UserIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
+import {
+  Section,
+  Box,
+  Heading,
+  Paragraph,
+  Label,
+  List,
+  ListItem,
+  Button,
+  Select,
+  Columns,
+  Search,
+  CheckBox,
+} from 'grommet'
+import { AddIcon, UserExpertIcon, FormTrashIcon, StopFillIcon, SettingsOptionIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
@@ -20,6 +34,7 @@ class TerritoryList extends React.Component {
     territory: {},
     searchTerm: '',
     orderBy: null,
+    noAssigned: false,
   }
 
   componentDidMount() {
@@ -51,10 +66,11 @@ class TerritoryList extends React.Component {
 
   loadData = (showLoading = true, cb) => {
     showLoading && this.setState({ loading: true })
-    const { searchTerm, orderBy } = this.state
+    const { searchTerm, orderBy, noAssigned } = this.state
     let filter = '?'
     filter += searchTerm ? `q=${searchTerm}&` : ''
     filter += orderBy ? `orderBy=${orderBy}&` : ''
+    filter += noAssigned ? `noAssigned=${noAssigned}&` : ''
     api.get(`/territories${filter}`).then((data) => {
       this.setState({ territories: data || [], loading: false })
       cb && cb()
@@ -139,7 +155,17 @@ class TerritoryList extends React.Component {
     }
   }
 
-  handleAssign = (e, territory) => {
+  handleWork = (e, territory) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    this.props.history.push({
+      pathname: '/work',
+      state: { territory },
+    })
+  }
+
+  handleAssignForm = (e, territory) => {
     e.preventDefault()
     e.stopPropagation()
     this.setState({ assignForm: false, territory })
@@ -147,7 +173,7 @@ class TerritoryList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territories, online, loading, toRemove, searchTerm, orderBy } = this.state
+    const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -185,6 +211,14 @@ class TerritoryList extends React.Component {
               placeHolder={t('orderBy')}
             />
           </Box>
+          <Box justify="center" align="stretch" pad="small">
+            <CheckBox
+              label={t('noAssigned')}
+              toggle
+              checked={noAssigned}
+              onChange={(e) => this.handleFilter('noAssigned', e.target.checked)}
+            />
+          </Box>
         </Columns>
         <List selectable onSelect={this.handleSelect}>
           {territories
@@ -208,14 +242,20 @@ class TerritoryList extends React.Component {
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>
-                  {ter.assigned && ter.date_to && (
+                  {((ter.assigned && ter.date_to) || (!ter.assigned && !ter.date_from)) && (
                     <Button
-                      icon={<UserIcon size="small" />}
-                      onClick={(e) => this.handleAssign(e, ter)}
+                      icon={<UserExpertIcon size="small" />}
+                      onClick={(e) => this.handleAssignForm(e, ter)}
                       a11yTitle={t('assign')}
                       title={t('assign')}
                     />
                   )}
+                  <Button
+                    icon={<SettingsOptionIcon size="small" />}
+                    onClick={(e) => this.handleWork(e, ter)}
+                    a11yTitle={t('workTerritory')}
+                    title={t('workTerritory')}
+                  />
                   <Button
                     icon={<FormTrashIcon size="medium" />}
                     onClick={online ? (e) => this.handleRemove(e, ter.id) : undefined}
@@ -248,6 +288,10 @@ class TerritoryList extends React.Component {
       </Section>
     )
   }
+}
+
+TerritoryList.propTypes = {
+  history: PropTypes.object,
 }
 
 export default withRouter(withTranslation('territories')(TerritoryList))

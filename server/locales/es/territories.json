@@ -18,10 +18,14 @@
   "territoryRemoved": "El territorio fue eliminado.",
   "territoryCreated": "El territorio {{number}} fue creado.",
   "territoryUpdated": "El territorio {{number}} fue modificado.",
+  "territoryWorked": "El territorio {{number}} fue trabajado",
   "search": "Buscar territorio",
   "orderBy": "Ordenar por",
   "orderBynumberDesc": "Mayor número",
   "orderBynumberAsc": "Menor número",
   "orderBydateDesc": "Menos reciente",
-  "orderBydateAsc": "Más reciente"
+  "orderBydateAsc": "Más reciente",
+  "workTerritory": "Trabajar el territorio",
+  "noNumbers": "No hay números",
+  "noAssigned": "Sin asignación"
 }

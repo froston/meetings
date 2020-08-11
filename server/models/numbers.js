@@ -3,7 +3,7 @@ const { getDb } = require('../db')
 exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
   let where = '' // to simplify dynamic conditions syntax
-  where += query ? `AND N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%"` : ``
+  where += query ? `AND (N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
   where += filters.status ? `AND H.status = "${filters.status}"` : ''
   getDb().query(
     `SELECT H.*, N.*, H.id AS history_id

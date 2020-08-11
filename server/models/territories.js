@@ -7,15 +7,16 @@ exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
 
   let where = ''
-  where += query ? `AND T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%"` : ``
+  where += query ? `AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
+  where += filters.noAssigned ? `AND (H.date_from IS NOT NULL AND H.date_to IS NOT NULL)` : ``
 
   let order
   switch (filters.orderBy) {
     case 'numberDesc':
-      order = 'ORDER BY number DESC'
+      order = 'ORDER BY T.number DESC'
       break
     case 'numberAsc':
-      order = 'ORDER BY number ASC'
+      order = 'ORDER BY T.number ASC'
       break
     case 'dateDesc':
       order = 'ORDER BY H.date_to DESC'
@@ -36,7 +37,7 @@ exports.getAll = (filters, cb) => {
         FROM territories_hist H2 
         WHERE H2.territory_id = H.territory_id
       )
-      ${where} 
+      ${where}
       ${order}
     `,
     (err, ters) => {
@@ -73,8 +74,7 @@ exports.createTerritory = (data, cb) => {
     const newHistroy = {
       territory_id: res.insertId,
       assigned: data.assigned,
-      date_from: data.date_from,
-      date_to: data.date_to,
+      date_from: consts.formatDateTime(data.date_from),
     }
     getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
       if (err) throw err
@@ -120,5 +120,29 @@ exports.createAssignment = (id, data, cb) => {
   getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
     if (err) throw err
     cb(null)
+  })
+}
+
+exports.workTerritory = (id, data, cb) => {
+  const updatedTer = {
+    date_to: consts.formatDateTime(data.date_to),
+  }
+  getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedTer, data.history_id], (err) => {
+    if (err) throw err
+    async.each(
+      data.numbers,
+      (num, numCb) => {
+        const newHistroy = {
+          number_id: num.id,
+          status: num.status,
+          details: num.details,
+        }
+        getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+          if (err) throw err
+          numCb(err)
+        })
+      },
+      cb
+    )
   })
 }

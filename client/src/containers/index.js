@@ -9,6 +9,7 @@ import Layout from './Layout'
 import PrivateRoute from './PrivateRoute'
 import TerritoryList from './TerritoryList'
 import NumberList from './NumberList'
+import Work from './Work'
 
 export {
   App,
@@ -22,4 +23,5 @@ export {
   PrivateRoute,
   TerritoryList,
   NumberList,
+  Work,
 }

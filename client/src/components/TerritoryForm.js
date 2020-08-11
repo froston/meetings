@@ -106,20 +106,26 @@ class TerritoryForm extends React.PureComponent {
             <FormField label={t('assigned')} error={errors.assigned}>
               <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
             </FormField>
-            <FormField label={t('date_from')} error={errors.date_from}>
-              <DateTime
-                value={date_from}
-                onChange={(val) => this.handleChange('date_from', val)}
-                format={consts.DATETIME_FORMAT}
-              />
-            </FormField>
-            <FormField label={t('date_to')} error={errors.date_to}>
-              <DateTime
-                value={date_to}
-                onChange={(val) => this.handleChange('date_to', val)}
-                format={consts.DATETIME_FORMAT}
-              />
-            </FormField>
+            {territory && territory.id ? (
+              <>
+                <FormField label={t('date_from')}>
+                  <TextInput value={date_from} disabled />
+                </FormField>
+                {date_to && (
+                  <FormField label={t('date_to')}>
+                    <TextInput value={date_to} disabled />
+                  </FormField>
+                )}
+              </>
+            ) : (
+              <FormField label={t('date_from')} error={errors.date_from}>
+                <DateTime
+                  value={date_from}
+                  onChange={(val) => this.handleChange('date_from', val)}
+                  format={consts.DATETIME_FORMAT}
+                />
+              </FormField>
+            )}
             {territory && territory.numbers && !!territory.numbers.length && (
               <>
                 <br />

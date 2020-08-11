@@ -17,7 +17,6 @@ class NumberHistory extends React.PureComponent {
   }
 
   loadData = () => {
-    console.log(this.props)
     api.get(`/numbers/${this.props.number.id}/history`).then((hist) => {
       this.setState({ hist })
     })
