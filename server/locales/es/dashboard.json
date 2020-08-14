@@ -8,5 +8,7 @@
   "messageWarnTitle": "Falta Programa - quedan {{left}} días",
   "messageWarnDesc": "Tiene tiempo para crear el programa hasta {{until}}.",
   "messageOkTitle": "Programa Hecho",
-  "messageOkDesc": "Su programa para el {{month}} está listo."
+  "messageOkDesc": "Su programa para el {{month}} está listo.",
+  "numbers": "Estados de números",
+  "territories": "Estados de territorios"
 }

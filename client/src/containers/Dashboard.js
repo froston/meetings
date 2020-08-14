@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { withTranslation, Trans } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
+import { Section, Box, Heading, Paragraph, Distribution, Notification, Columns } from 'grommet'
+import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
-import { api, consts } from '../utils'
+import { api, consts, functions } from '../utils'
 
 class Dashboard extends Component {
   state = {
@@ -11,6 +12,8 @@ class Dashboard extends Component {
     sisters: 0,
     noParticipate: 0,
     scheduleExists: false,
+    numbers: [],
+    territories: [],
   }
   day = moment().date()
   month = moment().month() + 1
@@ -37,6 +40,12 @@ class Dashboard extends Component {
         (schedule) => schedule.month === this.month + 1 && schedule.year === this.year
       )
       this.setState({ scheduleExists })
+    })
+    api.get(`/numbers`).then((numbers) => {
+      this.setState({ numbers })
+    })
+    api.get(`/territories`).then((territories) => {
+      this.setState({ territories })
     })
   }
 
@@ -80,7 +89,7 @@ class Dashboard extends Component {
 
   render() {
     const { t } = this.props
-    const { brothers, sisters, noParticipate } = this.state
+    const { brothers, sisters, noParticipate, numbers, territories } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
@@ -119,6 +128,40 @@ class Dashboard extends Component {
             ]}
           />
         </Box>
+        <Columns masonry maxCount={2}>
+          <Box margin={{ vertical: 'small' }}>
+            <Heading tag="h2" margin="small">
+              {t('numbers')}
+            </Heading>
+            <AnnotatedMeter
+              size="medium"
+              type="circle"
+              max={70}
+              series={['', ...consts.statusOptions].map((s) => ({
+                label: s ? t(`common:status${s}`) : '?',
+                value: numbers.filter((n) => (s ? n.status == s : !n.status)).length,
+                colorIndex: functions.getNumberStatusColor(s),
+              }))}
+              legend={true}
+            />
+          </Box>
+          <Box margin={{ vertical: 'small' }}>
+            <Heading tag="h2" margin="small">
+              {t('territories')}
+            </Heading>
+            <AnnotatedMeter
+              size="medium"
+              type="circle"
+              max={70}
+              series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
+                label: t(`common:color${c}`),
+                value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
+                colorIndex: c,
+              }))}
+              legend={true}
+            />
+          </Box>
+        </Columns>
       </Section>
     )
   }

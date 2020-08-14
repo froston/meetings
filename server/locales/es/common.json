@@ -54,5 +54,10 @@
   "statusRV": "Revisita",
   "statusX": "No llamar",
   "statusFS": "Fuera de servicio",
-  "status": "Seleccionar ..."
+  "status": "Seleccionar ...",
+  "colorunknown": "?",
+  "colorok": "0 - 1 mes",
+  "colorwarning": "1 - 2 meses",
+  "colorcritical": "+ 2 meses",
+  "colorgraph-1": "Asignado"
 }

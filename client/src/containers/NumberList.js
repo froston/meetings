@@ -53,14 +53,17 @@ class NumberList extends React.Component {
     this.setState({ searchTerm }, this.loadData)
   }
 
-  loadData = (showLoading = true, cb) => {
+  loadData = (showLoading = true, cb, more = false) => {
     showLoading && this.setState({ loading: true })
-    const { searchTerm, status } = this.state
-    let filter = '?'
-    filter += searchTerm ? `q=${searchTerm}&` : ''
-    filter += status ? `status=${status}&` : ''
+    const { searchTerm, status, numbers } = this.state
+    let filter = `?offset=${more ? numbers.length : 0}&limit=20`
+    filter += searchTerm ? `&q=${searchTerm}` : ''
+    filter += status ? `&status=${status}` : ''
     api.get(`/numbers${filter}`).then((data) => {
-      this.setState({ numbers: data || [], loading: false })
+      this.setState({
+        numbers: more ? [...numbers, ...data] : data,
+        loading: false,
+      })
       cb && cb()
     })
   }
@@ -105,6 +108,10 @@ class NumberList extends React.Component {
         this.setState({ numberForm: true }, this.loadData)
       })
     }
+  }
+
+  handleMore = () => {
+    this.loadData(false, null, true)
   }
 
   cleanTerritories = () => {
@@ -180,7 +187,7 @@ class NumberList extends React.Component {
           </Box>
         </Columns>
 
-        <List selectable onSelect={this.handleSelect}>
+        <List selectable onSelect={this.handleSelect} onMore={numbers.length >= 20 && this.handleMore}>
           {numbers
             .filter((t) => !toRemove.includes(t.id))
             .map((num, index) => (

@@ -5,17 +5,20 @@ exports.getAll = (filters, cb) => {
   let where = '' // to simplify dynamic conditions syntax
   where += query ? `AND (N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
   where += filters.status ? `AND H.status = "${filters.status}"` : ''
+  let limit = ''
+  limit += filters.offset && filters.limit ? `LIMIT ${filters.offset}, ${filters.limit}` : ''
   getDb().query(
     `SELECT H.*, N.*, H.id AS history_id
       FROM numbers N 
       LEFT JOIN numbers_hist H ON N.id = H.number_id
-      WHERE H.id = (
+      WHERE (H.id = (
         SELECT MAX(H2.id) 
         FROM numbers_hist H2 
         WHERE H2.number_id = H.number_id
-      )
+      ) OR H.id IS NULL)
       ${where} 
-      ORDER BY N.id DESC`,
+      ORDER BY N.id DESC
+      ${limit}`,
     cb
   )
 }

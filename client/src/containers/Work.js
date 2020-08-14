@@ -11,6 +11,7 @@ import {
   Footer,
   Button,
   TextInput,
+  NumberInput,
   Select,
   Columns,
   DateTime,
@@ -34,23 +35,28 @@ class Work extends React.Component {
   componentDidMount() {
     const { location, history } = this.props
     if (location.state) {
-      const { territory } = location.state
-      let numbers = {}
-      if (territory && territory.numbers && !!territory.numbers.length) {
-        territory.numbers.forEach((n) => {
-          numbers[n.number] = n
-        })
-      }
-      // set territory to state
-      let terState = { territory, numbers }
-      if (territory.isAssigned) {
-        terState.assigned = territory.assigned
-        terState.date_from = territory.date_from
-      }
-      this.setState(terState)
+      this.loadData(location.state)
     } else {
       history.push('territories')
     }
+  }
+
+  loadData = (data) => {
+    const { territory } = data
+    let numbers = {}
+    if (territory && territory.numbers && !!territory.numbers.length) {
+      territory.numbers.forEach((n) => {
+        numbers[n.number] = n
+      })
+    }
+    // set territory to state
+    let terState = { territory, numbers, history_id: null }
+    if (territory.isAssigned || (!territory.date_from && !territory.date_to)) {
+      terState.history_id = territory.history_id
+      terState.assigned = territory.assigned
+      terState.date_from = territory.date_from
+    }
+    this.setState(terState)
   }
 
   validate = (cb) => {
@@ -63,7 +69,6 @@ class Work extends React.Component {
       if (!date_from) errors.date_from = this.props.t('common:required')
     }
     const toValid = moment(date_to, consts.DATETIME_FORMAT).isValid()
-    console.log(toValid, date_to)
     if (!toValid) errors.date_to = this.props.t('common:dateNotValid')
     if (!date_to) errors.date_to = this.props.t('common:required')
     if (Object.keys(errors).length) {
@@ -117,7 +122,7 @@ class Work extends React.Component {
         <Columns masonry maxCount={2}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <FormField label={t('number')}>
-              <TextInput value={territory.number} />
+              <NumberInput value={territory.number} disabled />
             </FormField>
             {territory.isAssigned ? (
               <>
@@ -131,7 +136,7 @@ class Work extends React.Component {
             ) : (
               <>
                 <FormField label={t('assigned')} error={errors.assigned}>
-                  <TextInput value={assigned} onDOMChange={(val) => this.handleChange('assigned', val)} />
+                  <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
                 </FormField>
                 <FormField label={t('date_from')} error={errors.date_from}>
                   <DateTime
@@ -206,8 +211,8 @@ class Work extends React.Component {
 }
 
 Work.propTypes = {
-  location: PropTypes.bool,
-  history: PropTypes.bool,
+  location: PropTypes.object,
+  history: PropTypes.object,
 }
 
 export default withTranslation(['territories', 'numbers'])(Work)
