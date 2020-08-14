@@ -136,7 +136,7 @@ class Dashboard extends Component {
             <AnnotatedMeter
               size="medium"
               type="circle"
-              max={70}
+              max={numbers.length}
               series={['', ...consts.statusOptions].map((s) => ({
                 label: s ? t(`common:status${s}`) : '?',
                 value: numbers.filter((n) => (s ? n.status == s : !n.status)).length,
@@ -152,7 +152,7 @@ class Dashboard extends Component {
             <AnnotatedMeter
               size="medium"
               type="circle"
-              max={70}
+              max={territories.length}
               series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
                 label: t(`common:color${c}`),
                 value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
