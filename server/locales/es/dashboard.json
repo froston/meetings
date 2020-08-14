@@ -1,6 +1,6 @@
 {
   "title": "Tablero",
-  "desc": "Bienvenido a la aplicación 'Reunión Vida y Ministerio Cristianos'. Aquí puede administrar los estudiantes y programas mensuales.",
+  "desc": "Bienvenido a la aplicación 'Reunión Vida y Ministerio Cristianos'. Aquí puede administrar los estudiantes y programas mensuales. También los territorios telefónicos.",
   "dist": "Distribución de los Estudiantes",
   "brothers": "Hermanos",
   "sisters": "Hermanas",
@@ -10,5 +10,7 @@
   "messageOkTitle": "Programa Hecho",
   "messageOkDesc": "Su programa para el {{month}} está listo.",
   "numbers": "Estados de números",
-  "territories": "Estados de territorios"
+  "territories": "Estados de territorios",
+  "messageTerWarning": "Hay teritorios que no se han hecho mas de 3 meses",
+  "messageTerDesc": "Teritorios {{territories}}"
 }

@@ -49,12 +49,13 @@ class Dashboard extends Component {
     })
   }
 
-  getMessage = () => {
+  getMessages = () => {
     const { t } = this.props
-    const { scheduleExists } = this.state
+    const { scheduleExists, territories } = this.state
+    let messages = []
     if (this.day > 1 && this.day < 15) {
       if (scheduleExists) {
-        return (
+        messages.push(
           <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
             <Notification
               message={t('messageOkTitle')}
@@ -65,7 +66,7 @@ class Dashboard extends Component {
           </Box>
         )
       } else {
-        return (
+        messages.push(
           <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
             <Notification
               message={t('messageWarnTitle', { left: 15 - this.day })}
@@ -80,7 +81,23 @@ class Dashboard extends Component {
         )
       }
     }
-    return null
+    const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) == 'critical')
+    if (criticals.length) {
+      messages.push(
+        <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+          <Notification
+            message={t('messageTerWarning')}
+            state={t('messageTerDesc', {
+              territories: criticals.map((c) => c.number).join(', '),
+            })}
+            size="medium"
+            status="critical"
+          />
+        </Box>
+      )
+    }
+
+    return messages
   }
 
   navigate = (to, state) => {
@@ -95,12 +112,8 @@ class Dashboard extends Component {
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>
-        <Paragraph margin="small">
-          <Trans i18nKey="desc">
-            <br />
-          </Trans>
-        </Paragraph>
-        {this.getMessage()}
+        <Paragraph margin="small">{t('desc')}</Paragraph>
+        {this.getMessages()}
         <Box pad={{ vertical: 'small' }}>
           <Heading tag="h2" margin="small">
             {t('dist')}
