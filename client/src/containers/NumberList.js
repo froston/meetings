@@ -187,7 +187,7 @@ class NumberList extends React.Component {
           </Box>
         </Columns>
 
-        <List selectable onSelect={this.handleSelect} onMore={numbers.length >= 20 && this.handleMore}>
+        <List selectable onSelect={this.handleSelect} onMore={numbers.length >= 20 ? this.handleMore : null}>
           {numbers
             .filter((t) => !toRemove.includes(t.id))
             .map((num, index) => (

@@ -28,5 +28,7 @@
   "orderBydateAsc": "Más reciente",
   "workTerritory": "Trabajar el territorio",
   "noNumbers": "No hay números",
-  "noAssigned": "Sin asignación"
+  "noAssigned": "Sin asignación",
+  "history": "Historial",
+  "territoryView": "Ver territorio"
 }

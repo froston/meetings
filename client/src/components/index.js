@@ -11,6 +11,8 @@ import TerritoryForm from './TerritoryForm'
 import NumberForm from './NumberForm'
 import AssignForm from './AssignForm'
 import NumberHistory from './NumberHistory'
+import TerritoryHistory from './TerritoryHistory'
+import TerritoryView from './TerritoryView'
 
 export {
   Nav,
@@ -26,4 +28,6 @@ export {
   NumberForm,
   AssignForm,
   NumberHistory,
+  TerritoryHistory,
+  TerritoryView,
 }

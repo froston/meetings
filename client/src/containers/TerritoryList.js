@@ -3,11 +3,18 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Search, CheckBox } from 'grommet'
-import { AddIcon, UserExpertIcon, FormTrashIcon, StopFillIcon, SettingsOptionIcon } from 'grommet/components/icons/base'
+import {
+  AddIcon,
+  UserExpertIcon,
+  FormTrashIcon,
+  StopFillIcon,
+  SettingsOptionIcon,
+  HistoryIcon,
+} from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
-import { Undo, TerritoryForm, AssignForm } from '../components'
+import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView } from '../components'
 import { api, consts, functions } from '../utils'
 
 class TerritoryList extends React.Component {
@@ -22,6 +29,8 @@ class TerritoryList extends React.Component {
     searchTerm: '',
     orderBy: null,
     noAssigned: false,
+    territoryHist: true,
+    territoryView: true,
   }
 
   componentDidMount() {
@@ -160,6 +169,12 @@ class TerritoryList extends React.Component {
     })
   }
 
+  handleHistory = (e, territory) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.setState({ territory, territoryHist: false })
+  }
+
   handleAssignForm = (e, territory) => {
     e.preventDefault()
     e.stopPropagation()
@@ -254,6 +269,14 @@ class TerritoryList extends React.Component {
                     a11yTitle={t('workTerritory')}
                     title={t('workTerritory')}
                   />
+                  {ter.history_id > 0 && (
+                    <Button
+                      icon={<HistoryIcon size="small" />}
+                      onClick={(e) => this.handleHistory(e, ter)}
+                      a11yTitle={t('remove')}
+                      title={t('remove')}
+                    />
+                  )}
                   <Button
                     icon={<FormTrashIcon size="medium" />}
                     onClick={online ? (e) => this.handleRemove(e, ter.id) : undefined}
@@ -276,12 +299,23 @@ class TerritoryList extends React.Component {
           handleSubmit={this.handleSubmit}
           handleClose={() => this.handleForm('territoryForm', true)}
           territory={this.state.territory}
+          handleView={() => this.handleForm('territoryView', false)}
         />
         <AssignForm
           hidden={this.state.assignForm}
           territory={this.state.territory}
           handleClose={() => this.handleForm('assignForm', true)}
           handleSubmit={this.handleAssignment}
+        />
+        <TerritoryHistory
+          hidden={this.state.territoryHist}
+          handleClose={() => this.handleForm('territoryHist', true)}
+          territory={this.state.territory}
+        />
+        <TerritoryView
+          hidden={this.state.territoryView}
+          handleClose={() => this.handleForm('territoryView', true)}
+          territory={this.state.territory}
         />
       </Section>
     )

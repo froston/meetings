@@ -56,6 +56,26 @@ router.delete('/:id', (req, res) => {
   })
 })
 
+router.get('/:id/history', (req, res) => {
+  const id = req.params.id
+  model.getTerritoryHist(id, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
+router.get('/:terNum/view', (req, res) => {
+  const terNum = req.params.terNum
+  model.getTerritoryNumbers(terNum, (err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
 router.post('/:id/history', (req, res) => {
   const id = req.params.id
   const body = req.body

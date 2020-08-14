@@ -15,7 +15,7 @@ exports.getAll = (filters, cb) => {
         SELECT MAX(H2.id) 
         FROM numbers_hist H2 
         WHERE H2.number_id = H.number_id
-      ) OR H.id IS NULL)
+      ))
       ${where} 
       ORDER BY N.id DESC
       ${limit}`,

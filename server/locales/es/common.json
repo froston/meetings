@@ -54,6 +54,7 @@
   "statusRV": "Revisita",
   "statusX": "No llamar",
   "statusFS": "Fuera de servicio",
+  "statusnull": "?",
   "status": "Seleccionar ...",
   "colorunknown": "?",
   "colorok": "0 - 1 mes",

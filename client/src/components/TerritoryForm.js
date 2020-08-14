@@ -15,7 +15,9 @@ import {
   ListItem,
   NumberInput,
   DateTime,
+  Anchor,
 } from 'grommet'
+import { StopFillIcon, ViewIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
 import { consts, functions } from '../utils'
 
@@ -96,6 +98,11 @@ class TerritoryForm extends React.PureComponent {
     this.props.handleClose()
   }
 
+  handleView = () => {
+    this.handleClose()
+    this.props.handleView()
+  }
+
   render() {
     const { t, hidden, territory, online } = this.props
     const { number, assigned, date_from, date_to, errors } = this.state
@@ -104,6 +111,7 @@ class TerritoryForm extends React.PureComponent {
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
           <Form pad="medium" onSubmit={this.handleSubmit}>
             <Header>
+              {territory && <StopFillIcon size="small" colorIndex={functions.getTerritoryStatusColor(territory)} />}
               <Heading>{territory ? `${t('territory')} ${territory.number}` : t('new')}</Heading>
             </Header>
             <FormField label={t('number')} error={errors.number}>
@@ -128,13 +136,16 @@ class TerritoryForm extends React.PureComponent {
                 <TextInput value={functions.formatDateValue(territory.last_worked)} disabled />
               </FormField>
             )}
+            <Box margin={{ vertical: 'medium' }}>
+              <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
+            </Box>
             {territory && territory.numbers && !!territory.numbers.length && (
               <>
                 <br />
                 <Heading tag="h3">{t('numbers')}</Heading>
                 <List>
                   {territory.numbers.map((n, i) => (
-                    <ListItem justify="between" separator={i === 0 ? 'horizontal' : 'bottom'}>
+                    <ListItem key={i} justify="between" separator={i === 0 ? 'horizontal' : 'bottom'}>
                       <span>{n.number}</span>
                     </ListItem>
                   ))}
@@ -159,6 +170,7 @@ TerritoryForm.propTypes = {
   territory: PropTypes.object,
   handleSubmit: PropTypes.func,
   handleClose: PropTypes.func,
+  handleView: PropTypes.func,
 }
 
 export default withTranslation(['territories', 'common'])(TerritoryForm)

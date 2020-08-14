@@ -168,3 +168,26 @@ exports.workTerritory = (id, data, cb) => {
     })
   })
 }
+
+exports.getTerritoryHist = (id, cb) => {
+  getDb().query('SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC', id, (err, hist) => {
+    if (err) throw err
+    cb(err, hist)
+  })
+}
+
+exports.getTerritoryNumbers = (terNum, cb) => {
+  numberModel.getByTerritoryNumber(terNum, (err, nums) => {
+    if (err) throw err
+    async.map(
+      nums,
+      (num, done) => {
+        numberModel.getNumberHist(num.id, (err, hist) => {
+          if (err) throw err
+          done(null, { ...num, ...hist[0] })
+        })
+      },
+      cb
+    )
+  })
+}
