@@ -56,7 +56,7 @@ class Dashboard extends Component {
     if (this.day > 1 && this.day < 15) {
       if (scheduleExists) {
         messages.push(
-          <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+          <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
             <Notification
               message={t('messageOkTitle')}
               state={t('messageOkDesc', { month: moment(this.month + 1, 'MM').format('MMMM') })}
@@ -67,7 +67,7 @@ class Dashboard extends Component {
         )
       } else {
         messages.push(
-          <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+          <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
             <Notification
               message={t('messageWarnTitle', { left: 15 - this.day })}
               state={t('messageWarnDesc', {
@@ -84,7 +84,7 @@ class Dashboard extends Component {
     const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) == 'critical')
     if (criticals.length) {
       messages.push(
-        <Box pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+        <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
           <Notification
             message={t('messageTerWarning')}
             state={t('messageTerDesc', {
