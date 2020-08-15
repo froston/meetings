@@ -1,24 +1,26 @@
-exports.getAvailable = student => {
+const moment = require('moment')
+
+exports.getAvailable = (student) => {
   return [
     student.reading ? { value: 'Reading' } : undefined,
     student.initial_call ? { value: 'Initial Call' } : undefined,
     student.return_visit ? { value: 'Return Visit' } : undefined,
     student.study ? { value: 'Bible Study' } : undefined,
-    student.talk ? { value: 'Talk' } : undefined
+    student.talk ? { value: 'Talk' } : undefined,
   ]
 }
 
-exports.setAvailable = available => {
+exports.setAvailable = (available) => {
   return {
-    reading: available.find(a => a === 'Reading') ? true : false,
-    initial_call: available.find(a => a === 'Initial Call') ? true : false,
-    return_visit: available.find(a => a === 'Return Visit') ? true : false,
-    study: available.find(a => a === 'Bible Study') ? true : false,
-    talk: available.find(a => a === 'Talk') ? true : false
+    reading: available.find((a) => a === 'Reading') ? true : false,
+    initial_call: available.find((a) => a === 'Initial Call') ? true : false,
+    return_visit: available.find((a) => a === 'Return Visit') ? true : false,
+    study: available.find((a) => a === 'Bible Study') ? true : false,
+    talk: available.find((a) => a === 'Talk') ? true : false,
   }
 }
 
-exports.getAvailableName = taskName => {
+exports.getAvailableName = (taskName) => {
   let task = ''
   switch (taskName) {
     case 'Reading':
@@ -42,3 +44,5 @@ exports.getAvailableName = taskName => {
   }
   return task
 }
+
+exports.formatDateTime = (date) => (date ? moment(date, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss') : null)

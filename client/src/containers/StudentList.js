@@ -1,5 +1,5 @@
 import React from 'react'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
 import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -19,7 +19,7 @@ class StudentList extends React.Component {
     student: {},
     searchTerm: '',
     noParticipate: false,
-    gender: null
+    gender: null,
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class StudentList extends React.Component {
     window.removeEventListener('offline', this.handleConnection)
   }
 
-  handleConnection = e => {
+  handleConnection = (e) => {
     if (e.type === 'offline') {
       toast('You are offline.')
       this.setState({ online: false })
@@ -56,18 +56,18 @@ class StudentList extends React.Component {
     filter += searchTerm ? `name=${searchTerm}&` : ''
     filter += noParticipate ? `noParticipate=${noParticipate}&` : ''
     filter += gender ? `gender=${gender}&` : ''
-    api.get(`/students${filter}`).then(students => {
+    api.get(`/students${filter}`).then((students) => {
       this.setState({ students: students || [], loading: false })
       cb && cb()
     })
   }
 
-  handleSearch = e => {
+  handleSearch = (e) => {
     const searchTerm = e.target.value
     this.setState({ searchTerm }, this.loadData)
   }
 
-  handleSelect = index => {
+  handleSelect = (index) => {
     this.setState({ studentForm: false, student: this.state.students[index] })
   }
 
@@ -78,19 +78,19 @@ class StudentList extends React.Component {
   handleTasks = (e, student) => {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ taskForm: false, student })
+    this.setState({ taskForm: false, studentForm: true, student })
   }
 
-  handleUndo = id => {
+  handleUndo = (id) => {
     const { toRemove } = this.state
-    this.setState({ toRemove: toRemove.filter(s => s !== id) })
+    this.setState({ toRemove: toRemove.filter((s) => s !== id) })
   }
 
   cleanSchedules = () => {
     const { toRemove } = this.state
     let requests = toRemove.map(
-      id =>
-        new Promise(resolve => {
+      (id) =>
+        new Promise((resolve) => {
           api.remove('/students', id).then(resolve)
         })
     )
@@ -108,7 +108,7 @@ class StudentList extends React.Component {
     if (window.confirm(t('confirmRemove'))) {
       this.setState({ toRemove: [...this.state.toRemove, id] })
       toast(<Undo data={id} text={t('studentRemoved')} undo={this.handleUndo} />, {
-        onClose: this.cleanSchedules
+        onClose: this.cleanSchedules,
       })
     }
   }
@@ -184,7 +184,7 @@ class StudentList extends React.Component {
 
         <List selectable onSelect={this.handleSelect}>
           {students
-            .filter(s => !toRemove.includes(s.id))
+            .filter((s) => !toRemove.includes(s.id))
             .map((student, index) => (
               <ListItem
                 key={student.id}
@@ -210,13 +210,13 @@ class StudentList extends React.Component {
                 <Box direction="row" responsive={false}>
                   <Button
                     icon={<CatalogIcon size="medium" />}
-                    onClick={e => this.handleTasks(e, student)}
+                    onClick={(e) => this.handleTasks(e, student)}
                     a11yTitle={t('tasks')}
                     title={t('tasks')}
                   />
                   <Button
                     icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? e => this.handleRemove(e, student.id) : undefined}
+                    onClick={online ? (e) => this.handleRemove(e, student.id) : undefined}
                     a11yTitle={t('remove')}
                     title={t('remove')}
                     disabled={!online}
@@ -235,7 +235,7 @@ class StudentList extends React.Component {
           hidden={this.state.studentForm}
           handleSubmit={this.handleSubmit}
           handleClose={() => this.handleForm('studentForm', true)}
-          handleTasks={e => this.handleTasks(e, this.state.student)}
+          handleTasks={(e) => this.handleTasks(e, this.state.student)}
           student={this.state.student}
         />
         <TaskList
@@ -248,4 +248,4 @@ class StudentList extends React.Component {
   }
 }
 
-export default translate('students')(StudentList)
+export default withTranslation('students')(StudentList)

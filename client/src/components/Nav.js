@@ -1,15 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Sidebar, Header, Title, Box, Menu, Button, Footer } from 'grommet'
 import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
 
 class Nav extends React.PureComponent {
-  getParentUrl = path => path.split('/')[1] || '/' // the menu key is always parent url
+  getParentUrl = (path) => path.split('/')[1] || '/' // the menu key is always parent url
 
-  isActive = link => {
+  isActive = (link) => {
     const { location } = this.props
     if (location && location.pathname) {
       const path = this.getParentUrl(location.pathname)
@@ -21,7 +21,7 @@ class Nav extends React.PureComponent {
       this.props.handleClose()
     }
   }
-  setLang = lang => {
+  setLang = (lang) => {
     this.props.setLang(lang)
   }
   logout = () => {
@@ -48,6 +48,16 @@ class Nav extends React.PureComponent {
             <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
               {t('schedules')}
             </Link>
+            <Link
+              to="/territories"
+              className={this.isActive('territories') || this.isActive('work')}
+              onClick={this.handleClick}
+            >
+              {t('territories')}
+            </Link>
+            <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+              {t('numbers')}
+            </Link>
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>
@@ -63,7 +73,7 @@ Nav.propTypes = {
   responsive: PropTypes.string,
   location: PropTypes.object,
   setLang: PropTypes.func,
-  logout: PropTypes.func
+  logout: PropTypes.func,
 }
 
-export default translate('nav')(Nav)
+export default withTranslation('nav')(Nav)

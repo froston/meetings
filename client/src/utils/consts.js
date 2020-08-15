@@ -20,7 +20,7 @@ export const availableOptions = [
   AVAILABLE_INITIAL_CALL,
   AVAILABLE_RETURN_VISIT,
   AVAILABLE_BIBLE_STUDY,
-  AVAILABLE_TALK
+  AVAILABLE_TALK,
 ]
 export const scheduleOptions = [
   AVAILABLE_READING,
@@ -29,8 +29,15 @@ export const scheduleOptions = [
   AVAILABLE_RETURN_VISIT_2,
   AVAILABLE_RETURN_VISIT_3,
   AVAILABLE_BIBLE_STUDY,
-  AVAILABLE_TALK
+  AVAILABLE_TALK,
 ]
 
 export const hallsOptions = [HALLS_ALL, HALLS_A, HALLS_B]
 export const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+export const statusOptions = ['NC', 'NI', 'O', 'C', 'A', 'RV', 'X', 'FS']
+
+export const DATE_FORMAT = 'D/M/YYYY'
+export const DATETIME_FORMAT = 'D/M/YYYY HH:mm'
+
+export const orderByOpt = ['numberDesc', 'numberAsc', 'dateDesc', 'dateAsc']

@@ -148,3 +148,7 @@ a.grommetux-button:hover {
 .grommetux-date-time-drop__day--active {
   background-color: #0a64a0;
 }
+
+.grommetux-list__more {
+  text-align: center;
+}

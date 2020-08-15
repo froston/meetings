@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Box, Menu, CheckBox, RadioButton, Form, FormField, Title, Anchor } from 'grommet'
 import { FilterIcon, CloseIcon } from 'grommet/components/icons/base'
 
@@ -11,7 +11,7 @@ class StudentFilters extends React.PureComponent {
     return (
       <Menu
         responsive
-        icon={<FilterIcon colorIndex={active && 'neutral-1'} size="medium" />}
+        icon={<FilterIcon colorIndex={active ? 'neutral-1' : ''} size="medium" />}
         closeOnClick
         size="medium"
       >
@@ -21,7 +21,7 @@ class StudentFilters extends React.PureComponent {
             <FormField>
               <CheckBox
                 label={t('filtersNoParticipate')}
-                onChange={e => handleFilter('noParticipate', e.target.checked)}
+                onChange={(e) => handleFilter('noParticipate', e.target.checked)}
                 checked={noParticipate}
               />
             </FormField>
@@ -54,7 +54,7 @@ class StudentFilters extends React.PureComponent {
 StudentFilters.propTypes = {
   handleSubmit: PropTypes.func,
   noParticipate: PropTypes.bool,
-  gender: PropTypes.string
+  gender: PropTypes.string,
 }
 
-export default translate('students')(StudentFilters)
+export default withTranslation('students')(StudentFilters)

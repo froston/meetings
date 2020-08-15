@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Form, FormField, Footer, Button, Select, DateTime } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
@@ -9,13 +9,13 @@ const initState = {
   task: '',
   hall: {},
   date: '',
-  errors: {}
+  errors: {},
 }
 
 class TaskForm extends React.PureComponent {
   state = initState
 
-  validate = cb => {
+  validate = (cb) => {
     const { t } = this.props
     const { task, hall, date } = this.state
     let errors = {}
@@ -24,19 +24,19 @@ class TaskForm extends React.PureComponent {
     if (!date) errors.date = t('common:required')
     if (Object.keys(errors).length) {
       this.setState({
-        errors: Object.assign({}, this.state.errors, errors)
+        errors: Object.assign({}, this.state.errors, errors),
       })
     } else {
       cb()
     }
   }
 
-  getTaskDate = date => {
+  getTaskDate = (date) => {
     const dateObj = moment(date)
     return {
       week: String(Math.ceil(dateObj.date() / 7)),
       month: dateObj.format('M'),
-      year: dateObj.format('Y')
+      year: dateObj.format('Y'),
     }
   }
 
@@ -44,7 +44,7 @@ class TaskForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
       const student = this.props.student
@@ -53,7 +53,7 @@ class TaskForm extends React.PureComponent {
         student_name: student.name,
         ...this.getTaskDate(this.state.date),
         task: this.state.task.value,
-        hall: this.state.hall.value
+        hall: this.state.hall.value,
       }
       this.props.handleSubmit(newTask)
       this.setState({ ...initState })
@@ -67,11 +67,11 @@ class TaskForm extends React.PureComponent {
       <div>
         <Form pad="medium" onSubmit={this.handleSubmit}>
           <FormField label={t('common:date')} error={errors.date}>
-            <DateTime format="M/D/YYYY" value={date} onChange={value => this.handleChange('date', value)} />
+            <DateTime format="M/D/YYYY" value={date} onChange={(value) => this.handleChange('date', value)} />
           </FormField>
           <FormField label={t('common:talk')} error={errors.task}>
             <Select
-              options={consts.scheduleOptions.map(av => ({ value: av, label: t(`common:${av}`) }))}
+              options={consts.scheduleOptions.map((av) => ({ value: av, label: t(`common:${av}`) }))}
               value={task}
               onChange={({ value }) => this.handleChange('task', value)}
             />
@@ -79,7 +79,7 @@ class TaskForm extends React.PureComponent {
           <FormField label={t('common:hall')} error={errors.hall}>
             <Select
               placeHolder={t('common:hall')}
-              options={[consts.HALLS_A, consts.HALLS_B].map(hl => ({ value: hl, label: t(`common:hall${hl}`) }))}
+              options={[consts.HALLS_A, consts.HALLS_B].map((hl) => ({ value: hl, label: t(`common:hall${hl}`) }))}
               value={hall}
               onChange={({ value }) => this.handleChange('hall', value)}
             />
@@ -95,7 +95,7 @@ class TaskForm extends React.PureComponent {
 
 TaskForm.propTypes = {
   student: PropTypes.object,
-  handleSubmit: PropTypes.func
+  handleSubmit: PropTypes.func,
 }
 
-export default translate(['tasks', 'common'])(TaskForm)
+export default withTranslation(['tasks', 'common'])(TaskForm)

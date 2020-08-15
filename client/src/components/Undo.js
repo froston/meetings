@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Anchor } from 'grommet'
 
 const styles = {
   marginLeft: 'auto',
   color: '#0a64a0',
-  fontWeight: 700
+  fontWeight: 700,
 }
 
 const Undo = ({ t, text, data, undo, closeToast }) => {
@@ -26,7 +26,7 @@ Undo.propTypes = {
   text: PropTypes.string.isRequired,
   undo: PropTypes.func.isRequired,
   closeToast: PropTypes.func.isRequired,
-  data: PropTypes.any
+  data: PropTypes.any,
 }
 
-export default translate()(Undo)
+export default withTranslation()(Undo)

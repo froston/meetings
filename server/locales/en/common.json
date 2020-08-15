@@ -43,5 +43,13 @@
   "hallA": "Main",
   "hallB": "Auxiliary",
   "name": "Name",
-  "readingMain": "Only in the main hall"
+  "readingMain": "Only in the main hall",
+  "statusNC": "No en casa",
+  "statusNI": "No interesado",
+  "statusO": "Ocupado",
+  "statusC": "Cortó",
+  "statusA": "Atendió",
+  "statusRV": "Revisita",
+  "statusX": "No llamar",
+  "statusFS": "Fuera de servicio"
 }

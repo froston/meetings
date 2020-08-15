@@ -1,5 +1,5 @@
 import React from 'react'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } from 'grommet'
 import { toast } from 'react-toastify'
 import moment from 'moment'
@@ -16,7 +16,7 @@ class Schedule extends React.Component {
     availableList: true,
     helpers: false,
     warnings: [],
-    oldTask: {}
+    oldTask: {},
   }
 
   componentDidMount() {
@@ -30,7 +30,7 @@ class Schedule extends React.Component {
     window.removeEventListener('offline', this.handleConnection)
   }
 
-  handleConnection = e => {
+  handleConnection = (e) => {
     if (e.type === 'offline') {
       toast('You are offline.')
       this.setState({ online: false })
@@ -43,7 +43,7 @@ class Schedule extends React.Component {
 
   loadData = () => {
     const id = this.props.match.params.id
-    api.get(`/schedules/${id}`).then(schedule => {
+    api.get(`/schedules/${id}`).then((schedule) => {
       this.setState({ schedule })
       this.getWarnings(schedule.tasks)
     })
@@ -55,14 +55,14 @@ class Schedule extends React.Component {
       .get(
         `/students/${student_id}/available?taskName=${task}&month=${month}&year=${year}&hall=${hall}&helper=${helper}`
       )
-      .then(availables => {
+      .then((availables) => {
         this.setState({
           availables,
           taskToChange,
           availableList: false,
-          helpers: helper
+          helpers: helper,
         })
-        api.get(`/students?noParticipate=true`).then(noParticipate => {
+        api.get(`/students?noParticipate=true`).then((noParticipate) => {
           this.setState({ noParticipate })
         })
       })
@@ -74,13 +74,13 @@ class Schedule extends React.Component {
     api.patch(`/tasks`, oldTask.id, task).then(this.loadData)
   }
 
-  handleSelectNew = student => {
+  handleSelectNew = (student) => {
     const { taskToChange, helpers } = this.state
     this.setState({ oldTask: taskToChange })
     const task = helpers ? { helper_id: student.id } : { student_id: student.id }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
       toast(<Undo text={`${this.props.t('reassigned')} ${student.name}.`} undo={this.handleUndo} />, {
-        onClose: () => this.setState({ oldTask: {} })
+        onClose: () => this.setState({ oldTask: {} }),
       })
       this.setState({ availableList: true })
       this.loadData()
@@ -91,12 +91,12 @@ class Schedule extends React.Component {
     this.setState({ availableList: true })
   }
 
-  getWarnings = tasks => {
+  getWarnings = (tasks) => {
     let warnings = [],
       names = []
     const { t } = this.props
-    tasks.forEach(task => {
-      if (tasks.filter(t => task.student_name === t.student_name).length > 1 && !names.includes(task.student_name)) {
+    tasks.forEach((task) => {
+      if (tasks.filter((t) => task.student_name === t.student_name).length > 1 && !names.includes(task.student_name)) {
         warnings.push(t('scheduleWarn', { name: task.student_name }))
         names.push(task.student_name)
       }
@@ -118,8 +118,8 @@ class Schedule extends React.Component {
     const { schedule, online } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
-      const tasksA = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_A)
-      const tasksB = schedule.tasks.filter(a => a.week === week && a.hall === consts.HALLS_B)
+      const tasksA = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_A)
+      const tasksB = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_B)
       weeks.push(
         <Tab key={week} title={`${t('common:week')} ${week}`}>
           <Accordion openMulti={true} active={[0, 1]}>
@@ -186,4 +186,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default translate(['schedules', 'common'])(Schedule)
+export default withTranslation(['schedules', 'common'])(Schedule)

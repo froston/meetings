@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { translate } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import {
   Layer,
   Header,
@@ -16,7 +16,7 @@ import {
   AccordionPanel,
   List,
   ListItem,
-  CheckBox
+  CheckBox,
 } from 'grommet'
 import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon } from 'grommet/components/icons/base'
@@ -28,25 +28,19 @@ const availableHalls = [consts.HALLS_ALL, consts.HALLS_A]
 class ScheduleForm extends React.PureComponent {
   getState = () => ({
     month: {
-      value: Number(
-        moment()
-          .add(1, 'M')
-          .format('M')
-      ),
-      label: moment()
-        .add(1, 'M')
-        .format('MMMM')
+      value: Number(moment().add(1, 'M').format('M')),
+      label: moment().add(1, 'M').format('MMMM'),
     },
     year: String(moment().year()),
     weeks: 1,
     tasks: { 1: [], 2: [], 3: [], 4: [], 5: [] },
     hall: {
       value: consts.HALLS_ALL,
-      label: this.props.t(`common:hall${consts.HALLS_ALL}`)
+      label: this.props.t(`common:hall${consts.HALLS_ALL}`),
     },
     readingMain: false,
     submitting: false,
-    errors: {}
+    errors: {},
   })
 
   state = this.getState()
@@ -57,11 +51,11 @@ class ScheduleForm extends React.PureComponent {
     }
   }
 
-  validate = cb => {
+  validate = (cb) => {
     const { t } = this.props
     const { weeks, month, year, hall } = this.state
     let errors = {}
-    this.props.checkScheduleExists(month.value, year, exists => {
+    this.props.checkScheduleExists(month.value, year, (exists) => {
       if (exists) {
         errors.month = t('exists')
         errors.year = t('exists')
@@ -73,7 +67,7 @@ class ScheduleForm extends React.PureComponent {
       if (Object.keys(errors).length || exists) {
         this.setState({
           errors: Object.assign({}, this.state.errors, errors),
-          submitting: false
+          submitting: false,
         })
       } else {
         cb()
@@ -85,18 +79,15 @@ class ScheduleForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault()
     this.setState({ submitting: true })
     this.validate(() => {
-      // convert return visits
-      let tasks = this.state.tasks
-      /* for (let week = 1; week <= this.state.weeks; week++) {
-        tasks[week] = this.state.tasks[week].map(taskName =>
-          taskName.includes('Return Visit') ? taskName.substring(3) : taskName
-        )
-      } */
-      const values = { ...this.state, tasks, month: this.state.month.value, hall: this.state.hall.value }
+      const values = {
+        ...this.state,
+        month: this.state.month.value,
+        hall: this.state.hall.value,
+      }
       this.props.handleSubmit(values, () => {
         this.setState({ ...this.getState() })
       })
@@ -134,7 +125,7 @@ class ScheduleForm extends React.PureComponent {
                   <span className="secondary">
                     <Button
                       icon={<FormTrashIcon size="small" />}
-                      onClick={e => this.handleRemoveTask(e, weekNum, index)}
+                      onClick={(e) => this.handleRemoveTask(e, weekNum, index)}
                       title={this.props.t(`tasks:remove`)}
                     />
                   </span>
@@ -144,7 +135,7 @@ class ScheduleForm extends React.PureComponent {
           <br />
           <Select
             placeHolder={this.props.t(`common:tasks`)}
-            options={consts.scheduleOptions.map(value => ({ value, label: this.props.t(`common:${value}`) }))}
+            options={consts.scheduleOptions.map((value) => ({ value, label: this.props.t(`common:${value}`) }))}
             onChange={({ value }) => this.handleWeekChange(weekNum, value)}
           />
         </AccordionPanel>
@@ -168,18 +159,18 @@ class ScheduleForm extends React.PureComponent {
               <Select
                 id="Month"
                 label={t('common:month')}
-                options={consts.monthsOptions.map(value => ({ value, label: t(`common:month${value}`) }))}
+                options={consts.monthsOptions.map((value) => ({ value, label: t(`common:month${value}`) }))}
                 value={month}
                 onChange={({ value }) => this.handleChange('month', value)}
               />
             </FormField>
             <FormField label={t('common:year')} error={errors.year}>
-              <TextInput value={year} onDOMChange={e => this.handleChange('year', e.target.value)} />
+              <TextInput value={year} onDOMChange={(e) => this.handleChange('year', e.target.value)} />
             </FormField>
             <FormField label={t('common:halls')} error={errors.hall}>
               <Select
                 placeHolder={t('common:halls')}
-                options={availableHalls.map(value => ({ value, label: t(`common:hall${value}`) }))}
+                options={availableHalls.map((value) => ({ value, label: t(`common:hall${value}`) }))}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />
@@ -194,7 +185,7 @@ class ScheduleForm extends React.PureComponent {
               </FormField>
             )}
             <FormField label={t('common:weekNum')} error={errors.weeks}>
-              <NumberInput value={weeks} onChange={e => this.handleChange('weeks', e.target.value)} />
+              <NumberInput value={weeks} onChange={(e) => this.handleChange('weeks', e.target.value)} />
             </FormField>
             <Accordion active={0}>{this.renderWeeks()}</Accordion>
             <Footer pad={{ vertical: 'medium' }}>
@@ -210,7 +201,7 @@ class ScheduleForm extends React.PureComponent {
 ScheduleForm.propTypes = {
   hidden: PropTypes.bool,
   handleSubmit: PropTypes.func,
-  handleClose: PropTypes.func
+  handleClose: PropTypes.func,
 }
 
-export default translate(['schedules', 'tasks', 'common'])(ScheduleForm)
+export default withTranslation(['schedules', 'tasks', 'common'])(ScheduleForm)
