@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { withTranslation, Trans } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, Distribution, Notification, Columns } from 'grommet'
+import { withTranslation } from 'react-i18next'
+import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
 import { api, consts, functions } from '../utils'
@@ -81,10 +81,10 @@ class Dashboard extends Component {
         )
       }
     }
-    const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) == 'critical')
+    const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
     if (criticals.length) {
       messages.push(
-        <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+        <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/territories')}>
           <Notification
             message={t('messageTerWarning')}
             state={t('messageTerDesc', {
@@ -141,7 +141,7 @@ class Dashboard extends Component {
             ]}
           />
         </Box>
-        <Columns masonry maxCount={2}>
+        <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
           <Box margin={{ vertical: 'small' }}>
             <Heading tag="h2" margin="small">
               {t('numbers')}
@@ -152,7 +152,7 @@ class Dashboard extends Component {
               max={numbers.length}
               series={['', ...consts.statusOptions].map((s) => ({
                 label: s ? t(`common:status${s}`) : '?',
-                value: numbers.filter((n) => (s ? n.status == s : !n.status)).length,
+                value: numbers.filter((n) => (s ? n.status === s : !n.status)).length,
                 colorIndex: functions.getNumberStatusColor(s),
               }))}
               legend={true}
@@ -174,7 +174,7 @@ class Dashboard extends Component {
               legend={true}
             />
           </Box>
-        </Columns>
+        </div>
       </Section>
     )
   }

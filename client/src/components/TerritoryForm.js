@@ -105,7 +105,7 @@ class TerritoryForm extends React.PureComponent {
 
   render() {
     const { t, hidden, territory, online } = this.props
-    const { number, assigned, date_from, date_to, errors } = this.state
+    const { number, assigned, date_from, errors } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Layer, Header, Heading, Table, TableRow } from 'grommet'
-import { FormTrashIcon, StopFillIcon, AddIcon, HistoryIcon } from 'grommet/components/icons/base'
+import { StopFillIcon } from 'grommet/components/icons/base'
 import { api, functions } from '../utils'
 
 class TerritoryView extends React.PureComponent {
