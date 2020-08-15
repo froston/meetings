@@ -7,6 +7,7 @@ import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
 import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work } from './'
 import { Nav } from '../components'
+import { withAuth } from '../utils'
 
 class Layout extends React.PureComponent {
   state = {
@@ -32,8 +33,12 @@ class Layout extends React.PureComponent {
   }
 
   logout = () => {
-    localStorage.removeItem('auth')
-    this.props.history.push('/login')
+    this.props.auth.logout().then(() => {
+      this.props.history.push({
+        pathname: '/',
+        state: { message: 'Logout successfull' },
+      })
+    })
   }
 
   render() {
@@ -89,4 +94,4 @@ class Layout extends React.PureComponent {
   }
 }
 
-export default withRouter(withTranslation()(Layout))
+export default withRouter(withTranslation()(withAuth(Layout)))
