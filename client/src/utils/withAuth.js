@@ -2,8 +2,8 @@ import React from 'react'
 import firebase from 'firebase'
 
 const config = {
-  apiKey: 'AIzaSyDKlRap6snQ3T4wZQuZFEcFD4SUQzMquiU',
-  authDomain: 'vida-y-ministerio-autodromo.firebaseapp.com',
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAIN,
 }
 
 firebase.initializeApp(config)
@@ -11,14 +11,11 @@ firebase.initializeApp(config)
 const withAuth = (WrappedComponent) => {
   return class extends React.Component {
     componentDidMount() {
-      firebase
-        .auth()
-        .getRedirectResult()
-        .then((res) => {
-          if (res.user) {
-            this.forceUpdate()
-          }
-        })
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.forceUpdate()
+        }
+      })
     }
 
     signin() {
@@ -31,12 +28,14 @@ const withAuth = (WrappedComponent) => {
     }
 
     render() {
+      const auth = firebase.auth()
       return (
         <WrappedComponent
           {...this.props}
           auth={{
-            isSignedIn: !!firebase.auth().currentUser,
-            user: firebase.auth().currentUser,
+            firebaseAuth: auth,
+            isSignedIn: !!auth.currentUser,
+            user: auth.currentUser,
             signIn: this.signin,
             logout: this.logout,
           }}

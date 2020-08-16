@@ -7,15 +7,23 @@ import { withAuth } from '../utils'
 
 class Login extends React.PureComponent {
   state = {
-    loading: false,
+    loading: true,
     loginError: null,
   }
 
   componentDidMount() {
     const { state } = this.props.location
     if (state && state.message) {
-      this.setState({ loginError: state.message })
+      this.setState({
+        loginError: state.message,
+        loading: false,
+      })
     }
+    this.props.auth.firebaseAuth.onAuthStateChanged((user) => {
+      if (!user) {
+        this.setState({ loading: false })
+      }
+    })
   }
 
   handleLogin = () => {
@@ -36,11 +44,11 @@ class Login extends React.PureComponent {
         </Article>
         <Sidebar justify="between" align="center" pad="none" size="large">
           <Box />
-          <Box margin="medium">
+          <Box margin="medium" className="login-form">
             <Heading>{t('title')}</Heading>
             <p>{t('welcome')}</p>
             {loginError && <p style={{ color: '#FF324D' }}>{loginError}</p>}
-            <Button primary label="Login" onClick={!loading ? this.handleLogin : null} />
+            <Button primary label={loading ? t('logging') : t('login')} onClick={!loading ? this.handleLogin : null} />
           </Box>
           <Footer direction="row" size="small" pad={{ horizontal: 'medium', vertical: 'small', between: 'small' }}>
             <span className="secondary">&copy; 2018 Pavel Müller</span>
