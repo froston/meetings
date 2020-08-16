@@ -4,7 +4,9 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "axios": "^0.19.2",
     "file-saver": "^2.0.2",
+    "firebase": "^7.18.0",
     "grommet": "^1.11.0",
     "grommet-addons": "^0.6.0",
     "grommet-css": "^1.6.0",

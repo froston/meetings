@@ -11,9 +11,11 @@
     "async": "^3.2.0",
     "body-parser": "^1.19.0",
     "btoa": "^1.2.1",
+    "cors": "^2.8.5",
     "csv-parser": "^2.3.3",
     "excel4node": "^1.7.2",
     "express": "^4.17.1",
+    "firebase-admin": "^9.1.0",
     "grommet-addons": "^0.6.0",
     "hummus": "^1.0.108",
     "i18next": "^15.1.3",
@@ -26,13 +28,14 @@
     "passport-http": "^0.3.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5"
   },
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon --inspect server/index.js",
+    "dev": "nodemon -r dotenv/config server/index.js --inspect",
     "heroku-postbuild": "cd client && npm i && npm run build"
   },
   "husky": {

@@ -4,7 +4,7 @@ import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
-import { api, consts, functions } from '../utils'
+import { api, consts, functions, withAuth } from '../utils'
 
 class Dashboard extends Component {
   state = {
@@ -24,17 +24,27 @@ class Dashboard extends Component {
   }
 
   loadData = () => {
-    api.get(`/students`).then((res) => {
-      const students = res || []
-      const brothers = students.filter((s) => s.gender === consts.GENDER_BROTHER && s.participate)
-      const sisters = students.filter((s) => s.gender === consts.GENDER_SISTER && s.participate)
-      const noParticipate = students.filter((s) => !s.participate)
-      this.setState({
-        brothers: brothers.length,
-        sisters: sisters.length,
-        noParticipate: noParticipate.length,
+    api
+      .get(`/students`)
+      .then((res) => {
+        const students = res || []
+        const brothers = students.filter((s) => s.gender === consts.GENDER_BROTHER && s.participate)
+        const sisters = students.filter((s) => s.gender === consts.GENDER_SISTER && s.participate)
+        const noParticipate = students.filter((s) => !s.participate)
+        this.setState({
+          brothers: brothers.length,
+          sisters: sisters.length,
+          noParticipate: noParticipate.length,
+        })
       })
-    })
+      .catch((err) => {
+        this.props.auth.logout().then(() => {
+          this.props.history.push({
+            pathname: '/',
+            state: { message: err.message },
+          })
+        })
+      })
     api.get(`/schedules`).then((schedules) => {
       const scheduleExists = schedules.find(
         (schedule) => schedule.month === this.month + 1 && schedule.year === this.year
@@ -105,12 +115,12 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, auth } = this.props
     const { brothers, sisters, noParticipate, numbers, territories } = this.state
     return (
       <Section>
         <Heading tag="h1" margin="small">
-          {t('title')}
+          {t('title')} <b>{auth.user.displayName}!</b>
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         {this.getMessages()}
@@ -180,4 +190,4 @@ class Dashboard extends Component {
   }
 }
 
-export default withRouter(withTranslation('dashboard')(Dashboard))
+export default withRouter(withTranslation('dashboard')(withAuth(Dashboard)))

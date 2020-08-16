@@ -1,18 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
+import { withAuth } from '../utils'
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, auth, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
-      localStorage.getItem('auth') ? (
+    render={(props) =>
+      auth.isSignedIn ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
             pathname: '/login',
-            state: { from: props.location }
+            state: { from: props.location, ...props.location.state },
           }}
         />
       )
@@ -22,11 +23,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,
-  location: PropTypes.object
+  location: PropTypes.object,
 }
 
 PrivateRoute.defaultProps = {
-  location: {}
+  location: {},
 }
 
-export default PrivateRoute
+export default withAuth(PrivateRoute)

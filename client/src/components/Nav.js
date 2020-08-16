@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
-import { Sidebar, Header, Title, Box, Menu, Button, Footer } from 'grommet'
+import { Sidebar, Header, Title, Box, Menu, Button, Footer, Image } from 'grommet'
 import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
+import { withAuth } from '../utils'
 
 class Nav extends React.PureComponent {
   getParentUrl = (path) => path.split('/')[1] || '/' // the menu key is always parent url
@@ -28,7 +29,7 @@ class Nav extends React.PureComponent {
     this.props.logout()
   }
   render() {
-    const { t, i18n } = this.props
+    const { t, i18n, auth } = this.props
     return (
       <Sidebar colorIndex="neutral-1">
         <Header size="large" justify="between" pad={{ horizontal: 'medium' }}>
@@ -61,6 +62,14 @@ class Nav extends React.PureComponent {
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>
+          <Box margin="small">
+            <Image
+              style={{ width: '40px', borderRadius: 20 }}
+              src={auth.user.photoURL}
+              size="small"
+              title={auth.user.displayName}
+            />
+          </Box>
           <Button title="Logout" icon={<LogoutIcon />} onClick={this.logout} a11yTitle="Logout" plain />
           <LangMenu lang={i18n.language} setLang={this.setLang} />
         </Footer>
@@ -76,4 +85,4 @@ Nav.propTypes = {
   logout: PropTypes.func,
 }
 
-export default withTranslation('nav')(Nav)
+export default withTranslation('nav')(withAuth(Nav))

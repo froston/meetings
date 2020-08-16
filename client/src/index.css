@@ -82,11 +82,11 @@
   position: relative;
 }
 
-.grommetux-form .grommetux-button--primary {
+.login-form .grommetux-button--primary {
   background: #0a64a0 !important;
   border-color: #0a64a0 !important;
 }
-.grommetux-form .grommetux-button--primary:hover {
+.login-form .grommetux-button--primary:hover {
   box-shadow: 0px 0px 0px 2px #0a64a0 !important;
 }
 
