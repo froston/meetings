@@ -8,5 +8,9 @@
   "messageWarnTitle": "Chybí Rozvrh - zbývá {{left}} dní",
   "messageWarnDesc": "Máte čas na vytvoření rozvrhu do {{until}}.",
   "messageOkTitle": "Rozvrh Připraven",
-  "messageOkDesc": "Váš rozvrh pro {{month}} je hotov."
+  "messageOkDesc": "Váš rozvrh pro {{month}} je hotov.",
+  "numbers": "Stav čísel",
+  "territories": "Stav obvodů",
+  "messageTerWarning": "Některé obvody nebyly propracovány více než 3 měsíce.",
+  "messageTerDesc": "Obvody {{territories}}"
 }

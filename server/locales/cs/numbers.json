@@ -1,0 +1,20 @@
+{
+  "title": "Čísla",
+  "desc": "Zde můžete spravovat telefonní čísla.",
+  "number": "Tel. číslo",
+  "number2": "Číslo",
+  "name": "Osoba",
+  "status": "Status",
+  "territory": "Obvod",
+  "details": "Poznámky",
+  "remove": "Smazat číslo",
+  "add": "Přidat číslo",
+  "new": "Nové číslo",
+  "confirmRemove": "Opravdu smazat číslo?",
+  "numberRemoved": "Číslo smazáno.",
+  "numberCreated": "Číslo {{number}} vytvořeno.",
+  "numberUpdated": "Číslo {{number}} upraveno.",
+  "search": "Hledat čísla",
+  "history": "Historie",
+  "changedDate": "Datum"
+}

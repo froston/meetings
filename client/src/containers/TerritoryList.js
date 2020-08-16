@@ -273,8 +273,8 @@ class TerritoryList extends React.Component {
                     <Button
                       icon={<HistoryIcon size="small" />}
                       onClick={(e) => this.handleHistory(e, ter)}
-                      a11yTitle={t('remove')}
-                      title={t('remove')}
+                      a11yTitle={t('history')}
+                      title={t('history')}
                     />
                   )}
                   <Button
