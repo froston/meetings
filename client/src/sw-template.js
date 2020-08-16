@@ -8,23 +8,23 @@ if ('function' === typeof importScripts) {
       prefix: 'meetings',
       suffix: 'v1',
       precache: 'meetings-precache',
-      runtime: 'meetings-runtime'
+      runtime: 'meetings-runtime',
     })
 
     /* injection point for manifest files.  */
     workbox.precaching.precacheAndRoute([])
 
-    const fs = ['common', 'dashboard', 'login', 'nav', 'schedules', 'students', 'tasks']
+    const fs = ['common', 'dashboard', 'login', 'nav', 'schedules', 'students', 'tasks', 'numbers', 'territories']
 
     workbox.precaching.precacheAndRoute([
-      ...fs.map(f => `/locales/es/${f}.json`),
-      ...fs.map(f => `/locales/en/${f}.json`),
-      ...fs.map(f => `/locales/cs/${f}.json`)
+      ...fs.map((f) => `/locales/es/${f}.json`),
+      ...fs.map((f) => `/locales/en/${f}.json`),
+      ...fs.map((f) => `/locales/cs/${f}.json`),
     ])
 
     /* custom cache rules*/
     workbox.routing.registerNavigationRoute('/index.html', {
-      blacklist: [/^\/_/, /\/[^\/]+\.[^\/]+$/]
+      blacklist: [/^\/_/, /\/[^\/]+\.[^\/]+$/],
     })
 
     workbox.routing.registerRoute(
@@ -34,16 +34,16 @@ if ('function' === typeof importScripts) {
         plugins: [
           new workbox.expiration.Plugin({
             maxEntries: 60,
-            maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
-          })
-        ]
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          }),
+        ],
       })
     )
 
     workbox.routing.registerRoute(
       new RegExp('/api/.*'),
       new workbox.strategies.NetworkFirst({
-        cacheName: 'api-cache '
+        cacheName: 'api-cache ',
       })
     )
   } else {
