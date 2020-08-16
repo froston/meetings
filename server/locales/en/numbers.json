@@ -1,0 +1,20 @@
+{
+  "title": "Numbers",
+  "desc": "Manage the numbers here.",
+  "number": "Phone Number",
+  "number2": "Number",
+  "name": "Person",
+  "status": "State",
+  "territory": "Teritory",
+  "details": "Details",
+  "remove": "Remove Number",
+  "add": "Add Number",
+  "new": "New número",
+  "confirmRemove": "Sure to remove the number?",
+  "numberRemoved": "The number was removed.",
+  "numberCreated": "The number {{number}} was created.",
+  "numberUpdated": "The number {{number}} was updated.",
+  "search": "Search numbers",
+  "history": "History",
+  "changedDate": "Date"
+}

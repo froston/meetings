@@ -32,10 +32,12 @@ class Login extends React.PureComponent {
   }
 
   render() {
-    const { t, auth } = this.props
+    const { t, auth, location } = this.props
     const { loading, loginError } = this.state
     if (auth.isSignedIn) {
-      return <Redirect to="/" />
+      const { state } = this.props.location
+      const redirect = state && state.from ? state.from : '/'
+      return <Redirect to={redirect} />
     }
     return (
       <Split flex="left" separator>

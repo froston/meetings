@@ -44,5 +44,19 @@
   "hallB": "Pomocný",
   "name": "Jméno",
   "readingMain": "Pouze v hlavním sále",
-  "dateFormat": "dd. MM. YYYY"
+  "statusNC": "Není doma",
+  "statusNI": "Nemá zájem",
+  "statusO": "Zaneprázdněn",
+  "statusC": "Položil",
+  "statusA": "Přijmul hovor",
+  "statusRV": "Opětovná návštěva",
+  "statusX": "Nevolat",
+  "statusFS": "Mimo provoz",
+  "statusnull": "?",
+  "status": "Vybrat ...",
+  "colorunknown": "?",
+  "colorok": "0 - 1 měsíc",
+  "colorwarning": "1 - 2 měsíce",
+  "colorcritical": "+ 2 měsíce",
+  "colorgraph-1": "Přidělen"
 }
