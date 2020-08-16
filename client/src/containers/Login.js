@@ -2,7 +2,6 @@ import React from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Split, Article, Section, Footer, Sidebar, Button, Box, Heading } from 'grommet'
-import Spinning from 'grommet/components/icons/Spinning'
 
 import { withAuth } from '../utils'
 

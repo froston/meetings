@@ -9,7 +9,6 @@ const Backend = require('i18next-node-fs-backend')
 const config = require('./config')
 const router = require('./router')
 const { initDb } = require('./db')
-const userModel = require('./models/users')
 const { validateToken } = require('./auth/firebase')
 
 const app = express()

@@ -1,9 +1,13 @@
 const firebaseAdmin = require('firebase-admin')
-const serviceAccount = require('./serviceAccountKey.json')
 const userModel = require('../models/users')
+const config = require('../config')
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(serviceAccount),
+  credential: firebaseAdmin.credential.cert({
+    project_id: config.firebase.project_id,
+    private_key: config.firebase.private_key,
+    client_email: config.firebase.client_email,
+  }),
 })
 
 exports.validateToken = async (req, res, next) => {

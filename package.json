@@ -28,13 +28,14 @@
     "passport-http": "^0.3.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5"
   },
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon --inspect server/index.js",
+    "dev": "nodemon -r dotenv/config server/index.js --inspect",
     "heroku-postbuild": "cd client && npm i && npm run build"
   },
   "husky": {
