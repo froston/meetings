@@ -46,3 +46,5 @@ exports.getAvailableName = (taskName) => {
 }
 
 exports.formatDateTime = (date) => (date ? moment(date, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss') : null)
+
+exports.getUpdateDate = () => moment().format('YYYY-MM-DD HH:mm:ss')

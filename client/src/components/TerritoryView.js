@@ -33,7 +33,7 @@ class TerritoryView extends React.PureComponent {
             </Heading>
           </Header>
           <div style={{ overflowX: 'auto', width: '60vw' }}>
-            <Table responsive={false} scrollable>
+            <Table responsive={false} scrollable className="territory-view">
               <thead>
                 <tr>
                   <th>{t('name')}</th>
@@ -45,8 +45,9 @@ class TerritoryView extends React.PureComponent {
               <tbody>
                 {nums &&
                   nums.map((num, index) => {
+                    const rowClass = (num.status == 'RV' || num.status == 'X') && 'strikeout'
                     return (
-                      <TableRow key={index} style={{ borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
+                      <TableRow key={index} style={{ borderBottom: '1px solid rgba(0,0,0,0.15)' }} className={rowClass}>
                         <td style={{ padding: 5 }}>
                           <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
                           <span style={{ paddingLeft: 5 }}>{num.name}</span>
