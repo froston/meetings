@@ -45,7 +45,7 @@ class TerritoryView extends React.PureComponent {
               <tbody>
                 {nums &&
                   nums.map((num, index) => {
-                    const rowClass = (num.status == 'RV' || num.status == 'X') && 'strikeout'
+                    const rowClass = (num.status === 'RV' || num.status === 'X') && 'strikeout'
                     return (
                       <TableRow key={index} style={{ borderBottom: '1px solid rgba(0,0,0,0.15)' }} className={rowClass}>
                         <td style={{ padding: 5 }}>

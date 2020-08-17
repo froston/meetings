@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next'
 import { Sidebar, Header, Title, Box, Menu, Button, Footer, Image } from 'grommet'
 import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
-import { withAuth } from '../utils'
+import { withAuth, functions } from '../utils'
 
 class Nav extends React.PureComponent {
   getParentUrl = (path) => path.split('/')[1] || '/' // the menu key is always parent url
@@ -29,7 +29,7 @@ class Nav extends React.PureComponent {
     this.props.logout()
   }
   render() {
-    const { t, i18n, auth } = this.props
+    const { t, i18n, auth, meta } = this.props
     return (
       <Sidebar colorIndex="neutral-1">
         <Header size="large" justify="between" pad={{ horizontal: 'medium' }}>
@@ -43,22 +43,30 @@ class Nav extends React.PureComponent {
             <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
               {t('dashboard')}
             </Link>
-            <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
-              {t('students')}
-            </Link>
-            <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
-              {t('schedules')}
-            </Link>
-            <Link
-              to="/territories"
-              className={this.isActive('territories') || this.isActive('work')}
-              onClick={this.handleClick}
-            >
-              {t('territories')}
-            </Link>
-            <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
-              {t('numbers')}
-            </Link>
+            {functions.hasAccess(meta, 'lifeministry') && (
+              <>
+                <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
+                  {t('students')}
+                </Link>
+                <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
+                  {t('schedules')}
+                </Link>
+              </>
+            )}
+            {functions.hasAccess(meta, 'territories') && (
+              <>
+                <Link
+                  to="/territories"
+                  className={this.isActive('territories') || this.isActive('work')}
+                  onClick={this.handleClick}
+                >
+                  {t('territories')}
+                </Link>
+                <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+                  {t('numbers')}
+                </Link>
+              </>
+            )}
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>

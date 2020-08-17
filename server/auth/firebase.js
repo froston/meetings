@@ -15,12 +15,11 @@ exports.validateToken = async (req, res, next) => {
   if (authorization && authorization.startsWith('Bearer ')) {
     const idToken = authorization.split('Bearer ')[1]
     try {
-      const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken)
-      req.currentUser = decodedToken
+      req.currentUser = await firebaseAdmin.auth().verifyIdToken(idToken)
 
-      userModel.getUserByEmail(req.currentUser.email, (err, user) => {
+      userModel.userExists(req.currentUser, (err, userExists) => {
         if (err) throw err
-        if (user) {
+        if (userExists) {
           next()
         } else {
           res.status(401).send({ message: 'User is not registred' })
