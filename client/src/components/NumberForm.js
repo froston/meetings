@@ -98,7 +98,7 @@ class NumberForm extends React.PureComponent {
                 maxLength={20}
               />
             </FormField>
-            <FormField label={t('name')} error={errors.name}>
+            <FormField label={t('name')}>
               <TextInput value={name} onDOMChange={(e) => this.handleChange('name', e.target.value)} maxLength={100} />
             </FormField>
             <FormField label={t('status')} error={errors.status}>
@@ -109,7 +109,7 @@ class NumberForm extends React.PureComponent {
                 onChange={({ value }) => this.handleChange('status', value)}
               />
             </FormField>
-            <FormField label={t('territory')} error={errors.teritorry}>
+            <FormField label={t('territory')}>
               <NumberInput value={territory} onChange={(e) => this.handleChange('territory', e.target.value)} />
             </FormField>
             <FormField label={t('details')}>
