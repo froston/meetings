@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify'
 import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work, AuthRoute } from './'
 import { Nav } from '../components'
 import { api, withAuth } from '../utils'
+import Cookies from 'js-cookie'
 
 class Layout extends React.PureComponent {
   state = {
@@ -17,7 +18,9 @@ class Layout extends React.PureComponent {
   }
 
   componentDidMount() {
-    moment.locale(this.props.i18n.language)
+    const lang = this.props.i18n.language
+    moment.locale(lang)
+    Cookies.set('languages', [lang])
 
     api.get(`/users/${this.props.auth.user.uid}`).then((user) => {
       this.setState({ meta: user.meta })
@@ -34,6 +37,7 @@ class Layout extends React.PureComponent {
 
   setLang = (lang) => {
     moment.locale(lang)
+    Cookies.set('languages', [lang])
     this.props.i18n.changeLanguage(lang)
   }
 
