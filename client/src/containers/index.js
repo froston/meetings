@@ -7,6 +7,7 @@ import Schedule from './Schedule'
 import Login from './Login'
 import Layout from './Layout'
 import PrivateRoute from './PrivateRoute'
+import AuthRoute from './AuthRoute'
 import TerritoryList from './TerritoryList'
 import NumberList from './NumberList'
 import Work from './Work'
@@ -21,6 +22,7 @@ export {
   Login,
   Layout,
   PrivateRoute,
+  AuthRoute,
   TerritoryList,
   NumberList,
   Work,

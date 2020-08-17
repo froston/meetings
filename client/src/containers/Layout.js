@@ -5,9 +5,9 @@ import { withTranslation } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
-import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work } from './'
+import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work, AuthRoute } from './'
 import { Nav } from '../components'
-import { api, withAuth, functions } from '../utils'
+import { api, withAuth } from '../utils'
 
 class Layout extends React.PureComponent {
   state = {
@@ -72,23 +72,17 @@ class Layout extends React.PureComponent {
           <Box pad="medium">
             <Article>
               {openNav}
-              <Switch>
-                <Route exact path="/" render={(props) => <Dashboard {...props} meta={meta} />} />
-                {functions.hasAccess(meta, 'lifeministry') && (
-                  <>
-                    <Route exact path="/students" component={StudentList} />
-                    <Route exact path="/schedules" component={ScheduleList} />
-                    <Route exact path="/schedules/:id" component={Schedule} />
-                  </>
-                )}
-                {functions.hasAccess(meta, 'territories') && (
-                  <>
-                    <Route exact path="/territories" component={TerritoryList} />
-                    <Route exact path="/numbers" component={NumberList} />
-                    <Route exact path="/work" component={Work} />
-                  </>
-                )}
-              </Switch>
+              {meta && (
+                <Switch>
+                  <Route exact path="/" render={(props) => <Dashboard {...props} meta={meta} />} />
+                  <AuthRoute exact path="/students" component={StudentList} meta={meta} access="lifeministry" />
+                  <AuthRoute exact path="/schedules" component={ScheduleList} meta={meta} access="lifeministry" />
+                  <AuthRoute exact path="/schedules/:id" component={Schedule} meta={meta} access="lifeministry" />
+                  <AuthRoute exact path="/territories" component={TerritoryList} meta={meta} access="territories" />
+                  <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="territories" />
+                  <AuthRoute exact path="/work" component={Work} meta={meta} access="territories" />
+                </Switch>
+              )}
             </Article>
           </Box>
         </Split>
