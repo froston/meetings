@@ -152,3 +152,8 @@ a.grommetux-button:hover {
 .grommetux-list__more {
   text-align: center;
 }
+
+.territory-view tr.strikeout {
+  text-decoration: line-through;
+  text-decoration-color: rgba(0, 0, 0, 0.45);
+}
