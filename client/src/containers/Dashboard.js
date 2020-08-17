@@ -60,51 +60,55 @@ class Dashboard extends Component {
   }
 
   getMessages = () => {
-    const { t } = this.props
+    const { t, meta } = this.props
     const { scheduleExists, territories } = this.state
     let messages = []
-    if (this.day > 1 && this.day < 15) {
-      if (scheduleExists) {
+    if (functions.hasAccess(meta, 'lifeministry')) {
+      if (this.day > 1 && this.day < 15) {
+        if (scheduleExists) {
+          messages.push(
+            <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+              <Notification
+                message={t('messageOkTitle')}
+                state={t('messageOkDesc', { month: moment(this.month + 1, 'MM').format('MMMM') })}
+                size="medium"
+                status="ok"
+              />
+            </Box>
+          )
+        } else {
+          messages.push(
+            <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+              <Notification
+                message={t('messageWarnTitle', { left: 15 - this.day })}
+                state={t('messageWarnDesc', {
+                  until: `15/${this.month}/${this.year}`,
+                  interpolation: { escapeValue: false },
+                })}
+                size="medium"
+                status="warning"
+              />
+            </Box>
+          )
+        }
+      }
+    }
+    if (functions.hasAccess(meta, 'territories')) {
+      const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
+      if (criticals.length) {
         messages.push(
-          <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+          <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/territories')}>
             <Notification
-              message={t('messageOkTitle')}
-              state={t('messageOkDesc', { month: moment(this.month + 1, 'MM').format('MMMM') })}
-              size="medium"
-              status="ok"
-            />
-          </Box>
-        )
-      } else {
-        messages.push(
-          <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
-            <Notification
-              message={t('messageWarnTitle', { left: 15 - this.day })}
-              state={t('messageWarnDesc', {
-                until: `15/${this.month}/${this.year}`,
-                interpolation: { escapeValue: false },
+              message={t('messageTerWarning')}
+              state={t('messageTerDesc', {
+                territories: criticals.map((c) => c.number).join(', '),
               })}
               size="medium"
-              status="warning"
+              status="critical"
             />
           </Box>
         )
       }
-    }
-    const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
-    if (criticals.length) {
-      messages.push(
-        <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/territories')}>
-          <Notification
-            message={t('messageTerWarning')}
-            state={t('messageTerDesc', {
-              territories: criticals.map((c) => c.number).join(', '),
-            })}
-            size="medium"
-            status="critical"
-          />
-        </Box>
-      )
     }
 
     return messages
@@ -115,7 +119,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { t, auth } = this.props
+    const { t, auth, meta } = this.props
     const { brothers, sisters, noParticipate, numbers, territories } = this.state
     return (
       <Section>
@@ -124,67 +128,71 @@ class Dashboard extends Component {
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         {this.getMessages()}
-        <Box pad={{ vertical: 'small' }}>
-          <Heading tag="h2" margin="small">
-            {t('dist')}
-          </Heading>
-          <Distribution
-            series={[
-              {
-                label: t('brothers'),
-                value: brothers,
-                colorIndex: 'graph-1',
-                onClick: () => this.navigate('/students', { gender: 'B' }),
-              },
-              {
-                label: t('sisters'),
-                value: sisters,
-                colorIndex: 'graph-2',
-                onClick: () => this.navigate('/students', { gender: 'S' }),
-              },
-              {
-                label: t('no-participate'),
-                value: noParticipate,
-                colorIndex: 'graph-4',
-                onClick: () => this.navigate('/students', { noParticipate: true }),
-              },
-            ]}
-          />
-        </Box>
-        <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-          <Box margin={{ vertical: 'small' }}>
+        {functions.hasAccess(meta, 'lifeministry') && (
+          <Box pad={{ vertical: 'small' }}>
             <Heading tag="h2" margin="small">
-              {t('numbers')}
+              {t('dist')}
             </Heading>
-            <AnnotatedMeter
-              size="medium"
-              type="circle"
-              max={numbers.length}
-              series={['', ...consts.statusOptions].map((s) => ({
-                label: s ? t(`common:status${s}`) : '?',
-                value: numbers.filter((n) => (s ? n.status === s : !n.status)).length,
-                colorIndex: functions.getNumberStatusColor(s),
-              }))}
-              legend={true}
+            <Distribution
+              series={[
+                {
+                  label: t('brothers'),
+                  value: brothers,
+                  colorIndex: 'graph-1',
+                  onClick: () => this.navigate('/students', { gender: 'B' }),
+                },
+                {
+                  label: t('sisters'),
+                  value: sisters,
+                  colorIndex: 'graph-2',
+                  onClick: () => this.navigate('/students', { gender: 'S' }),
+                },
+                {
+                  label: t('no-participate'),
+                  value: noParticipate,
+                  colorIndex: 'graph-4',
+                  onClick: () => this.navigate('/students', { noParticipate: true }),
+                },
+              ]}
             />
           </Box>
-          <Box margin={{ vertical: 'small' }}>
-            <Heading tag="h2" margin="small">
-              {t('territories')}
-            </Heading>
-            <AnnotatedMeter
-              size="medium"
-              type="circle"
-              max={territories.length}
-              series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
-                label: t(`common:color${c}`),
-                value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
-                colorIndex: c,
-              }))}
-              legend={true}
-            />
-          </Box>
-        </div>
+        )}
+        {functions.hasAccess(meta, 'territories') && (
+          <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
+            <Box margin={{ vertical: 'small' }}>
+              <Heading tag="h2" margin="small">
+                {t('numbers')}
+              </Heading>
+              <AnnotatedMeter
+                size="medium"
+                type="circle"
+                max={numbers.length}
+                series={['', ...consts.statusOptions].map((s) => ({
+                  label: s ? t(`common:status${s}`) : '?',
+                  value: numbers.filter((n) => (s ? n.status === s : !n.status)).length,
+                  colorIndex: functions.getNumberStatusColor(s),
+                }))}
+                legend={true}
+              />
+            </Box>
+            <Box margin={{ vertical: 'small' }}>
+              <Heading tag="h2" margin="small">
+                {t('territories')}
+              </Heading>
+              <AnnotatedMeter
+                size="medium"
+                type="circle"
+                max={territories.length}
+                series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
+                  label: t(`common:color${c}`),
+                  value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
+                  colorIndex: c,
+                }))}
+                legend={true}
+              />
+            </Box>
+          </div>
+        )}
       </Section>
     )
   }

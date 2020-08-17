@@ -7,16 +7,21 @@ import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
 import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work } from './'
 import { Nav } from '../components'
-import { withAuth } from '../utils'
+import { api, withAuth, functions } from '../utils'
 
 class Layout extends React.PureComponent {
   state = {
     navActive: true,
     responsive: 'multiple',
+    meta: {},
   }
 
   componentDidMount() {
     moment.locale(this.props.i18n.language)
+
+    api.get(`/users/${this.props.auth.user.uid}`).then((user) => {
+      this.setState({ meta: user.meta })
+    })
   }
 
   handleNav = () => {
@@ -42,7 +47,7 @@ class Layout extends React.PureComponent {
   }
 
   render() {
-    const { navActive, responsive } = this.state
+    const { navActive, responsive, meta } = this.state
     const priority = navActive ? 'left' : 'right'
     let nav
     let openNav
@@ -54,6 +59,7 @@ class Layout extends React.PureComponent {
           logout={this.logout}
           location={this.props.location}
           responsive={responsive}
+          meta={meta}
         />
       )
     } else {
@@ -67,13 +73,21 @@ class Layout extends React.PureComponent {
             <Article>
               {openNav}
               <Switch>
-                <Route exact path="/" component={Dashboard} />
-                <Route exact path="/students" component={StudentList} />
-                <Route exact path="/schedules" component={ScheduleList} />
-                <Route exact path="/schedules/:id" component={Schedule} />
-                <Route exact path="/territories" component={TerritoryList} />
-                <Route exact path="/numbers" component={NumberList} />
-                <Route exact path="/work" component={Work} />
+                <Route exact path="/" render={(props) => <Dashboard {...props} meta={meta} />} />
+                {functions.hasAccess(meta, 'lifeministry') && (
+                  <>
+                    <Route exact path="/students" component={StudentList} />
+                    <Route exact path="/schedules" component={ScheduleList} />
+                    <Route exact path="/schedules/:id" component={Schedule} />
+                  </>
+                )}
+                {functions.hasAccess(meta, 'territories') && (
+                  <>
+                    <Route exact path="/territories" component={TerritoryList} />
+                    <Route exact path="/numbers" component={NumberList} />
+                    <Route exact path="/work" component={Work} />
+                  </>
+                )}
               </Switch>
             </Article>
           </Box>

@@ -35,7 +35,7 @@ class Login extends React.PureComponent {
     const { t, auth, location } = this.props
     const { loading, loginError } = this.state
     if (auth.isSignedIn) {
-      const { state } = this.props.location
+      const { state } = location
       const redirect = state && state.from ? state.from : '/'
       return <Redirect to={redirect} />
     }
