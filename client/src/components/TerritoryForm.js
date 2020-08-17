@@ -11,8 +11,6 @@ import {
   Footer,
   Button,
   TextInput,
-  List,
-  ListItem,
   NumberInput,
   DateTime,
   Anchor,
@@ -136,21 +134,10 @@ class TerritoryForm extends React.PureComponent {
                 <TextInput value={functions.formatDateValue(territory.last_worked)} disabled />
               </FormField>
             )}
-            <Box margin={{ vertical: 'medium' }}>
-              <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
-            </Box>
-            {territory && territory.numbers && !!territory.numbers.length && (
-              <>
-                <br />
-                <Heading tag="h3">{t('numbers')}</Heading>
-                <List>
-                  {territory.numbers.map((n, i) => (
-                    <ListItem key={i} justify="between" separator={i === 0 ? 'horizontal' : 'bottom'}>
-                      <span>{n.number}</span>
-                    </ListItem>
-                  ))}
-                </List>
-              </>
+            {territory && (
+              <Box margin={{ vertical: 'medium' }}>
+                <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
+              </Box>
             )}
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>

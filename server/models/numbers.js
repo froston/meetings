@@ -1,4 +1,5 @@
 const { getDb } = require('../db')
+const consts = require('../helpers/consts')
 
 exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
@@ -83,6 +84,30 @@ exports.removeNumber = (id, cb) => {
       if (err) throw err
       cb(null)
     })
+  })
+}
+
+exports.createHistory = (data, cb) => {
+  const newHistroy = {
+    number_id: data.id,
+    status: data.status,
+    details: data.details,
+  }
+  getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+    if (err) throw err
+    cb(err)
+  })
+}
+
+exports.updateHistory = (data, cb) => {
+  const updatedHist = {
+    status: data.status,
+    details: data.details,
+    changed_date: consts.getUpdateDate(),
+  }
+  getDb().query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
+    if (err) throw err
+    cb(null)
   })
 }
 

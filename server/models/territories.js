@@ -143,29 +143,53 @@ exports.workTerritory = (id, data, cb) => {
   }
   getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
     if (err) throw err
-    const updatedTerHist = {
+    const terHist = {
       assigned: data.assigned,
       date_from: consts.formatDateTime(data.date_to),
       date_to: consts.formatDateTime(data.date_to),
     }
-    getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedTerHist, data.history_id], (err) => {
-      if (err) throw err
-      async.each(
-        data.numbers,
-        (num, numCb) => {
-          const newHistroy = {
-            number_id: num.id,
-            status: num.status,
-            details: num.details,
-          }
-          getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
-            if (err) throw err
-            numCb(err)
-          })
-        },
-        cb
-      )
-    })
+    if (data.history_id > 0) {
+      getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [terHist, data.history_id], (err) => {
+        if (err) throw err
+        async.each(
+          data.numbers,
+          (num, numCb) => {
+            numberModel.getNumberHist(num.id, (err, history) => {
+              if (err) throw err
+              const prevHist = history[0]
+              if (prevHist.status !== num.status) {
+                numberModel.createHistory(num, numCb)
+              } else {
+                num.history_id = prevHist.id
+                numberModel.updateHistory(num, numCb)
+              }
+            })
+          },
+          cb
+        )
+      })
+    } else {
+      terHist.territory_id = id
+      getDb().query('INSERT INTO territories_hist SET ?', terHist, (err) => {
+        if (err) throw err
+        async.each(
+          data.numbers,
+          (num, numCb) => {
+            numberModel.getNumberHist(num.id, (err, history) => {
+              if (err) throw err
+              const prevHist = history[0]
+              if (prevHist.status !== num.status) {
+                numberModel.createHistory(num, numCb)
+              } else {
+                num.history_id = prevHist.id
+                numberModel.updateHistory(num, numCb)
+              }
+            })
+          },
+          cb
+        )
+      })
+    }
   })
 }
 
