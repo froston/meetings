@@ -9,6 +9,7 @@ const initState = {
   assigned: '',
   date_from: moment().format(consts.DATETIME_FORMAT),
   errors: {},
+  loading: false,
 }
 
 class AssignForm extends React.PureComponent {
@@ -40,6 +41,7 @@ class AssignForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
+      this.setState({ loading: true })
       const { territory } = this.props
       this.props.handleSubmit(territory.id, { ...this.state })
     })
@@ -51,7 +53,7 @@ class AssignForm extends React.PureComponent {
 
   render() {
     const { t, hidden, territory, handleClose } = this.props
-    const { errors, assigned, date_from } = this.state
+    const { errors, assigned, date_from, loading } = this.state
     return (
       <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
         <Header size="medium">
@@ -59,7 +61,7 @@ class AssignForm extends React.PureComponent {
             {t('assign')} {territory && territory.number}
           </Heading>
         </Header>
-        <Form pad="medium" onSubmit={this.handleSubmit}>
+        <Form pad="medium">
           <>
             <FormField label={t('assigneTo')} error={errors.assigned}>
               <TextInput
@@ -78,7 +80,7 @@ class AssignForm extends React.PureComponent {
           </>
           <br />
           <Footer pad={{ vertical: 'medium' }}>
-            <Button label={t('assign')} type="submit" primary />
+            <Button label={t('assign')} onClick={!loading ? this.handleSubmit : null} primary />
           </Footer>
         </Form>
       </Layer>

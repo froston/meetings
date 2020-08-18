@@ -18,7 +18,6 @@ import {
   ListItem,
   CheckBox,
 } from 'grommet'
-import Spinning from 'grommet/components/icons/Spinning'
 import { FormTrashIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
 import { consts } from '../utils'
@@ -154,7 +153,7 @@ class ScheduleForm extends React.PureComponent {
               {t('new')}
             </Heading>
           </Header>
-          <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Form pad="medium">
             <FormField label={t('common:month')} error={errors.month}>
               <Select
                 id="Month"
@@ -189,7 +188,7 @@ class ScheduleForm extends React.PureComponent {
             </FormField>
             <Accordion active={0}>{this.renderWeeks()}</Accordion>
             <Footer pad={{ vertical: 'medium' }}>
-              {submitting ? <Spinning /> : <Button label={t('common:generate')} type="submit" primary />}
+              <Button label={t('common:generate')} onClick={!submitting ? this.handleSubmit : null} primary />
             </Footer>
           </Form>
         </Layer>

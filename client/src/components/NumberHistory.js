@@ -40,8 +40,8 @@ class NumberHistory extends React.PureComponent {
             <Table responsive={false} scrollable>
               <thead>
                 <tr>
-                  <th>{t('changedDate')}</th>
-                  <th>{t('status')}</th>
+                  <th width="130">{t('changedDate')}</th>
+                  <th width="180">{t('status')}</th>
                   <th>{t('details')}</th>
                 </tr>
               </thead>
