@@ -62,8 +62,9 @@ class Dashboard extends Component {
   getMessages = () => {
     const { t, meta } = this.props
     const { scheduleExists, territories } = this.state
+    const dismissed = sessionStorage.getItem(`dismissMessageSchedules`) === 'true'
     let messages = []
-    if (functions.hasAccess(meta, 'lifeministry')) {
+    if (functions.hasAccess(meta, 'lifeministry') && !dismissed) {
       if (this.day > 1 && this.day < 15) {
         if (scheduleExists) {
           messages.push(
@@ -73,6 +74,8 @@ class Dashboard extends Component {
                 state={t('messageOkDesc', { month: moment(this.month + 1, 'MM').format('MMMM') })}
                 size="medium"
                 status="ok"
+                onClose={(e) => this.handleCloseMessage(e, 'Schedules')}
+                closer
               />
             </Box>
           )
@@ -87,6 +90,8 @@ class Dashboard extends Component {
                 })}
                 size="medium"
                 status="warning"
+                onClose={(e) => this.handleCloseMessage(e, 'Schedules')}
+                closer
               />
             </Box>
           )
@@ -95,7 +100,8 @@ class Dashboard extends Component {
     }
     if (functions.hasAccess(meta, 'territories')) {
       const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
-      if (criticals.length) {
+      const dismissed = sessionStorage.getItem(`dismissMessageTerritories`) === 'true'
+      if (criticals.length && !dismissed) {
         messages.push(
           <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/territories')}>
             <Notification
@@ -105,6 +111,8 @@ class Dashboard extends Component {
               })}
               size="medium"
               status="critical"
+              onClose={(e) => this.handleCloseMessage(e, 'Territories')}
+              closer
             />
           </Box>
         )
@@ -116,6 +124,13 @@ class Dashboard extends Component {
 
   navigate = (to, state) => {
     this.props.history.push(to, { ...state })
+  }
+
+  handleCloseMessage = (e, message) => {
+    e.preventDefault()
+    e.stopPropagation()
+    sessionStorage.setItem(`dismissMessage${message}`, true)
+    this.forceUpdate()
   }
 
   render() {
