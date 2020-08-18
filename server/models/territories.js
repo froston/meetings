@@ -193,10 +193,28 @@ exports.workTerritory = (id, data, cb) => {
   })
 }
 
-exports.getTerritoryHist = (id, cb) => {
+const getTerritoryHist = (id, cb) => {
   getDb().query('SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC', id, (err, hist) => {
     if (err) throw err
     cb(err, hist)
+  })
+}
+
+exports.getTerritoryHist = getTerritoryHist
+
+exports.removeHistory = (id, history_id, cb) => {
+  getDb().query('DELETE FROM territories_hist WHERE id = ?', history_id, (err) => {
+    if (err) throw err
+    getTerritoryHist(id, (err, history) => {
+      if (err) throw err
+      const updatedTer = {
+        last_worked: consts.formatDateTime(history[0].date_to),
+      }
+      getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
+        if (err) throw err
+        cb(null)
+      })
+    })
   })
 }
 

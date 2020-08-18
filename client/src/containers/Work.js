@@ -16,9 +16,10 @@ import {
   Columns,
   DateTime,
 } from 'grommet'
+import { SettingsOptionIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { consts, api } from '../utils'
+import { consts, api, functions } from '../utils'
 
 const initState = {
   territory: {},
@@ -156,7 +157,7 @@ class Work extends React.Component {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} type="submit" primary />
+                <Button icon={<SettingsOptionIcon />} label={t('workTerritory')} type="submit" primary />
               </Box>
             </Footer>
           </Form>
@@ -164,8 +165,11 @@ class Work extends React.Component {
             {territory.numbers &&
               territory.numbers.map((num, i) => {
                 const { status, details } = this.state.numbers[num.number]
+                const borderTop = num.status
+                  ? `3px solid ${functions.getNumberStatusColor(num.status, true)}`
+                  : `3px solid #f5f5f5`
                 return (
-                  <Box key={i} align="center" pad="medium" margin="medium" colorIndex="light-2">
+                  <Box key={i} align="center" pad="medium" margin="medium" style={{ borderTop }} colorIndex="light-2">
                     <Form>
                       <Header>
                         <Heading tag="h3">

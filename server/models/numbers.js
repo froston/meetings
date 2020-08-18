@@ -66,13 +66,29 @@ exports.updateNumber = (id, data, cb) => {
   }
   getDb().query('UPDATE numbers SET ? WHERE id = ?', [updatedNumber, id], (err) => {
     if (err) throw err
-    const updatedHist = {
-      status: data.status,
-      details: data.details,
-    }
-    getDb().query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
+    getNumberHist(id, (err, history) => {
       if (err) throw err
-      cb(null)
+      const prevHist = history[0]
+      if (prevHist.status !== data.status) {
+        const newHistroy = {
+          number_id: id,
+          status: data.status,
+          details: data.details,
+        }
+        getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+          if (err) throw err
+          cb(err)
+        })
+      } else {
+        const updatedHist = {
+          status: data.status,
+          details: data.details,
+        }
+        getDb().query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
+          if (err) throw err
+          cb(null)
+        })
+      }
     })
   })
 }
@@ -111,9 +127,11 @@ exports.updateHistory = (data, cb) => {
   })
 }
 
-exports.getNumberHist = (id, cb) => {
+const getNumberHist = (id, cb) => {
   getDb().query('SELECT * FROM numbers_hist WHERE number_id = ? ORDER BY id DESC', id, (err, hist) => {
     if (err) throw err
     cb(err, hist)
   })
 }
+
+exports.getNumberHist = getNumberHist

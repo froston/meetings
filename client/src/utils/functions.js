@@ -5,26 +5,26 @@ export const formatDateValue = (date) => {
   return date ? moment(date).format(consts.DATETIME_FORMAT) : ''
 }
 
-export const getNumberStatusColor = (status) => {
+export const getNumberStatusColor = (status, css = false) => {
   switch (status) {
     case 'NC':
-      return 'brand'
+      return css ? '#865cd6' : 'brand'
     case 'NI':
-      return 'warning'
+      return css ? '#ffd602' : 'warning'
     case 'O':
-      return 'accent-2'
+      return css ? '#ff7d28' : 'accent-2'
     case 'C':
-      return 'neutral-3'
+      return css ? '#501eb4' : 'neutral-3'
     case 'A':
-      return 'neutral-1'
+      return css ? '#0a64a0' : 'neutral-1'
     case 'RV':
-      return 'ok'
+      return css ? '#8cc800' : 'ok'
     case 'X':
-      return 'critical'
+      return css ? '#ff324d' : 'critical'
     case 'FS':
-      return 'grey-1'
+      return css ? '#000001' : 'grey-1'
     default:
-      return 'unknown'
+      return css ? '#a8a8a8' : 'unknown'
   }
 }
 

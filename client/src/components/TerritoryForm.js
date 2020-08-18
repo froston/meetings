@@ -130,9 +130,12 @@ class TerritoryForm extends React.PureComponent {
               </>
             )}
             {territory && territory.last_worked && (
-              <FormField label={t('last_worked')}>
-                <TextInput value={functions.formatDateValue(territory.last_worked)} disabled />
-              </FormField>
+              <>
+                <br />
+                <FormField label={t('last_worked')}>
+                  <TextInput value={functions.formatDateValue(territory.last_worked)} disabled />
+                </FormField>
+              </>
             )}
             {territory && (
               <Box margin={{ vertical: 'medium' }}>
