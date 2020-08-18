@@ -28,6 +28,7 @@ const initState = {
   date_to: '',
   numbers: {},
   errors: {},
+  loading: false,
 }
 
 class Work extends React.Component {
@@ -93,6 +94,7 @@ class Work extends React.Component {
     e.preventDefault()
     this.validate(() => {
       const { t, history } = this.props
+      this.setState({ loading: true })
       const data = {
         ...this.state.territory,
         ...this.state,
@@ -112,7 +114,7 @@ class Work extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territory, assigned, date_from, date_to, errors } = this.state
+    const { territory, assigned, date_from, date_to, errors, loading } = this.state
     return (
       <Section>
         <Header>
@@ -121,7 +123,7 @@ class Work extends React.Component {
           </Heading>
         </Header>
         <Columns masonry maxCount={2}>
-          <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Form pad="medium">
             <FormField label={t('number')}>
               <NumberInput value={territory.number} disabled />
             </FormField>
@@ -157,7 +159,12 @@ class Work extends React.Component {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button icon={<SettingsOptionIcon />} label={t('workTerritory')} type="submit" primary />
+                <Button
+                  onClick={!loading ? this.handleSubmit : null}
+                  icon={<SettingsOptionIcon />}
+                  label={t('workTerritory')}
+                  primary
+                />
               </Box>
             </Footer>
           </Form>

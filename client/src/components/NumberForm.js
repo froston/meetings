@@ -11,6 +11,7 @@ const initState = {
   status: '',
   details: '',
   errors: {},
+  loading: false,
 }
 
 class NumberForm extends React.PureComponent {
@@ -50,6 +51,7 @@ class NumberForm extends React.PureComponent {
           }
         : '',
       details: number.details || '',
+      loading: false,
     }
     this.setState({ ...state, errors: {} })
   }
@@ -61,6 +63,7 @@ class NumberForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
+      this.setState({ loading: true })
       const { number } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
@@ -80,13 +83,13 @@ class NumberForm extends React.PureComponent {
 
   render() {
     const { t, hidden, online } = this.props
-    const { errors, number, name, territory, status, details } = this.state
+    const { errors, number, name, territory, status, details, loading } = this.state
     const numberObj = this.props.number
     const statusOptions = consts.statusOptions
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
-          <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Form pad="medium">
             <Header>
               {numberObj && <StopFillIcon size="small" colorIndex={functions.getNumberStatusColor(numberObj.status)} />}
               <Heading>{numberObj ? numberObj.number : t('new')}</Heading>
@@ -124,7 +127,7 @@ class NumberForm extends React.PureComponent {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} type={online ? 'submit' : undefined} primary disabled={!online} />
+                <Button label={t('common:submit')} onClick={!loading && online ? this.handleSubmit : null} primary />
               </Box>
             </Footer>
           </Form>

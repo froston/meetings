@@ -25,6 +25,7 @@ const initState = {
   date_from: '',
   date_to: '',
   errors: {},
+  loading: false,
 }
 
 class TerritoryForm extends React.PureComponent {
@@ -68,6 +69,7 @@ class TerritoryForm extends React.PureComponent {
       assigned: territory.assigned || '',
       date_from: dateFrom,
       date_to: dateTo,
+      loading: false,
     }
     this.setState({ ...state, errors: {} })
   }
@@ -79,6 +81,7 @@ class TerritoryForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
+      this.setState({ loading: true })
       const { territory } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
@@ -103,11 +106,11 @@ class TerritoryForm extends React.PureComponent {
 
   render() {
     const { t, hidden, territory, online } = this.props
-    const { number, assigned, date_from, errors } = this.state
+    const { number, assigned, date_from, errors, loading } = this.state
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
-          <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Form pad="medium">
             <Header>
               {territory && <StopFillIcon size="small" colorIndex={functions.getTerritoryStatusColor(territory)} />}
               <Heading>{territory ? `${t('territory')} ${territory.number}` : t('new')}</Heading>
@@ -144,7 +147,7 @@ class TerritoryForm extends React.PureComponent {
             )}
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} type={online ? 'submit' : undefined} primary disabled={!online} />
+                <Button onClick={!loading && online ? this.handleSubmit : null} label={t('common:submit')} primary />
               </Box>
             </Footer>
           </Form>

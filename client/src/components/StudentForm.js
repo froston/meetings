@@ -27,6 +27,7 @@ const initState = {
   available: [],
   notes: '',
   errors: {},
+  loading: false,
 }
 
 class StudentForm extends React.PureComponent {
@@ -63,6 +64,7 @@ class StudentForm extends React.PureComponent {
       available: student.available,
       notes: student.notes || '',
       hall: { value: student.hall, label: t(`common:hall${student.hall}`) },
+      loading: false,
     }
     this.setState({ ...state })
   }
@@ -77,6 +79,7 @@ class StudentForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
+      this.setState({ loading: true })
       const { student } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values, { available: values.available.map((obj) => obj && obj.value) })
@@ -95,12 +98,12 @@ class StudentForm extends React.PureComponent {
 
   render() {
     const { t, hidden, student, handleTasks, online } = this.props
-    const { name, available, hall, errors, gender, participate, notes } = this.state
+    const { name, available, hall, errors, gender, participate, notes, loading } = this.state
     const availableOptions = gender === consts.GENDER_SISTER ? consts.sisAvailableOptions : consts.availableOptions
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
-          <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Form pad="medium">
             <Header>
               <Heading>{student ? student.name : t('new')}</Heading>
             </Header>
@@ -159,7 +162,7 @@ class StudentForm extends React.PureComponent {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} type={online ? 'submit' : undefined} primary disabled={!online} />
+                <Button label={t('common:submit')} onClick={!loading && online ? this.handleSubmit : null} primary />
                 {student && <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />}
               </Box>
             </Footer>
