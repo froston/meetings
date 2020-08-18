@@ -42,6 +42,8 @@ class TerritoryList extends React.Component {
     }
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
+
+    this.debounceSearch = functions.debounce(this.loadData, 300)
   }
 
   componentWillUnmount() {
@@ -144,7 +146,7 @@ class TerritoryList extends React.Component {
 
   handleSearch = (e) => {
     const searchTerm = e.target.value
-    this.setState({ searchTerm }, this.loadData)
+    this.setState({ searchTerm }, this.debounceSearch)
   }
 
   handleRemove = (e, id) => {
@@ -258,16 +260,18 @@ class TerritoryList extends React.Component {
                   {!ter.isAssigned && (
                     <Button
                       icon={<UserExpertIcon size="small" />}
-                      onClick={(e) => this.handleAssignForm(e, ter)}
+                      onClick={online ? (e) => this.handleAssignForm(e, ter) : undefined}
                       a11yTitle={t('assign')}
                       title={t('assign')}
+                      disabled={!online}
                     />
                   )}
                   <Button
                     icon={<SettingsOptionIcon size="small" />}
-                    onClick={(e) => this.handleWork(e, ter)}
+                    onClick={online ? (e) => this.handleWork(e, ter) : undefined}
                     a11yTitle={t('workTerritory')}
                     title={t('workTerritory')}
+                    disabled={!online}
                   />
                   {ter.history_id > 0 && (
                     <Button

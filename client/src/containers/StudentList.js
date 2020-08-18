@@ -6,7 +6,7 @@ import Spinning from 'grommet/components/icons/Spinning'
 import { toast } from 'react-toastify'
 import { TaskList } from './'
 import { StudentForm, StudentFilters, Undo } from '../components'
-import { api, consts } from '../utils'
+import { api, consts, functions } from '../utils'
 
 class StudentList extends React.Component {
   state = {
@@ -31,6 +31,8 @@ class StudentList extends React.Component {
     }
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
+
+    this.debounceSearch = functions.debounce(this.loadData, 300)
   }
 
   componentWillUnmount() {
@@ -64,7 +66,7 @@ class StudentList extends React.Component {
 
   handleSearch = (e) => {
     const searchTerm = e.target.value
-    this.setState({ searchTerm }, this.loadData)
+    this.setState({ searchTerm }, this.debounceSearch)
   }
 
   handleSelect = (index) => {
