@@ -30,6 +30,8 @@ class NumberList extends React.Component {
     }
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
+
+    this.debounceSearch = functions.debounce(this.loadData, 300)
   }
 
   componentWillUnmount() {
@@ -50,7 +52,7 @@ class NumberList extends React.Component {
 
   handleSearch = (e) => {
     const searchTerm = e.target.value
-    this.setState({ searchTerm }, this.loadData)
+    this.setState({ searchTerm }, this.debounceSearch)
   }
 
   loadData = (showLoading = true, cb, more = false) => {
