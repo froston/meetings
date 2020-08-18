@@ -311,6 +311,7 @@ class TerritoryList extends React.Component {
           hidden={this.state.territoryHist}
           handleClose={() => this.handleForm('territoryHist', true)}
           territory={this.state.territory}
+          reloadList={this.loadData}
         />
         <TerritoryView
           hidden={this.state.territoryView}

@@ -14,6 +14,21 @@
     },
     "DB_PASSWORD": {
       "description": "Database password."
+    },
+    "FIREBASE_PROJECT_ID": {
+      "description": "Firebase project ID."
+    },
+    "FIREBASE_PRIVATE_KEY": {
+      "description": "Firebase private key."
+    },
+    "FIREBASE_CLIENT_EMAIL": {
+      "description": "Firebase client email."
+    },
+    "REACT_APP_FIREBASE_APIKEY": {
+      "description": "Firebase api key."
+    },
+    "REACT_APP_FIREBASE_AUTHDOMAIN": {
+      "description": "Firebase auth domain."
     }
   },
   "image": "heroku/nodejs",
