@@ -32,9 +32,9 @@ export const remove = (url, id) => {
 }
 
 export const downloadFile = (url) => {
-  return axios({
-    method: 'get',
-    url: url,
-    responseType: 'blob',
-  }).then((res) => res.data)
+  return instance
+    .get(url, {
+      responseType: 'blob',
+    })
+    .then((res) => res.data)
 }
