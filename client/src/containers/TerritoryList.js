@@ -239,12 +239,12 @@ class TerritoryList extends React.Component {
             .map((ter, index) => (
               <ListItem
                 key={ter.id}
-                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
                 justify="between"
                 align="center"
                 responsive={false}
                 onClick={this.handleSelect}
                 separator={index === 0 ? 'horizontal' : 'bottom'}
+                style={{ paddingTop: 0, paddingBottom: 0 }}
               >
                 <Box>
                   <div>

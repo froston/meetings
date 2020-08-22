@@ -60,5 +60,7 @@
   "colorok": "0 - 1 mes",
   "colorwarning": "1 - 2 meses",
   "colorcritical": "+ 2 meses",
-  "colorgraph-1": "Asignado"
+  "colorgraph-1": "Asignado",
+  "removeHist": "Eliminar Historial",
+  "confirmRemoveHist": "Seguro de eliminar el historial?"
 }

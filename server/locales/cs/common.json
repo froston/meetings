@@ -58,5 +58,7 @@
   "colorok": "0 - 1 měsíc",
   "colorwarning": "1 - 2 měsíce",
   "colorcritical": "+ 2 měsíce",
-  "colorgraph-1": "Přidělen"
+  "colorgraph-1": "Přidělen",
+  "removeHist": "Odstranit historii",
+  "confirmRemoveHist": "Opravdu smazat historii?"
 }

@@ -15,11 +15,13 @@ import {
   Select,
   Columns,
   DateTime,
+  Anchor,
 } from 'grommet'
-import { SettingsOptionIcon } from 'grommet/components/icons/base'
+import { SettingsOptionIcon, ViewIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions } from '../utils'
+import { TerritoryView } from '../components'
 
 const initState = {
   territory: {},
@@ -29,6 +31,7 @@ const initState = {
   numbers: {},
   errors: {},
   loading: false,
+  territoryView: true,
 }
 
 class Work extends React.Component {
@@ -62,7 +65,7 @@ class Work extends React.Component {
   }
 
   validate = (cb) => {
-    const { territory, assigned, date_from, date_to } = this.state
+    const { territory, assigned, date_from, date_to, numbers } = this.state
     let errors = {}
     if (!territory.isAssigned) {
       const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
@@ -73,11 +76,31 @@ class Work extends React.Component {
     const toValid = moment(date_to, consts.DATETIME_FORMAT).isValid()
     if (!toValid) errors.date_to = this.props.t('common:dateNotValid')
     if (!date_to) errors.date_to = this.props.t('common:required')
+
+    Object.entries(numbers).forEach(([key, value]) => {
+      if (!value.status && !value.details) {
+        return
+      } else {
+        if ((value.status == 'RV' || value.status == 'X') && (!value.details || value.details.trim() == '')) {
+          errors[key] = {}
+          errors[key].details = this.props.t('common:required')
+        }
+        if (!value.status && !!value.details) {
+          errors[key] = {}
+          errors[key].status = this.props.t('common:required')
+        }
+      }
+    })
+
     if (Object.keys(errors).length) {
       this.setState({ errors: Object.assign({}, this.state.errors, errors) })
     } else {
       cb()
     }
+  }
+
+  handleView = () => {
+    this.setState({ territoryView: !this.state.territoryView })
   }
 
   handleChange = (name, value) => {
@@ -87,7 +110,7 @@ class Work extends React.Component {
   handleNumChange = (name, value, number) => {
     const numbers = { ...this.state.numbers }
     numbers[number][name] = value
-    this.setState({ numbers })
+    this.setState({ numbers, errors: {} })
   }
 
   handleSubmit = (e) => {
@@ -158,13 +181,17 @@ class Work extends React.Component {
               />
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
-              <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
+              <Box>
                 <Button
                   onClick={!loading ? this.handleSubmit : null}
                   icon={<SettingsOptionIcon />}
                   label={t('workTerritory')}
                   primary
                 />
+                <br />
+                {territory && (
+                  <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
+                )}
               </Box>
             </Footer>
           </Form>
@@ -172,6 +199,7 @@ class Work extends React.Component {
             {territory.numbers &&
               territory.numbers.map((num, i) => {
                 const { status, details } = this.state.numbers[num.number]
+                const numError = errors[num.number] || {}
                 const borderTop = num.status
                   ? `3px solid ${functions.getNumberStatusColor(num.status, true)}`
                   : `3px solid #f5f5f5`
@@ -183,10 +211,10 @@ class Work extends React.Component {
                           {t('numbers:number')} <strong>{num.number}</strong>
                         </Heading>
                       </Header>
-                      <FormField label={t('numbers:name')} error={errors.name}>
+                      <FormField label={t('numbers:name')}>
                         <TextInput value={num.name} disabled />
                       </FormField>
-                      <FormField label={t('numbers:status')} error={errors.status}>
+                      <FormField label={t('numbers:status')} error={numError.status}>
                         <Select
                           label={t('common:status')}
                           options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
@@ -195,7 +223,7 @@ class Work extends React.Component {
                           placeHolder={t('numbers:status')}
                         />
                       </FormField>
-                      <FormField label={t('numbers:details')}>
+                      <FormField label={t('numbers:details')} error={numError.details}>
                         <textarea
                           rows={3}
                           type="text"
@@ -216,6 +244,7 @@ class Work extends React.Component {
             )}
           </div>
         </Columns>
+        <TerritoryView hidden={this.state.territoryView} handleClose={this.handleView} territory={territory} />
       </Section>
     )
   }
