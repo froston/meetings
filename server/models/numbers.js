@@ -134,4 +134,11 @@ const getNumberHist = (id, cb) => {
   })
 }
 
+exports.removeHistory = (id, history_id, cb) => {
+  getDb().query('DELETE FROM numbers_hist WHERE id = ?', history_id, (err) => {
+    if (err) throw err
+    cb(err)
+  })
+}
+
 exports.getNumberHist = getNumberHist

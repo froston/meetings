@@ -195,12 +195,12 @@ class NumberList extends React.Component {
             .map((num, index) => (
               <ListItem
                 key={num.id}
-                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
                 justify="between"
                 align="center"
                 responsive={false}
                 onClick={this.handleSelect}
                 separator={index === 0 ? 'horizontal' : 'bottom'}
+                style={{ paddingTop: 0, paddingBottom: 0 }}
               >
                 <Box>
                   <div title={num.status}>
@@ -245,6 +245,7 @@ class NumberList extends React.Component {
           hidden={this.state.numberHist}
           handleClose={() => this.handleForm('numberHist', true)}
           number={this.state.number}
+          reloadList={this.loadData}
         />
       </Section>
     )
