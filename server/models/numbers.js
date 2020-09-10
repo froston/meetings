@@ -4,7 +4,7 @@ const consts = require('../helpers/consts')
 exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
   let where = '' // to simplify dynamic conditions syntax
-  where += query ? `AND (N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
+  where += query ? `AND (N.number LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
   where += filters.status ? `AND H.status = "${filters.status}"` : ''
   let limit = ''
   limit += filters.offset && filters.limit ? `LIMIT ${filters.offset}, ${filters.limit}` : ''
@@ -41,7 +41,6 @@ exports.getByTerritoryNumber = (num, cb) => {
 exports.createNumber = (data, cb) => {
   const newNumber = {
     number: data.number,
-    name: data.name,
     territory: data.territory,
   }
   getDb().query('INSERT INTO numbers SET ?', newNumber, (err, res) => {
@@ -61,7 +60,6 @@ exports.createNumber = (data, cb) => {
 exports.updateNumber = (id, data, cb) => {
   const updatedNumber = {
     number: data.number,
-    name: data.name,
     territory: data.territory,
   }
   getDb().query('UPDATE numbers SET ? WHERE id = ?', [updatedNumber, id], (err) => {

@@ -5,7 +5,7 @@ import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label, Search
 import { FormTrashIcon, StopFillIcon, AddIcon, HistoryIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
-import { Undo, NumberForm, NumberHistory } from '../components'
+import { Undo, NumberForm, NumberHistory, Loader } from '../components'
 import { api, functions, consts } from '../utils'
 
 class NumberList extends React.Component {
@@ -151,6 +151,7 @@ class NumberList extends React.Component {
     const statusOptions = ['', ...consts.statusOptions]
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>
@@ -206,7 +207,6 @@ class NumberList extends React.Component {
                   <div title={num.status}>
                     <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
                     <strong> {num.number}</strong>
-                    {num.name && <Label size="small"> | {num.name}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>

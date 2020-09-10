@@ -32,11 +32,10 @@ class TerritoryView extends React.PureComponent {
               {t('territory')} {territory && territory.number}
             </Heading>
           </Header>
-          <div style={{ overflowX: 'auto', width: '75vw' }}>
+          <div style={{ overflowX: 'auto', width: '70vw' }}>
             <Table responsive={false} scrollable className="territory-view">
               <thead>
                 <tr>
-                  <th width="270">{t('name')}</th>
                   <th width="150">{t('number2')}</th>
                   <th width="200">{t('status')}</th>
                   <th>{t('details')}</th>
@@ -50,10 +49,7 @@ class TerritoryView extends React.PureComponent {
                       <TableRow key={index} style={{ borderBottom: '1px solid rgba(0,0,0,0.15)' }} className={rowClass}>
                         <td style={{ padding: 5 }}>
                           <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
-                          <span style={{ paddingLeft: 5 }}>{num.name}</span>
-                        </td>
-                        <td width="120" style={{ padding: 5 }}>
-                          {num.number}
+                          <span style={{ paddingLeft: 5 }}>{num.number}</span>
                         </td>
                         <td style={{ padding: 5 }}>{t(`common:status${num.status}`)}</td>
                         <td style={{ padding: 5 }}>{num.details}</td>

@@ -55,7 +55,7 @@ class NumberHistory extends React.PureComponent {
                 <tr>
                   <th width="130">{t('changedDate')}</th>
                   <th width="180">{t('status')}</th>
-                  <th>{t('details')}</th>
+                  <th width="300">{t('details')}</th>
                   {hist.length > 1 && <th></th>}
                 </tr>
               </thead>
@@ -96,4 +96,4 @@ NumberHistory.propTypes = {
   reloadHist: PropTypes.func,
 }
 
-export default withTranslation(['common', 'numbers'])(NumberHistory)
+export default withTranslation(['numbers', 'common'])(NumberHistory)

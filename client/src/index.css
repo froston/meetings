@@ -157,3 +157,66 @@ a.grommetux-button:hover {
   text-decoration: line-through;
   text-decoration-color: rgba(0, 0, 0, 0.45);
 }
+.grommet-loader-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999;
+}
+.grommet-loader {
+  height: 4px;
+  overflow: hidden;
+  position: relative;
+  background-color: rgb(167, 202, 237);
+}
+.grommet-loader-bar {
+  top: 0;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  position: absolute;
+  transition: transform 0.2s linear;
+  transform-origin: left;
+  background-color: #0a64a0;
+}
+.grommet-loader-bar1 {
+  width: auto;
+  animation: keyframes-indeterminate1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+.grommet-loader-bar1 {
+  transition: transform 0.4s linear;
+}
+.grommet-loader-bar2 {
+  width: auto;
+  animation: keyframes-indeterminate2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+}
+@-webkit-keyframes keyframes-indeterminate1 {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+@-webkit-keyframes keyframes-indeterminate2 {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}

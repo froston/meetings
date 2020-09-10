@@ -4,6 +4,7 @@ import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, Distribution, Notification } from 'grommet'
 import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
+import { Loader } from '../components'
 import { api, consts, functions, withAuth } from '../utils'
 
 class Dashboard extends Component {
@@ -14,6 +15,7 @@ class Dashboard extends Component {
     scheduleExists: false,
     numbers: [],
     territories: [],
+    loading: false,
   }
   day = moment().date()
   month = moment().month() + 1
@@ -24,17 +26,30 @@ class Dashboard extends Component {
   }
 
   loadData = () => {
-    api
-      .get(`/students`)
+    this.setState({ loading: true })
+
+    Promise.all([api.get(`/students`), api.get(`/schedules`), api.get(`/territories`), api.get(`/numbers`)])
       .then((res) => {
-        const students = res || []
+        const students = res[0] || []
+        const schedules = res[1] || []
+        const territories = res[2] || []
+        const numbers = res[3] || []
+
         const brothers = students.filter((s) => s.gender === consts.GENDER_BROTHER && s.participate)
         const sisters = students.filter((s) => s.gender === consts.GENDER_SISTER && s.participate)
         const noParticipate = students.filter((s) => !s.participate)
+        const scheduleExists = schedules.find(
+          (schedule) => schedule.month === this.month + 1 && schedule.year === this.year
+        )
+
         this.setState({
           brothers: brothers.length,
           sisters: sisters.length,
           noParticipate: noParticipate.length,
+          scheduleExists,
+          territories,
+          numbers,
+          loading: false,
         })
       })
       .catch((err) => {
@@ -45,18 +60,6 @@ class Dashboard extends Component {
           })
         })
       })
-    api.get(`/schedules`).then((schedules) => {
-      const scheduleExists = schedules.find(
-        (schedule) => schedule.month === this.month + 1 && schedule.year === this.year
-      )
-      this.setState({ scheduleExists })
-    })
-    api.get(`/numbers`).then((numbers) => {
-      this.setState({ numbers })
-    })
-    api.get(`/territories`).then((territories) => {
-      this.setState({ territories })
-    })
   }
 
   getMessages = () => {
@@ -135,11 +138,13 @@ class Dashboard extends Component {
 
   render() {
     const { t, auth, meta } = this.props
-    const { brothers, sisters, noParticipate, numbers, territories } = this.state
+    const { brothers, sisters, noParticipate, numbers, territories, loading } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
-          {t('title')} <b>{auth.user.displayName}!</b>
+          {t('title')}
+          <b>{auth.user.displayName}!</b>
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         {this.getMessages()}
@@ -172,8 +177,9 @@ class Dashboard extends Component {
             />
           </Box>
         )}
-        {functions.hasAccess(meta, 'territories') && (
-          <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
+
+        <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
+          {functions.hasAccess(meta, 'numbers') && (
             <Box margin={{ vertical: 'small' }}>
               <Heading tag="h2" margin="small">
                 {t('numbers')}
@@ -190,6 +196,8 @@ class Dashboard extends Component {
                 legend={true}
               />
             </Box>
+          )}
+          {functions.hasAccess(meta, 'territories') && (
             <Box margin={{ vertical: 'small' }}>
               <Heading tag="h2" margin="small">
                 {t('territories')}
@@ -206,8 +214,8 @@ class Dashboard extends Component {
                 legend={true}
               />
             </Box>
-          </div>
-        )}
+          )}
+        </div>
       </Section>
     )
   }

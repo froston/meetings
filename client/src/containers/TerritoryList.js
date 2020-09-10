@@ -14,7 +14,7 @@ import {
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
-import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView } from '../components'
+import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader } from '../components'
 import { api, consts, functions } from '../utils'
 
 class TerritoryList extends React.Component {
@@ -164,11 +164,7 @@ class TerritoryList extends React.Component {
   handleWork = (e, territory) => {
     e.preventDefault()
     e.stopPropagation()
-
-    this.props.history.push({
-      pathname: '/work',
-      state: { territory },
-    })
+    this.props.history.push(`/work/${territory.id}`)
   }
 
   handleHistory = (e, territory) => {
@@ -188,6 +184,7 @@ class TerritoryList extends React.Component {
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>

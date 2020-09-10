@@ -5,7 +5,7 @@ import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/compo
 import Spinning from 'grommet/components/icons/Spinning'
 import { toast } from 'react-toastify'
 import { TaskList } from './'
-import { StudentForm, StudentFilters, Undo } from '../components'
+import { StudentForm, StudentFilters, Undo, Loader } from '../components'
 import { api, consts, functions } from '../utils'
 
 class StudentList extends React.Component {
@@ -151,6 +151,7 @@ class StudentList extends React.Component {
     const { online, students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>

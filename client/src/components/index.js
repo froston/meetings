@@ -13,6 +13,7 @@ import AssignForm from './AssignForm'
 import NumberHistory from './NumberHistory'
 import TerritoryHistory from './TerritoryHistory'
 import TerritoryView from './TerritoryView'
+import Loader from './Loader'
 
 export {
   Nav,
@@ -30,4 +31,5 @@ export {
   NumberHistory,
   TerritoryHistory,
   TerritoryView,
+  Loader,
 }

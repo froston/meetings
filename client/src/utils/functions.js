@@ -75,6 +75,8 @@ export const hasAccess = (meta, access) => {
       return meta.admin === 1 || meta.lifeministry === 1
     case 'territories':
       return meta.admin === 1 || meta.territories === 1
+    case 'numbers':
+      return meta.admin === 1 || meta.numbers === 1
     default:
       return false
   }
