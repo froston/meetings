@@ -60,5 +60,9 @@
   "colorcritical": "+ 2 months",
   "colorgraph-1": "Assigned",
   "removeHist": "Eliminar Historial",
-  "confirmRemoveHist": "Sure to remove the history?"
+  "confirmRemoveHist": "Sure to remove the history?",
+  "userNotRegistred": "User is not registred. Please contact the administrator to get access.",
+  "missingHeader": "Authorization header missing.",
+  "userNotFound": "User does not exist.",
+  "logoutSuccessfull": "You have successfully logged out."
 }

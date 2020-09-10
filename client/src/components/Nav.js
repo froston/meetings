@@ -67,6 +67,11 @@ class Nav extends React.PureComponent {
                 {t('numbers')}
               </Link>
             )}
+            {functions.hasAccess(meta, 'admin') && (
+              <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
+                {t('users')}
+              </Link>
+            )}
           </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>

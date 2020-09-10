@@ -1,0 +1,18 @@
+{
+  "title": "Usuarios",
+  "desc": "Cree, edite y elimine los usuarios aquí.",
+  "add": "Crear Nuevo Usuario",
+  "remove": "Eliminar Usuario",
+  "email": "E-mail",
+  "uid": "UID",
+  "admin": "Administrador",
+  "meta": "Permisos",
+  "confirmRemove": "Seguro de eliminar al usuario?",
+  "new": "Nuevo Usuario",
+  "userRemoved": "Usuario se eliminó.",
+  "userCreated": "Usuario {{name}} se creó.",
+  "userUpdated": "Usuario {{name}} se actualizó.",
+  "lifeministry": "Vida y ministerio",
+  "territories": "Territorios",
+  "numbers": "Números"
+}

@@ -52,11 +52,14 @@ class Dashboard extends Component {
           loading: false,
         })
       })
-      .catch((err) => {
+      .catch(({ message, response }) => {
+        if (response && response.data && response.data.message) {
+          message = response.data.message
+        }
         this.props.auth.logout().then(() => {
           this.props.history.push({
             pathname: '/',
-            state: { message: err.message },
+            state: { message },
           })
         })
       })

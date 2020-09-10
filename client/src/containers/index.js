@@ -11,6 +11,7 @@ import AuthRoute from './AuthRoute'
 import TerritoryList from './TerritoryList'
 import NumberList from './NumberList'
 import Work from './Work'
+import UsersList from './UsersList'
 
 export {
   App,
@@ -26,4 +27,5 @@ export {
   TerritoryList,
   NumberList,
   Work,
+  UsersList,
 }
