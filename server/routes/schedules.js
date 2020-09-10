@@ -3,23 +3,23 @@ const model = require('../models/schedules')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  model.getAll(req.query, (err, schedules) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(schedules)
-  })
+router.get('/', async (req, res) => {
+  try {
+    const data = await model.getAll(req.query)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const id = req.params.id
-  model.getById(id, (err, schedule) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(schedule)
-  })
+  try {
+    const data = await model.getById(id)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
 router.get('/:id/downloadXls', (req, res) => {
@@ -29,7 +29,7 @@ router.get('/:id/downloadXls', (req, res) => {
   model.generateXls(id, lang, req.t, res)
 })
 
-router.get('/:id/downloadPdfs', (req, res) => {
+router.get('/:id/downloadPdfs', async (req, res) => {
   const id = req.params.id
   const beginsWith = req.query.beginsWith
   const lang = req.query.lang
@@ -37,24 +37,24 @@ router.get('/:id/downloadPdfs', (req, res) => {
   model.generatePdfs(id, beginsWith, lang, req.t, res)
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const newSchedule = req.body
-  model.createSchedule(newSchedule, (err, schedule) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(schedule)
-  })
+  try {
+    const data = await model.createSchedule(newSchedule)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = req.params.id
-  model.removeSchedule(id, err => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    await model.removeSchedule(id)
     res.status(204).end()
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
 module.exports = router

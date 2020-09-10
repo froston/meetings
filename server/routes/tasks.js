@@ -3,50 +3,50 @@ const model = require('../models/tasks')
 
 const router = express.Router()
 
-router.get('/:studentId', (req, res) => {
+router.get('/:studentId', async (req, res) => {
   const studentId = req.params.studentId
-  model.getAllTasks(studentId, (err, tasks) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(tasks)
-  })
+  try {
+    const data = await model.getAllTasks(studentId)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const newTask = req.body
   const taskName = newTask.task
   if (taskName.includes('Return Visit')) {
     newTask.task = taskName.substring(3)
     newTask.rv = Number(taskName[0])
   }
-  model.createTask(newTask, (err, task) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(task)
-  })
+  try {
+    const data = await model.createTask(newTask)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   const taskId = req.params.id
   const newTask = req.body
-  model.updateTask(taskId, newTask, (err, task) => {
-    if (err) {
-      res.status(500).send(err)
-    }
-    res.send(task)
-  })
+  try {
+    const data = await model.updateTask(taskId, newTask)
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = req.params.id
-  model.removeTask(id, err => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    await model.removeTask(id)
     res.status(204).end()
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
 module.exports = router

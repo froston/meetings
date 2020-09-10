@@ -1,7 +1,7 @@
-const { getDb } = require('../db')
+const db = require('../db')
 
-exports.getBySchedule = (month, year, cb) => {
-  getDb().query(
+exports.getBySchedule = async (month, year) => {
+  return await db.query(
     `
     SELECT 
       tasks.*,
@@ -13,13 +13,12 @@ exports.getBySchedule = (month, year, cb) => {
     LEFT JOIN students students ON students.id = tasks.student_id
     LEFT JOIN students helpers ON helpers.id = tasks.helper_id
     WHERE month = ? AND year = ?`,
-    [month, year],
-    cb
+    [month, year]
   )
 }
 
-exports.getAllTasks = (studentId, cb) => {
-  getDb().query(
+exports.getAllTasks = async (studentId) => {
+  return await db.query(
     `
     SELECT 
       tasks.*,
@@ -31,13 +30,12 @@ exports.getAllTasks = (studentId, cb) => {
     WHERE student_id = ? OR helper_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
-    [studentId, studentId],
-    cb
+    [studentId, studentId]
   )
 }
 
-exports.getStudentTasks = (studentId, cb) => {
-  getDb().query(
+exports.getStudentTasks = async (studentId) => {
+  return await db.query(
     `
     SELECT 
       tasks.*,
@@ -47,13 +45,12 @@ exports.getStudentTasks = (studentId, cb) => {
     WHERE student_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
-    [studentId],
-    cb
+    [studentId]
   )
 }
 
-exports.getHelpTasks = (helperId, cb) => {
-  getDb().query(
+exports.getHelpTasks = async (helperId) => {
+  return await db.query(
     `
     SELECT 
       tasks.*,
@@ -63,12 +60,11 @@ exports.getHelpTasks = (helperId, cb) => {
     WHERE helper_id = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
   `,
-    [helperId],
-    cb
+    [helperId]
   )
 }
 
-exports.createTask = (task, cb) => {
+exports.createTask = async (task) => {
   const taskToInsert = {
     student_id: task.student_id,
     helper_id: task.helper_id,
@@ -78,37 +74,35 @@ exports.createTask = (task, cb) => {
     hall: task.hall,
     week: task.week,
     month: task.month,
-    year: task.year
+    year: task.year,
   }
-  getDb().query('INSERT INTO tasks SET ?', taskToInsert, cb)
+  return await db.query('INSERT INTO tasks SET ?', taskToInsert)
 }
 
-exports.updateTask = (id, taskToUpdate, cb) => {
-  getDb().query('UPDATE tasks SET ? WHERE id = ?', [taskToUpdate, id], cb)
+exports.updateTask = async (id, taskToUpdate) => {
+  return await db.query('UPDATE tasks SET ? WHERE id = ?', [taskToUpdate, id])
 }
 
-exports.removeTask = (id, cb) => {
-  getDb().query('DELETE FROM tasks WHERE id = ?', id, cb)
+exports.removeTask = async (id) => {
+  return await db.query('DELETE FROM tasks WHERE id = ?', id)
 }
 
-exports.removeByStudent = (studentId, cb) => {
-  getDb().query('DELETE FROM tasks WHERE student_id = ?', studentId, cb)
+exports.removeByStudent = async (studentId) => {
+  return await db.query('DELETE FROM tasks WHERE student_id = ?', studentId)
 }
 
-exports.removeBySchedule = (month, year, cb) => {
-  getDb().query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year], cb)
+exports.removeBySchedule = async (month, year) => {
+  return await db.query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year])
 }
 
-exports.hasDuplicate = (studentId, helperId, cb) => {
-  getDb().query(
+exports.hasDuplicate = async (studentId, helperId) => {
+  const res = await db.query(
     `
     SELECT COUNT(*) as dupCount
     FROM tasks
     WHERE (student_id = ? AND helper_id = ?) OR (helper_id = ? AND student_id = ?) 
   `,
-    [studentId, helperId, studentId, helperId],
-    (err, res) => {
-      cb(err, res[0] && res[0].dupCount > 1)
-    }
+    [studentId, helperId, studentId, helperId]
   )
+  return res[0] && res[0].dupCount > 1
 }

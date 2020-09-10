@@ -1,62 +1,59 @@
-const async = require('async')
-const { getDb } = require('../db')
+const db = require('../db')
 const taskModel = require('./tasks')
 const consts = require('../helpers/consts')
 const sorting = require('../helpers/sorting')
 
-exports.getAll = (filters, cb) => {
+exports.getAll = async (filters) => {
   let like = 'WHERE 1 = 1 ' // to simplify dynamic conditions syntax
   like += filters.name ? `AND name LIKE "%${filters.name}%"` : ``
   like += !!filters.noParticipate ? `AND participate = "${filters.noParticipate}"` : ``
   like += filters.gender ? `AND gender = "${filters.gender}"` : ``
-  getDb().query(`SELECT * FROM students ${like} ORDER BY name`, (err, results) => {
-    if (err) throw err
-    results.forEach(student => {
-      student.available = consts.getAvailable(student)
-    })
-    cb(err, results)
+
+  const results = await db.query(`SELECT * FROM students ${like} ORDER BY name`)
+
+  results.forEach((student) => {
+    student.available = consts.getAvailable(student)
   })
+
+  return results
 }
 
-exports.getById = (id, cb) => {
-  getDb().query('SELECT * FROM students WHERE id = ?', id, (err, results) => {
-    if (err) throw err
-    results[0].available = consts.getAvailable(results[0])
-    cb(err, results)
-  })
+exports.getById = async (id) => {
+  const results = await db.query('SELECT * FROM students WHERE id = ?', id)
+  results[0].available = consts.getAvailable(results[0])
+  return results
 }
 
-exports.createStudent = (newStudent, cb) => {
+exports.createStudent = async (newStudent) => {
   const studentToInsert = {
     name: newStudent.name,
     participate: newStudent.participate,
     gender: newStudent.gender,
     hall: newStudent.hall,
     notes: newStudent.notes,
-    ...consts.setAvailable(newStudent.available)
+    ...consts.setAvailable(newStudent.available),
   }
-  getDb().query('INSERT INTO students SET ?', studentToInsert, cb)
+  return await db.query('INSERT INTO students SET ?', studentToInsert)
 }
 
-exports.updateStudent = (id, student, cb) => {
+exports.updateStudent = async (id, student) => {
   const studentToUpdate = {
     name: student.name,
     participate: student.participate,
     gender: student.gender,
     hall: student.hall,
     notes: student.notes,
-    ...consts.setAvailable(student.available)
+    ...consts.setAvailable(student.available),
   }
-  getDb().query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id], cb)
+  return await db.query('UPDATE students SET ? WHERE id = ?', [studentToUpdate, id])
 }
 
-exports.removeStudent = (id, cb) => {
-  getDb().query('DELETE FROM students WHERE id = ?', id, () => {
-    taskModel.removeByStudent(id, cb)
-  })
+exports.removeStudent = async (id) => {
+  await db.query('DELETE FROM students WHERE id = ?', id)
+  taskModel.removeByStudent(id)
 }
 
-exports.getSortedAvailables = (type, options, cb) => {
+exports.getSortedAvailables = async (type, options) => {
   const taskName = options.taskName
   const gender = options.gender
   const hall = options.hall
@@ -64,100 +61,56 @@ exports.getSortedAvailables = (type, options, cb) => {
   const year = options.year
   switch (type) {
     case 'student':
-      getAvailableStudents(taskName, hall, (err, students) => {
-        students.sort(sorting.sortStudents(taskName, hall, month, year))
-        cb(err, students)
-      })
-      break
+      return await getAvailableStudents(taskName, hall)
     case 'helper':
-      getAvailableHelpers(gender, hall, (err, students) => {
-        students.sort(sorting.sortHelpers(taskName, month, year))
-        cb(err, students)
-      })
-      break
+      const students = await getAvailableHelpers(gender, hall)
+      return students.sort(sorting.sortHelpers(taskName, month, year))
     default:
-      cb(null, [])
-      break
+      return []
   }
 }
 
-const getAvailableStudents = (taskName, hall, cb) => {
-  getDb().query(
+const getAvailableStudents = async (taskName, hall) => {
+  let students = await db.query(
     `
     SELECT * FROM students 
     WHERE ${consts.getAvailableName(taskName)} IS TRUE AND 
     (hall = "All" OR hall = ?) AND
     participate IS TRUE
   `,
-    [hall],
-    (err, students) => {
-      if (err) throw err
-      async.map(
-        students,
-        (student, callback) => {
-          async.parallel(
-            [
-              // parallel function to get students tasks
-              done => {
-                taskModel.getStudentTasks(student.id, (err, tasks) => {
-                  // distinguish reading task from other tasks
-                  if (taskName === 'Reading') {
-                    student.tasks = tasks.filter(t => t.task === 'Reading')
-                  } else {
-                    student.tasks = tasks.filter(t => t.task !== 'Reading')
-                  }
-                  done(err)
-                })
-              },
-              // parallel function to get help tasks
-              done => {
-                taskModel.getHelpTasks(student.id, (err, tasks) => {
-                  student.helpTasks = tasks
-                  done(err)
-                })
-              }
-            ],
-            callback
-          )
-        },
-        err => {
-          cb(err, students)
-        }
-      )
-    }
+    [hall]
   )
+
+  students = await Promise.all(
+    students.map(async (student) => {
+      const tasks = await taskModel.getStudentTasks(student.id)
+      // distinguish reading task from other tasks
+      if (taskName === 'Reading') {
+        student.tasks = tasks.filter((t) => t.task === 'Reading')
+      } else {
+        student.tasks = tasks.filter((t) => t.task !== 'Reading')
+      }
+      student.helpTasks = await taskModel.getHelpTasks(student.id)
+
+      return student
+    })
+  )
+
+  return students
 }
 
-const getAvailableHelpers = (gender, hall, cb) => {
+const getAvailableHelpers = async (gender, hall) => {
   const where = `WHERE (hall = "All" OR hall = ?) AND participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
-  getDb().query(`SELECT * FROM students ${where}`, [hall], (err, students) => {
-    if (err) throw err
-    async.map(
-      students,
-      (student, callback) => {
-        async.parallel(
-          [
-            // parallel function to get students tasks
-            done => {
-              taskModel.getStudentTasks(student.id, (err, tasks) => {
-                student.tasks = tasks
-                done(err)
-              })
-            },
-            // parallel function to get help tasks
-            done => {
-              taskModel.getHelpTasks(student.id, (err, tasks) => {
-                student.helpTasks = tasks
-                done(err)
-              })
-            }
-          ],
-          callback
-        )
-      },
-      err => {
-        cb(err, students)
-      }
-    )
-  })
+  const students = await db.query(`SELECT * FROM students ${where}`, [hall])
+
+  students = await Promise.all(
+    students.map(async (student) => {
+      student.tasks = await taskModel.getStudentTasks(student.id)
+      student.helpTasks = await taskModel.getHelpTasks(student.id)
+
+      return student
+    })
+  )
+
+  return students
 }
