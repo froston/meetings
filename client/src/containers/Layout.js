@@ -5,7 +5,17 @@ import { withTranslation } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
 import { MenuIcon, CloseIcon } from 'grommet/components/icons/base'
 import { ToastContainer } from 'react-toastify'
-import { Dashboard, StudentList, ScheduleList, Schedule, TerritoryList, NumberList, Work, AuthRoute } from './'
+import {
+  Dashboard,
+  StudentList,
+  ScheduleList,
+  Schedule,
+  TerritoryList,
+  NumberList,
+  Work,
+  AuthRoute,
+  UsersList,
+} from './'
 import { Nav } from '../components'
 import { api, withAuth } from '../utils'
 import Cookies from 'js-cookie'
@@ -45,7 +55,7 @@ class Layout extends React.PureComponent {
     this.props.auth.logout().then(() => {
       this.props.history.push({
         pathname: '/',
-        state: { message: 'Logout successfull' },
+        state: { message: this.props.t('logoutSuccessfull') },
       })
     })
   }
@@ -85,6 +95,7 @@ class Layout extends React.PureComponent {
                   <AuthRoute exact path="/territories" component={TerritoryList} meta={meta} access="territories" />
                   <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="numbers" />
                   <AuthRoute exact path="/work/:id" component={Work} meta={meta} access="territories" />
+                  <AuthRoute exact path="/users" component={UsersList} meta={meta} access="admin" />
                   <Redirect to="/" />
                 </Switch>
               )}
