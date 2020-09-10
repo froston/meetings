@@ -21,7 +21,7 @@ import { SettingsOptionIcon, ViewIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions } from '../utils'
-import { TerritoryView } from '../components'
+import { TerritoryView, Loader } from '../components'
 
 const initState = {
   territory: {},
@@ -140,6 +140,7 @@ class Work extends React.Component {
     const { territory, assigned, date_from, date_to, errors, loading } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Header>
           <Heading>
             {t('workTerritory')} {territory.number}

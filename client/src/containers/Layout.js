@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route, withRouter } from 'react-router-dom'
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
 import moment from 'moment'
 import { withTranslation } from 'react-i18next'
 import { Box, Article, Split, Button } from 'grommet'
@@ -83,8 +83,9 @@ class Layout extends React.PureComponent {
                   <AuthRoute exact path="/schedules" component={ScheduleList} meta={meta} access="lifeministry" />
                   <AuthRoute exact path="/schedules/:id" component={Schedule} meta={meta} access="lifeministry" />
                   <AuthRoute exact path="/territories" component={TerritoryList} meta={meta} access="territories" />
-                  <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="territories" />
+                  <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="numbers" />
                   <AuthRoute exact path="/work" component={Work} meta={meta} access="territories" />
+                  <Redirect to="/" />
                 </Switch>
               )}
             </Article>

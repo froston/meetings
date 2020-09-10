@@ -96,4 +96,4 @@ NumberHistory.propTypes = {
   reloadHist: PropTypes.func,
 }
 
-export default withTranslation(['common', 'numbers'])(NumberHistory)
+export default withTranslation(['numbers', 'common'])(NumberHistory)

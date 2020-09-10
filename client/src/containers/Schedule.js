@@ -3,7 +3,7 @@ import { withTranslation } from 'react-i18next'
 import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } from 'grommet'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { WeekTab, Available, Undo } from '../components'
+import { WeekTab, Available, Undo, Loader } from '../components'
 import { api, consts } from '../utils'
 
 class Schedule extends React.Component {
@@ -17,6 +17,7 @@ class Schedule extends React.Component {
     helpers: false,
     warnings: [],
     oldTask: {},
+    loading: false,
   }
 
   componentDidMount() {
@@ -42,14 +43,16 @@ class Schedule extends React.Component {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     const id = this.props.match.params.id
     api.get(`/schedules/${id}`).then((schedule) => {
-      this.setState({ schedule })
+      this.setState({ schedule, loading: false })
       this.getWarnings(schedule.tasks)
     })
   }
 
   handleChangeTask = (taskToChange, helper = false) => {
+    this.setState({ loading: true })
     const { student_id, task, hall, month, year } = taskToChange
     api
       .get(
@@ -63,7 +66,7 @@ class Schedule extends React.Component {
           helpers: helper,
         })
         api.get(`/students?noParticipate=true`).then((noParticipate) => {
-          this.setState({ noParticipate })
+          this.setState({ noParticipate, loading: false })
         })
       })
   }
@@ -152,9 +155,10 @@ class Schedule extends React.Component {
 
   render() {
     const { t } = this.props
-    const { schedule, availables, noParticipate, helpers, availableList, warnings } = this.state
+    const { schedule, availables, noParticipate, helpers, availableList, warnings, loading } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('name')}
           {schedule.month && schedule.year && ` - ${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}

@@ -54,18 +54,18 @@ class Nav extends React.PureComponent {
               </>
             )}
             {functions.hasAccess(meta, 'territories') && (
-              <>
-                <Link
-                  to="/territories"
-                  className={this.isActive('territories') || this.isActive('work')}
-                  onClick={this.handleClick}
-                >
-                  {t('territories')}
-                </Link>
-                <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
-                  {t('numbers')}
-                </Link>
-              </>
+              <Link
+                to="/territories"
+                className={this.isActive('territories') || this.isActive('work')}
+                onClick={this.handleClick}
+              >
+                {t('territories')}
+              </Link>
+            )}
+            {functions.hasAccess(meta, 'numbers') && (
+              <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+                {t('numbers')}
+              </Link>
             )}
           </Menu>
         </Box>

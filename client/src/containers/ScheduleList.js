@@ -7,7 +7,7 @@ import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentTextIcon } from
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import moment from 'moment'
-import { ScheduleForm, Undo } from '../components'
+import { ScheduleForm, Undo, Loader } from '../components'
 import { api } from '../utils'
 
 class ScheduleList extends React.Component {
@@ -163,6 +163,7 @@ class ScheduleList extends React.Component {
     const { online, schedules, toRemove, scheduleForm, loading, year } = this.state
     return (
       <Section>
+        <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
         </Heading>
