@@ -164,11 +164,7 @@ class TerritoryList extends React.Component {
   handleWork = (e, territory) => {
     e.preventDefault()
     e.stopPropagation()
-
-    this.props.history.push({
-      pathname: '/work',
-      state: { territory },
-    })
+    this.props.history.push(`/work/${territory.id}`)
   }
 
   handleHistory = (e, territory) => {

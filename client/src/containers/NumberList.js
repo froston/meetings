@@ -207,7 +207,6 @@ class NumberList extends React.Component {
                   <div title={num.status}>
                     <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
                     <strong> {num.number}</strong>
-                    {num.name && <Label size="small"> | {num.name}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>

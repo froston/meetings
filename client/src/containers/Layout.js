@@ -84,7 +84,7 @@ class Layout extends React.PureComponent {
                   <AuthRoute exact path="/schedules/:id" component={Schedule} meta={meta} access="lifeministry" />
                   <AuthRoute exact path="/territories" component={TerritoryList} meta={meta} access="territories" />
                   <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="numbers" />
-                  <AuthRoute exact path="/work" component={Work} meta={meta} access="territories" />
+                  <AuthRoute exact path="/work/:id" component={Work} meta={meta} access="territories" />
                   <Redirect to="/" />
                 </Switch>
               )}

@@ -64,7 +64,13 @@ exports.getAll = (filters, cb) => {
 exports.getById = (id, cb) => {
   getDb().query('SELECT * FROM territories WHERE id = ?', id, (err, ters) => {
     if (err) throw err
-    cb(err, ters[0])
+    const ter = ters[0]
+    getTerritoryNumbers(ter.number, (err, numbers) => {
+      if (err) throw err
+      ter.isAssigned = !!ter.date_from && !ter.date_to
+      ter.numbers = numbers
+      cb(err, ter)
+    })
   })
 }
 
@@ -178,7 +184,7 @@ exports.workTerritory = (id, data, cb) => {
             numberModel.getNumberHist(num.id, (err, history) => {
               if (err) throw err
               const prevHist = history[0]
-              if (prevHist.status !== num.status) {
+              if (!prevHist || (prevHist && prevHist.status !== num.status)) {
                 numberModel.createHistory(num, numCb)
               } else {
                 num.history_id = prevHist.id
@@ -218,7 +224,7 @@ exports.removeHistory = (id, history_id, cb) => {
   })
 }
 
-exports.getTerritoryNumbers = (terNum, cb) => {
+const getTerritoryNumbers = (terNum, cb) => {
   numberModel.getByTerritoryNumber(terNum, (err, nums) => {
     if (err) throw err
     async.map(
@@ -226,10 +232,12 @@ exports.getTerritoryNumbers = (terNum, cb) => {
       (num, done) => {
         numberModel.getNumberHist(num.id, (err, hist) => {
           if (err) throw err
-          done(null, { ...num, ...hist[0] })
+          done(null, { ...hist[0], ...num })
         })
       },
       cb
     )
   })
 }
+
+exports.getTerritoryNumbers = getTerritoryNumbers
