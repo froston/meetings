@@ -32,3 +32,7 @@ exports.validateToken = async (req, res, next) => {
     res.status(401).send({ message: req.t('missingHeader') })
   }
 }
+
+exports.listUsers = (cb) => {
+  firebaseAdmin.auth().listUsers(1000).then(cb)
+}

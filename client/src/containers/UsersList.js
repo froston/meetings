@@ -1,10 +1,10 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, List, ListItem, Button } from 'grommet'
-import { AddIcon, FormTrashIcon } from 'grommet/components/icons/base'
+import { Section, Box, Heading, Paragraph, List, ListItem, Button, Image } from 'grommet'
+import { FormTrashIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import { UserForm, Loader } from '../components'
-import { api, consts, functions } from '../utils'
+import { api, withAuth } from '../utils'
 
 class UsersList extends React.Component {
   state = {
@@ -54,23 +54,27 @@ class UsersList extends React.Component {
     this.setState({ [formName]: val })
   }
 
-  handleSubmit = (id, data) => {
+  handleRegister = (data) => {
     const { t } = this.props
-    if (id) {
-      api.patch('/users', id, data).then(() => {
-        toast(t('userUpdated', { name: data.email }))
-        this.setState({ userForm: true }, this.loadData)
-      })
-    } else {
+    if (window.confirm(t('confirmRegister'))) {
+      data.meta = {}
       api.post('/users', data).then(() => {
-        toast(t('userCreated', { name: data.email }))
+        toast(t('userRegistred', { name: data.displayName }))
         this.setState({ userForm: true }, this.loadData)
       })
     }
   }
 
-  render() {
+  handleSubmit = (id, data) => {
     const { t } = this.props
+    api.patch('/users', id, data).then(() => {
+      toast(t('userUpdated', { name: data.email }))
+      this.setState({ userForm: true }, this.loadData)
+    })
+  }
+
+  render() {
+    const { t, auth } = this.props
     const { loading, users } = this.state
     return (
       <Section>
@@ -79,11 +83,8 @@ class UsersList extends React.Component {
           {t('title')}
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
-        <Box pad={{ vertical: 'small' }}>
-          <Button icon={<AddIcon />} label={t('add')} a11yTitle={t('add')} href={'#'} onClick={this.handleAdd} />
-        </Box>
         <br />
-        <List selectable onSelect={this.handleSelect}>
+        <List>
           {users.map((user, index) => (
             <ListItem
               key={user.id}
@@ -91,19 +92,38 @@ class UsersList extends React.Component {
               justify="between"
               align="center"
               responsive={false}
-              onClick={this.handleSelect}
+              onClick={user.id > 0 ? () => this.handleSelect(index) : null}
               separator={index === 0 ? 'horizontal' : 'bottom'}
             >
-              <Box>
-                <strong>{user.email}</strong>
+              <Box direction="row">
+                <div>
+                  <Image
+                    style={{ width: '40px', borderRadius: 20 }}
+                    src={user.photoURL}
+                    size="xsmall"
+                    title={user.displayName}
+                  />
+                  <strong style={{ margin: 10 }}>{user.displayName}</strong>
+                </div>
               </Box>
               <Box direction="row" responsive={false}>
-                <Button
-                  icon={<FormTrashIcon size="medium" />}
-                  onClick={(e) => this.handleRemove(e, user.id)}
-                  a11yTitle={t('remove')}
-                  title={t('remove')}
-                />
+                {!user.id && (
+                  <Button
+                    accent
+                    onClick={(e) => this.handleRegister(user)}
+                    a11yTitle={t('register')}
+                    title={t('register')}
+                    label={t('register')}
+                  />
+                )}
+                {user.id > 0 && auth.user.uid !== user.uid && (
+                  <Button
+                    icon={<FormTrashIcon size="medium" />}
+                    onClick={(e) => this.handleRemove(e, user.id)}
+                    a11yTitle={t('remove')}
+                    title={t('remove')}
+                  />
+                )}
               </Box>
             </ListItem>
           ))}
@@ -119,4 +139,4 @@ class UsersList extends React.Component {
   }
 }
 
-export default withTranslation('users')(UsersList)
+export default withTranslation('users')(withAuth(UsersList))
