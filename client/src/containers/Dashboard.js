@@ -147,7 +147,7 @@ class Dashboard extends Component {
         <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
-          <b>{auth.user.displayName}!</b>
+          <b> {auth.user.displayName}!</b>
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         {this.getMessages()}

@@ -1,18 +1,20 @@
 {
   "title": "Usuarios",
-  "desc": "Cree, edite y elimine los usuarios aquí.",
-  "add": "Crear Nuevo Usuario",
+  "desc": "Edite y elimine los usuarios aquí. Para que aparezca un nuevo usuario aqui, primero tiene que iniciar la sesion en la aplicacion con su cuenta de Google.",
   "remove": "Eliminar Usuario",
   "email": "E-mail",
   "uid": "UID",
   "admin": "Administrador",
   "meta": "Permisos",
   "confirmRemove": "Seguro de eliminar al usuario?",
-  "new": "Nuevo Usuario",
   "userRemoved": "Usuario se eliminó.",
-  "userCreated": "Usuario {{name}} se creó.",
   "userUpdated": "Usuario {{name}} se actualizó.",
+  "userRegistred": "Usuario {{name}} fue registrado.",
   "lifeministry": "Vida y ministerio",
   "territories": "Territorios",
-  "numbers": "Números"
+  "numbers": "Números",
+  "creationTime": "Fecha de creación",
+  "lastSignInTime": "Fecha de última sesión",
+  "register": "Registrar",
+  "confirmRegister": "Seguro de registrar el usuario?"
 }

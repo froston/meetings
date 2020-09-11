@@ -1,0 +1,20 @@
+{
+  "title": "Users",
+  "desc": "Edit and remove the users here. To add a new user here, the user should first log-in with his Google account.",
+  "remove": "Remove user",
+  "email": "E-mail",
+  "uid": "UID",
+  "admin": "Administrator",
+  "meta": "Permissions",
+  "confirmRemove": "Seguro de eliminar al usuario? Sure to remove user?",
+  "userRemoved": "User was removed.",
+  "userUpdated": "User {{name} was updated.",
+  "userRegistred": "User {{name}} was registered.",
+  "lifeministry": "Life and Ministry",
+  "territories": "Territories",
+  "numbers": "Numbers",
+  "creationTime": "Creation date",
+  "lastSignInTime": "Last sign in date",
+  "register": "Register",
+  "confirmRegister": "Sure to regsiter the user?"
+}

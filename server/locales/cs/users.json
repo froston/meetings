@@ -1,0 +1,20 @@
+{
+  "title": "Uživatelé",
+  "desc": "Upravujte a odstraňujte uživatele. Chcete-li zde přidat nového uživatele, musí se nejprve přihlásit se svým účtem Google.",
+  "remove": "Smazat uživatele",
+  "email": "E-mail",
+  "uid": "UID",
+  "admin": "Administrátor",
+  "meta": "Práva",
+  "confirmRemove": "Opravdu smazat uživatele?",
+  "userRemoved": "Uživatel byl smazán.",
+  "userUpdated": "Uživatel {{name}} byl upraven.",
+  "userRegistred": "Uživatel {{name}} byl zaregistrován.",
+  "lifeministry": "Život a služba",
+  "territories": "Obvody",
+  "numbers": "Čísla",
+  "creationTime": "Datum vytvoření",
+  "lastSignInTime": "Datum posledního přihlášení",
+  "register": "Zaregistrovat",
+  "confirmRegister": "Opravdu zaregistrovat uživatele?"
+}

@@ -1,16 +1,20 @@
 const async = require('async')
 const { getDb } = require('../db')
+const { listUsers } = require('../auth/firebase')
 
 exports.getAll = (cb) => {
-  getDb().query(`SELECT id, uid, email, meta FROM users`, (err, users) => {
-    if (err) throw err
+  listUsers((res) => {
+    const users = res.users
     async.map(
       users,
       (user, done) => {
-        if (user && user.meta) {
-          user.meta = JSON.parse(user.meta)
-        }
-        done(null, user)
+        getUserByUID(user.uid, (err, regUser) => {
+          if (err) throw err
+          if (regUser && regUser.id > 0) {
+            user = { ...regUser, ...user }
+          }
+          done(null, user)
+        })
       },
       cb
     )
@@ -24,7 +28,7 @@ exports.userExists = ({ uid, email }, cb) => {
   })
 }
 
-exports.getUserByUID = (uid, cb) => {
+const getUserByUID = (uid, cb) => {
   getDb().query(`SELECT id, email, meta FROM users WHERE uid = ?`, [uid], (err, users) => {
     if (err) throw err
     const user = users[0]
@@ -34,6 +38,7 @@ exports.getUserByUID = (uid, cb) => {
     cb(err, user)
   })
 }
+exports.getUserByUID = getUserByUID
 
 exports.createUser = (data, cb) => {
   const newUser = {
@@ -43,7 +48,7 @@ exports.createUser = (data, cb) => {
   }
   getDb().query('INSERT INTO users SET ?', newUser, (err, res) => {
     if (err) throw err
-    cb(err)
+    cb(err, res)
   })
 }
 

@@ -14,7 +14,18 @@ if ('function' === typeof importScripts) {
     /* injection point for manifest files.  */
     workbox.precaching.precacheAndRoute([])
 
-    const fs = ['common', 'dashboard', 'login', 'nav', 'schedules', 'students', 'tasks', 'numbers', 'territories']
+    const fs = [
+      'common',
+      'dashboard',
+      'login',
+      'nav',
+      'schedules',
+      'students',
+      'tasks',
+      'numbers',
+      'territories',
+      'users',
+    ]
 
     workbox.precaching.precacheAndRoute([
       ...fs.map((f) => `/locales/es/${f}.json`),
