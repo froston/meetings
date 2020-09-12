@@ -1,6 +1,7 @@
 import React from 'react'
 import { withTranslation } from 'react-i18next'
 import PropTypes from 'prop-types'
+import { Prompt } from 'react-router-dom'
 import {
   Box,
   Section,
@@ -32,6 +33,7 @@ const initState = {
   errors: {},
   loading: false,
   territoryView: true,
+  submitted: false,
 }
 
 class Work extends React.Component {
@@ -134,7 +136,9 @@ class Work extends React.Component {
       })
       api.post(`/territories/${data.id}/work`, data).then(() => {
         toast(t('territoryWorked', { number: data.number }))
-        history.push('/territories')
+        this.setState({ submitted: true }, () => {
+          history.push('/territories')
+        })
       })
     })
   }
@@ -254,6 +258,7 @@ class Work extends React.Component {
           </Columns>
         )}
         <TerritoryView hidden={this.state.territoryView} handleClose={this.handleView} territory={territory} />
+        <Prompt when={!this.state.submitted} message={t('common:beforeLeaving')} />
       </Section>
     )
   }
@@ -264,4 +269,4 @@ Work.propTypes = {
   history: PropTypes.object,
 }
 
-export default withTranslation(['territories', 'numbers'])(Work)
+export default withTranslation(['territories', 'numbers', 'common'])(Work)

@@ -64,5 +64,7 @@
   "userNotRegistred": "Uživatel není zaregistrovaný. Pro získání přístupu prosím kontaktujte administrátora.",
   "missingHeader": "Chybí autorizační hlavička.",
   "userNotFound": "Uživatel neexistuje.",
-  "logoutSuccessfull": "Úspěšně jste se odhlásili."
+  "logoutSuccessfull": "Úspěšně jste se odhlásili.",
+  "numberDuplicate": "Číslo již existuje",
+  "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?"
 }

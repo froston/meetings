@@ -64,5 +64,7 @@
   "userNotRegistred": "User is not registred. Please contact the administrator to get access.",
   "missingHeader": "Authorization header missing.",
   "userNotFound": "User does not exist.",
-  "logoutSuccessfull": "You have successfully logged out."
+  "logoutSuccessfull": "You have successfully logged out.",
+  "numberDuplicate": "Number already exists",
+  "beforeLeaving": "You have unsaved changes, are you sure you want to leave?"
 }

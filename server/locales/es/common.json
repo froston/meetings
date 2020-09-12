@@ -67,5 +67,6 @@
   "missingHeader": "Falta el encabezado de autorización",
   "userNotFound": "Usuario no existe.",
   "logoutSuccessfull": "Ha cerrado su sesión con éxito.",
-  "numberDuplicate": "Número ya existe"
+  "numberDuplicate": "Número ya existe",
+  "beforeLeaving": "Tiene cambios sin guardar, ¿está seguro de que desea salir?"
 }
