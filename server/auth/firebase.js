@@ -20,6 +20,10 @@ exports.validateToken = async (req, res, next) => {
       userModel.userExists(req.currentUser, (err, userExists) => {
         if (err) throw err
         if (userExists) {
+          // make available username for models
+          if (req.body && req.currentUser) {
+            req.body.username = req.currentUser.name
+          }
           next()
         } else {
           res.status(401).send({ message: req.t('userNotRegistred') })

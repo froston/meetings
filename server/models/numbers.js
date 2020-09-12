@@ -48,6 +48,7 @@ exports.createNumber = (data, cb) => {
     const newNumber = {
       number: data.number,
       territory: data.territory,
+      user: data.username,
     }
     getDb().query('INSERT INTO numbers SET ?', newNumber, (err, res) => {
       if (err) throw err
