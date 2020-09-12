@@ -93,7 +93,7 @@ class NumberList extends React.Component {
     this.setState({ toRemove: toRemove.filter((t) => t !== id) })
   }
 
-  handleSubmit = (id, values) => {
+  handleSubmit = (id, values, cbError) => {
     const { t } = this.props
     const data = {
       ...this.state.number,
@@ -105,10 +105,13 @@ class NumberList extends React.Component {
         this.setState({ numberForm: true }, this.loadData)
       })
     } else {
-      api.post('/numbers', data).then(() => {
-        toast(t('numberCreated', { number: data.number }))
-        this.setState({ numberForm: true }, this.loadData)
-      })
+      api
+        .post('/numbers', data)
+        .then(() => {
+          toast(t('numberCreated', { number: data.number }))
+          this.setState({ numberForm: true }, this.loadData)
+        })
+        .catch(cbError)
     }
   }
 

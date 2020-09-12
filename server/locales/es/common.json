@@ -66,5 +66,6 @@
   "userNotRegistred": "Usuario no está registrado. Contáctese por favor con el administrador para obtener acceso.",
   "missingHeader": "Falta el encabezado de autorización",
   "userNotFound": "Usuario no existe.",
-  "logoutSuccessfull": "Ha cerrado su sesión con éxito."
+  "logoutSuccessfull": "Ha cerrado su sesión con éxito.",
+  "numberDuplicate": "Número ya existe"
 }

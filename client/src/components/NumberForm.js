@@ -58,6 +58,16 @@ class NumberForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
+  handleError = (err) => {
+    if (err && err.response && err.response.data) {
+      let errors = {
+        ...this.state.errors,
+        number: err.response.data.message,
+      }
+      this.setState({ errors, loading: false })
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
@@ -70,7 +80,7 @@ class NumberForm extends React.PureComponent {
       if (number && number.id) {
         this.props.handleSubmit(number && number.id, newValues)
       } else {
-        this.props.handleSubmit(null, newValues)
+        this.props.handleSubmit(null, newValues, this.handleError)
       }
     })
   }

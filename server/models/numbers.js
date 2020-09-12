@@ -39,20 +39,27 @@ exports.getByTerritoryNumber = (num, cb) => {
 }
 
 exports.createNumber = (data, cb) => {
-  const newNumber = {
-    number: data.number,
-    territory: data.territory,
-  }
-  getDb().query('INSERT INTO numbers SET ?', newNumber, (err, res) => {
+  numberExists(data.number, (err, exists) => {
     if (err) throw err
-    const newHistroy = {
-      number_id: res.insertId,
-      status: data.status,
-      details: data.details,
+    if (exists) {
+      err = { ...err, alreadyExists: true }
+      return cb(err)
     }
-    getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+    const newNumber = {
+      number: data.number,
+      territory: data.territory,
+    }
+    getDb().query('INSERT INTO numbers SET ?', newNumber, (err, res) => {
       if (err) throw err
-      cb(null)
+      const newHistroy = {
+        number_id: res.insertId,
+        status: data.status,
+        details: data.details,
+      }
+      getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
+        if (err) throw err
+        cb(null)
+      })
     })
   })
 }
@@ -139,4 +146,12 @@ exports.removeHistory = (id, history_id, cb) => {
   })
 }
 
+const numberExists = (number, cb) => {
+  getDb().query('SELECT * FROM numbers WHERE number = ?', number, (err, nums) => {
+    if (err) throw err
+    cb(err, nums && nums[0] ? true : false)
+  })
+}
+
+exports.numberExists = numberExists
 exports.getNumberHist = getNumberHist

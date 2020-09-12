@@ -28,7 +28,11 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   model.createNumber(req.body, (err, data) => {
     if (err) {
-      res.status(500).send(err)
+      if (err.alreadyExists) {
+        err.message = req.t('numberDuplicate')
+        return res.status(400).send(err)
+      }
+      return res.status(500).send(err)
     }
     res.send(data)
   })
