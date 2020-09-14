@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const taskId = req.params.id
   const newTask = req.body
+  delete newTask.username
   model.updateTask(taskId, newTask, (err, task) => {
     if (err) {
       res.status(500).send(err)
@@ -41,7 +42,7 @@ router.patch('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const id = req.params.id
-  model.removeTask(id, err => {
+  model.removeTask(id, (err) => {
     if (err) {
       res.status(500).send(err)
     }
