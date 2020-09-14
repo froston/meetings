@@ -4,8 +4,14 @@ const consts = require('../helpers/consts')
 exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
   let where = '' // to simplify dynamic conditions syntax
-  where += query ? `AND (N.number LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
-  where += filters.status ? `AND H.status = "${filters.status}"` : ''
+  where += query ? `AND (N.number LIKE "%${query}%" OR H.details LIKE "%${query}%") ` : ``
+  where += filters.status ? `AND H.status = "${filters.status}" ` : ''
+  if (filters.territory == 0) {
+    where += `AND N.territory IS NULL `
+  } else if (filters.territory > 0) {
+    where += `AND N.territory = ${filters.territory} `
+  }
+
   let limit = ''
   limit += filters.offset && filters.limit ? `LIMIT ${filters.offset}, ${filters.limit}` : ''
   getDb().query(

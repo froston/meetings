@@ -7,9 +7,9 @@ exports.getAll = (filters, cb) => {
   const query = filters.q ? filters.q.trim() : null
 
   let where = ''
-  where += query ? `AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
+  where += query ? ` AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
   where += filters.noAssigned
-    ? `AND ((H.date_from IS NOT NULL AND H.date_to IS NOT NULL) OR (H.date_from IS NULL))`
+    ? ` AND ((H.date_from IS NOT NULL AND H.date_to IS NOT NULL) OR (H.date_from IS NULL))`
     : ``
 
   let order
@@ -64,12 +64,19 @@ exports.getAll = (filters, cb) => {
 exports.getById = (id, cb) => {
   getDb().query('SELECT * FROM territories WHERE id = ?', id, (err, ters) => {
     if (err) throw err
-    const ter = ters[0]
-    getTerritoryNumbers(ter.number, (err, numbers) => {
+    let ter = ters[0]
+    if (!ter) {
+      return cb(err, null)
+    }
+    getTerritoryHist(ter.id, (err, hist) => {
       if (err) throw err
-      ter.isAssigned = !!ter.date_from && !ter.date_to
-      ter.numbers = numbers
-      cb(err, ter)
+      ter = { ...hist[0], ...ter }
+      getTerritoryNumbers(ter.number, (err, numbers) => {
+        if (err) throw err
+        ter.isAssigned = !!ter.date_from && !ter.date_to
+        ter.numbers = numbers
+        cb(err, ter)
+      })
     })
   })
 }
