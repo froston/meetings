@@ -68,17 +68,18 @@ export const getTerritoryStatusColor = (ter) => {
 }
 
 export const hasAccess = (meta, access) => {
+  if (meta.admin === 1) {
+    return true
+  }
   switch (access) {
-    case 'admin':
-      return meta.admin === 1
     case 'lifeministry':
-      return meta.admin === 1 || meta.lifeministry === 1
+      return meta.lifeministry === 1
     case 'territories':
-      return meta.admin === 1 || meta.territories === 1
+      return meta.territories === 1
     case 'numbers':
-      return meta.admin === 1 || meta.numbers === 1
+      return meta.numbers === 1
     case 'work':
-      return meta.admin === 1 || meta.territories === 1 || meta.work === 1
+      return meta.territories === 1 || meta.work === 1
     default:
       return false
   }

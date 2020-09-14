@@ -30,6 +30,7 @@ class Nav extends React.PureComponent {
   }
   render() {
     const { t, i18n, auth, meta } = this.props
+    const isWorking = this.isActive('work') || this.isActive('worked')
     return (
       <Sidebar colorIndex="neutral-1">
         <Header size="large" justify="between" pad={{ horizontal: 'medium' }}>
@@ -54,16 +55,15 @@ class Nav extends React.PureComponent {
                   </Link>
                 </>
               )}
-              {functions.hasAccess(meta, 'territories') ||
-                (functions.hasAccess(meta, 'work') && (
-                  <Link
-                    to="/territories"
-                    className={this.isActive('territories') || this.isActive('work') || this.isActive('worked')}
-                    onClick={this.handleClick}
-                  >
-                    {t('territories')}
-                  </Link>
-                ))}
+              {(functions.hasAccess(meta, 'territories') || (isWorking && functions.hasAccess(meta, 'work'))) && (
+                <Link
+                  to="/territories"
+                  className={this.isActive('territories') || isWorking}
+                  onClick={this.handleClick}
+                >
+                  {t('territories')}
+                </Link>
+              )}
               {functions.hasAccess(meta, 'numbers') && (
                 <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
                   {t('numbers')}
