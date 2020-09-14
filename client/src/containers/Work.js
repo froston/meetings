@@ -21,7 +21,7 @@ import {
 import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { consts, api, functions } from '../utils'
+import { consts, api, functions, withAuth } from '../utils'
 import { TerritoryView, Loader } from '../components'
 
 const initState = {
@@ -40,11 +40,11 @@ class Work extends React.Component {
   state = initState
 
   componentDidMount() {
-    const { match, history } = this.props
+    const { match } = this.props
     if (match && match.params && match.params.id > 0) {
       this.loadData()
     } else {
-      history.push('territories')
+      this.handleReturn()
     }
   }
 
@@ -119,10 +119,19 @@ class Work extends React.Component {
     this.setState({ numbers, errors: {} })
   }
 
+  handleReturn = () => {
+    const { history, meta } = this.props
+    if (!functions.hasAccess(meta, 'territories')) {
+      history.push('/worked')
+    } else {
+      history.push('/territories')
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
-      const { t, history } = this.props
+      const { t } = this.props
       this.setState({ loading: true })
       const data = {
         ...this.state.territory,
@@ -137,7 +146,7 @@ class Work extends React.Component {
       api.post(`/territories/${data.id}/work`, data).then(() => {
         toast(t('territoryWorked', { number: data.number }))
         this.setState({ submitted: true }, () => {
-          history.push('/territories')
+          this.handleReturn()
         })
       })
     })
@@ -269,4 +278,4 @@ Work.propTypes = {
   history: PropTypes.object,
 }
 
-export default withTranslation(['territories', 'numbers', 'common'])(Work)
+export default withTranslation(['territories', 'numbers', 'common'])(withAuth(Work))

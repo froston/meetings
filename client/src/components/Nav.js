@@ -39,40 +39,43 @@ class Nav extends React.PureComponent {
           <Button icon={<CloseIcon />} onClick={this.props.handleClose} a11yTitle={t('closeMenu')} plain />
         </Header>
         <Box flex="grow" justify="start">
-          <Menu fill primary>
-            <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
-              {t('dashboard')}
-            </Link>
-            {functions.hasAccess(meta, 'lifeministry') && (
-              <>
-                <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
-                  {t('students')}
+          {meta && (
+            <Menu fill primary>
+              <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
+                {t('dashboard')}
+              </Link>
+              {functions.hasAccess(meta, 'lifeministry') && (
+                <>
+                  <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
+                    {t('students')}
+                  </Link>
+                  <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
+                    {t('schedules')}
+                  </Link>
+                </>
+              )}
+              {functions.hasAccess(meta, 'territories') ||
+                (functions.hasAccess(meta, 'work') && (
+                  <Link
+                    to="/territories"
+                    className={this.isActive('territories') || this.isActive('work') || this.isActive('worked')}
+                    onClick={this.handleClick}
+                  >
+                    {t('territories')}
+                  </Link>
+                ))}
+              {functions.hasAccess(meta, 'numbers') && (
+                <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+                  {t('numbers')}
                 </Link>
-                <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
-                  {t('schedules')}
+              )}
+              {functions.hasAccess(meta, 'admin') && (
+                <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
+                  {t('users')}
                 </Link>
-              </>
-            )}
-            {functions.hasAccess(meta, 'territories') && (
-              <Link
-                to="/territories"
-                className={this.isActive('territories') || this.isActive('work')}
-                onClick={this.handleClick}
-              >
-                {t('territories')}
-              </Link>
-            )}
-            {functions.hasAccess(meta, 'numbers') && (
-              <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
-                {t('numbers')}
-              </Link>
-            )}
-            {functions.hasAccess(meta, 'admin') && (
-              <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
-                {t('users')}
-              </Link>
-            )}
-          </Menu>
+              )}
+            </Menu>
+          )}
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>
           <Box margin="small">

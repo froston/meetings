@@ -57,6 +57,7 @@ class UserForm extends React.PureComponent {
         lifeministry: meta.find((m) => m.value == 'lifeministry') ? 1 : 0,
         territories: meta.find((m) => m.value == 'territories') ? 1 : 0,
         numbers: meta.find((m) => m.value == 'numbers') ? 1 : 0,
+        work: meta.find((m) => m.value == 'work') ? 1 : 0,
       },
     })
     this.props.handleSubmit(user && user.id, newValues)

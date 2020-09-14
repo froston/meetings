@@ -68,5 +68,6 @@
   "userNotFound": "Usuario no existe.",
   "logoutSuccessfull": "Ha cerrado su sesión con éxito.",
   "numberDuplicate": "Número ya existe",
-  "beforeLeaving": "Tiene cambios sin guardar, ¿está seguro de que desea salir?"
+  "beforeLeaving": "Tiene cambios sin guardar, ¿está seguro de que desea salir?",
+  "workedMessage": "Listo, muchas gracias!"
 }

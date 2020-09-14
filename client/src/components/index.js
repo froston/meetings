@@ -15,6 +15,7 @@ import TerritoryHistory from './TerritoryHistory'
 import TerritoryView from './TerritoryView'
 import Loader from './Loader'
 import UserForm from './UserForm'
+import Worked from './Worked'
 
 export {
   Nav,
@@ -34,4 +35,5 @@ export {
   TerritoryView,
   Loader,
   UserForm,
+  Worked,
 }

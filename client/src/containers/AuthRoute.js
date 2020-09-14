@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { functions } from '../utils'
 
 const AuthRoute = ({ component: Component, meta, access, ...rest }) => (
-  <Route {...rest} render={(props) => functions.hasAccess(meta, access) && <Component {...props} />} />
+  <Route
+    {...rest}
+    render={(props) => (functions.hasAccess(meta, access) ? <Component {...props} meta={meta} /> : <Redirect to="/" />)}
+  />
 )
 
 AuthRoute.propTypes = {

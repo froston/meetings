@@ -66,5 +66,6 @@
   "userNotFound": "User does not exist.",
   "logoutSuccessfull": "You have successfully logged out.",
   "numberDuplicate": "Number already exists",
-  "beforeLeaving": "You have unsaved changes, are you sure you want to leave?"
+  "beforeLeaving": "You have unsaved changes, are you sure you want to leave?",
+  "workedMessage": "Done, thank you!"
 }

@@ -66,5 +66,6 @@
   "userNotFound": "Uživatel neexistuje.",
   "logoutSuccessfull": "Úspěšně jste se odhlásili.",
   "numberDuplicate": "Číslo již existuje",
-  "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?"
+  "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?",
+  "workedMessage": "Hotovo, díky!"
 }

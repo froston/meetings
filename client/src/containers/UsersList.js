@@ -68,7 +68,7 @@ class UsersList extends React.Component {
   handleSubmit = (id, data) => {
     const { t } = this.props
     api.patch('/users', id, data).then(() => {
-      toast(t('userUpdated', { name: data.email }))
+      toast(t('userUpdated', { name: data.displayName }))
       this.setState({ userForm: true }, this.loadData)
     })
   }

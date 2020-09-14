@@ -16,7 +16,7 @@ import {
   AuthRoute,
   UsersList,
 } from './'
-import { Nav } from '../components'
+import { Nav, Worked } from '../components'
 import { api, withAuth } from '../utils'
 import Cookies from 'js-cookie'
 
@@ -24,7 +24,7 @@ class Layout extends React.PureComponent {
   state = {
     navActive: true,
     responsive: 'multiple',
-    meta: {},
+    meta: null,
   }
 
   componentDidMount() {
@@ -94,7 +94,8 @@ class Layout extends React.PureComponent {
                   <AuthRoute exact path="/schedules/:id" component={Schedule} meta={meta} access="lifeministry" />
                   <AuthRoute exact path="/territories" component={TerritoryList} meta={meta} access="territories" />
                   <AuthRoute exact path="/numbers" component={NumberList} meta={meta} access="numbers" />
-                  <AuthRoute exact path="/work/:id" component={Work} meta={meta} access="territories" />
+                  <AuthRoute exact path="/work/:id" component={Work} meta={meta} access="work" />
+                  <AuthRoute exact path="/worked" component={Worked} meta={meta} access="work" />
                   <AuthRoute exact path="/users" component={UsersList} meta={meta} access="admin" />
                   <Redirect to="/" />
                 </Switch>
