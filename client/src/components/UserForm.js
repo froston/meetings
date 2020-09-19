@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, CheckBox, Select, Image } from 'grommet'
-import { consts, functions } from '../utils'
+import { consts, functions, withAuth } from '../utils'
 
 const initState = {
   admin: false,
@@ -68,8 +68,9 @@ class UserForm extends React.PureComponent {
   }
 
   render() {
-    const { t, hidden, user } = this.props
+    const { t, hidden, user, auth } = this.props
     const { admin, loading, errors, meta } = this.state
+    const isCurrentUser = user && user.uid === auth.user.uid
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -100,7 +101,12 @@ class UserForm extends React.PureComponent {
                   <TextInput value={functions.formatDateValue(user.metadata.lastSignInTime)} disabled />
                 </FormField>
                 <FormField label={t('admin')}>
-                  <CheckBox onChange={(e) => this.handleChange('admin', e.target.checked)} checked={admin} toggle />
+                  <CheckBox
+                    onChange={(e) => this.handleChange('admin', e.target.checked)}
+                    checked={admin}
+                    toggle
+                    disabled={isCurrentUser}
+                  />
                 </FormField>
               </>
             )}
@@ -133,4 +139,4 @@ UserForm.propTypes = {
   handleClose: PropTypes.func,
 }
 
-export default withTranslation(['users', 'common'])(UserForm)
+export default withTranslation(['users', 'common'])(withAuth(UserForm))
