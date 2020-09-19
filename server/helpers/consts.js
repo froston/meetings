@@ -45,6 +45,29 @@ exports.getAvailableName = (taskName) => {
   return task
 }
 
+exports.pdfFields = () => {
+  return {
+    name: '900_1_Text',
+    assistant: '900_2_Text',
+    date: '900_3_Text',
+    reading: '900_4_CheckBox',
+    initialCall: '900_5_CheckBox',
+    initialCallText: '900_6_Text',
+    firstRv: '900_7_CheckBox',
+    firstRvText: '900_8_Text',
+    secondRv: '900_9_CheckBox',
+    secondRvText: '900_10_Text',
+    thirdRv: '',
+    bibleStudy: '900_11_CheckBox',
+    talk: '900_12_CheckBox',
+    other: '900_13_CheckBox',
+    otherText: '900_14_Text',
+    mainHall: '900_15_CheckBox',
+    aucilliaryHall1: '900_16_CheckBox',
+    aucilliaryHall2: '900_17_CheckBox',
+  }
+}
+
 exports.formatDateTime = (date) => (date ? moment(date, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss') : null)
 
 exports.getUpdateDate = () => moment().format('YYYY-MM-DD HH:mm:ss')
