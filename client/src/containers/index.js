@@ -12,6 +12,7 @@ import TerritoryList from './TerritoryList'
 import NumberList from './NumberList'
 import Work from './Work'
 import UsersList from './UsersList'
+import Settings from './Settings'
 
 export {
   App,
@@ -28,4 +29,5 @@ export {
   NumberList,
   Work,
   UsersList,
+  Settings,
 }

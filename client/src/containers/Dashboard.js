@@ -66,7 +66,7 @@ class Dashboard extends Component {
   }
 
   getMessages = () => {
-    const { t, meta } = this.props
+    const { t, meta, settings } = this.props
     const { scheduleExists, territories } = this.state
     const dismissed = sessionStorage.getItem(`dismissMessageSchedules`) === 'true'
     let messages = []
@@ -105,7 +105,7 @@ class Dashboard extends Component {
       }
     }
     if (functions.hasAccess(meta, 'territories')) {
-      const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
+      const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t, settings) === 'critical')
       const dismissed = sessionStorage.getItem(`dismissMessageTerritories`) === 'true'
       if (criticals.length && !dismissed) {
         messages.push(
@@ -140,7 +140,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { t, auth, meta } = this.props
+    const { t, auth, meta, settings } = this.props
     const { brothers, sisters, noParticipate, numbers, territories, loading } = this.state
     return (
       <Section>
@@ -210,8 +210,8 @@ class Dashboard extends Component {
                 type="circle"
                 max={territories.length}
                 series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
-                  label: t(`common:color${c}`),
-                  value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
+                  label: t(`common:color${c}`, settings),
+                  value: territories.filter((s) => functions.getTerritoryStatusColor(s, settings) === c).length,
                   colorIndex: c,
                 }))}
                 legend={true}

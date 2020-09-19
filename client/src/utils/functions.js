@@ -28,7 +28,7 @@ export const getNumberStatusColor = (status, css = false) => {
   }
 }
 
-export const getTerritoryStatusColor = (ter) => {
+export const getTerritoryStatusColor = (ter, settings = {}) => {
   let color = 'unknown'
 
   const assigned = ter.assigned && ter.assigned !== ''
@@ -38,13 +38,20 @@ export const getTerritoryStatusColor = (ter) => {
   var fromDif = moment().diff(dateFrom, 'days') + 1
   var toDif = moment().diff(dateTo, 'days') + 1
 
+  console.log(settings)
+
+  // settings missing
+  if (!settings.terWarning || !settings.terDanger) {
+    return 'unknown'
+  }
+
   // territory is free to assign
   if (dateFrom.isValid() && dateTo.isValid()) {
     // has been free up to 1 month
-    if (toDif <= 30) {
+    if (toDif <= settings.terWarning) {
       color = 'ok'
       // has been free up to 4 months
-    } else if (toDif > 30 && toDif < 120) {
+    } else if (toDif > settings.terWarning && toDif < settings.terDanger) {
       color = 'warning'
       // has been free more than 4 months
     } else {
@@ -53,10 +60,10 @@ export const getTerritoryStatusColor = (ter) => {
     // territory is currently assigned
   } else if (assigned && dateFrom.isValid() && !dateTo.isValid()) {
     // has been assigned up to 1 month
-    if (fromDif <= 120) {
+    if (fromDif <= settings.terDanger) {
       color = 'graph-1'
       // has been assigned for more than 1 month
-    } else if (fromDif > 120) {
+    } else if (fromDif > settings.terDanger) {
       color = 'critical'
     }
     // any of above

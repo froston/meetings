@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Sidebar, Header, Title, Box, Menu, Button, Footer, Image } from 'grommet'
-import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
+import { CloseIcon, LogoutIcon, SettingsOptionIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
 import { withAuth, functions } from '../utils'
 
@@ -27,6 +27,9 @@ class Nav extends React.PureComponent {
   }
   logout = () => {
     this.props.logout()
+  }
+  goToSettings = () => {
+    this.props.history.push('/settings')
   }
   render() {
     const { t, i18n, auth, meta } = this.props
@@ -88,6 +91,13 @@ class Nav extends React.PureComponent {
           </Box>
           <Button title="Logout" icon={<LogoutIcon />} onClick={this.logout} a11yTitle="Logout" plain />
           <LangMenu lang={i18n.language} setLang={this.setLang} />
+          <Button
+            title="Settings"
+            icon={<SettingsOptionIcon />}
+            onClick={this.goToSettings}
+            a11yTitle="Settings"
+            plain
+          />
         </Footer>
       </Sidebar>
     )
@@ -95,10 +105,12 @@ class Nav extends React.PureComponent {
 }
 
 Nav.propTypes = {
-  responsive: PropTypes.string,
+  auth: PropTypes.object,
+  history: PropTypes.object,
   location: PropTypes.object,
+  responsive: PropTypes.string,
   setLang: PropTypes.func,
   logout: PropTypes.func,
 }
 
-export default withTranslation('nav')(withAuth(Nav))
+export default withTranslation('nav')(withRouter(withAuth(Nav)))

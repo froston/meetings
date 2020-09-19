@@ -180,7 +180,7 @@ class TerritoryList extends React.Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, settings } = this.props
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     return (
       <Section>
@@ -245,7 +245,7 @@ class TerritoryList extends React.Component {
               >
                 <Box>
                   <div>
-                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter)} />
+                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
                     <strong>{`  ${t('territory')} ${ter.number}`}</strong>
                     {ter.last_worked && (
                       <Label size="small"> | {moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
@@ -325,6 +325,7 @@ class TerritoryList extends React.Component {
 }
 
 TerritoryList.propTypes = {
+  settings: PropTypes.object,
   history: PropTypes.object,
 }
 
