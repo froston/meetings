@@ -4,11 +4,12 @@ import { withTranslation } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
 import { api } from '../utils'
-import { TaskForm } from '../components'
+import { TaskForm, Loader } from '../components'
 
 class TaskList extends React.PureComponent {
   state = {
     tasks: [],
+    loading: false,
   }
 
   componentDidUpdate(prevProps) {
@@ -18,8 +19,9 @@ class TaskList extends React.PureComponent {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     api.get(`/tasks/${this.props.student.id}`).then((tasks) => {
-      this.setState({ tasks })
+      this.setState({ tasks, loading: false })
     })
   }
 
@@ -44,9 +46,10 @@ class TaskList extends React.PureComponent {
 
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
-    const { tasks } = this.state
+    const { tasks, loading } = this.state
     return (
       <div>
+        <Loader loading={loading} />
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">

@@ -47,7 +47,7 @@ const createSchedule = (newSchedule, mainCB) => {
   const scheduleToInsert = {
     month: Number(newSchedule.month),
     year: Number(newSchedule.year),
-    weeks: Number(newSchedule.weeks)
+    weeks: Number(newSchedule.weeks),
   }
   const scheduleWeeks = Array.from({ length: newSchedule.weeks }, (v, i) => i + 1)
   const scheduleTasks = newSchedule.tasks
@@ -67,15 +67,21 @@ const createSchedule = (newSchedule, mainCB) => {
           scheduleTasks[week],
           1,
           (task, taskCB) => {
-            const taskName = task.includes('Return Visit') ? task.substring(3) : task
-            const rvNumber = task.includes('Return Visit') ? Number(task[0]) : null
+            let taskName = task
+            let rvNumber = null
+            if (task.includes('Return Visit')) {
+              if (task !== 'Return Visit') {
+                taskName = task.substring(3)
+                rvNumber = Number(task[0])
+              }
+            }
             async.eachLimit(
               scheduleHalls,
               1,
               (hall, hallCB) => {
                 async.waterfall(
                   [
-                    callbackFinal => {
+                    (callbackFinal) => {
                       // dont generate reading if 'reading only in main' checked
                       const onlyMain =
                         taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
@@ -85,7 +91,7 @@ const createSchedule = (newSchedule, mainCB) => {
                           taskName,
                           hall,
                           month: scheduleMonth,
-                          year: scheduleYear
+                          year: scheduleYear,
                         }
                         studentModel.getSortedAvailables('student', sortingOpt, (err, students) => {
                           if (err) throw err
@@ -102,13 +108,13 @@ const createSchedule = (newSchedule, mainCB) => {
                               week: Number(week),
                               month: Number(newSchedule.month),
                               year: Number(newSchedule.year),
-                              hall: hall
+                              hall: hall,
                             }
                             taskModel.createTask(studentTask, (err, res) => {
                               callbackFinal(err, {
                                 ...studentTask,
                                 id: res.insertId,
-                                gender: finalStudent.gender
+                                gender: finalStudent.gender,
                               })
                             })
                           } else {
@@ -126,7 +132,7 @@ const createSchedule = (newSchedule, mainCB) => {
                           taskName,
                           gender: newTask.gender,
                           month: scheduleMonth,
-                          year: scheduleYear
+                          year: scheduleYear,
                         }
                         studentModel.getSortedAvailables('helper', sortingOpt, (err, helpers) => {
                           if (err) throw err
@@ -136,9 +142,9 @@ const createSchedule = (newSchedule, mainCB) => {
                             const finalHelper = helpers[flhsIndex]
                             // add helper to new task
                             const updatedHelper = {
-                              helper_id: finalHelper.id
+                              helper_id: finalHelper.id,
                             }
-                            taskModel.updateTask(newTask.id, updatedHelper, err => {
+                            taskModel.updateTask(newTask.id, updatedHelper, (err) => {
                               callbackHelper(err)
                             })
                           } else {
@@ -148,7 +154,7 @@ const createSchedule = (newSchedule, mainCB) => {
                       } else {
                         callbackHelper(null)
                       }
-                    }
+                    },
                   ],
                   hallCB
                 )
@@ -197,5 +203,5 @@ module.exports = {
   createSchedule,
   removeSchedule,
   generateXls,
-  generatePdfs
+  generatePdfs,
 }

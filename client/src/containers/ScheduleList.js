@@ -97,6 +97,7 @@ class ScheduleList extends React.Component {
   downloadXls = (e, schedule) => {
     e.preventDefault()
     e.stopPropagation()
+    this.setState({ loading: true })
     const lang = this.props.i18n.language
     const { t } = this.props
     toast(t('xlsMessage'))
@@ -104,6 +105,7 @@ class ScheduleList extends React.Component {
       const monthName = moment(schedule.month, 'MM').locale(lang).format('MMMM')
       const fileName = `${t('schedules:name')}_${monthName}_${schedule.year}`
       saveAs(blob, `${fileName}.xlsx`)
+      this.setState({ loading: false })
     })
   }
 
@@ -117,6 +119,7 @@ class ScheduleList extends React.Component {
     if (beginsWith) {
       const { t } = this.props
       const lang = this.props.i18n.language
+      this.setState({ loading: true })
       toast(t('pdfMessage'))
       api
         .downloadFile(`/schedules/${schedule.id}/downloadPdfs?beginsWith=${beginsWith}&lang=${lang}`)
@@ -124,8 +127,12 @@ class ScheduleList extends React.Component {
           const monthName = moment(schedule.month, 'MM').locale(lang).format('MMMM')
           const fileName = `${t('common:tasks')}_${monthName}_${schedule.year}`
           saveAs(blob, `${fileName}.zip`)
+          this.setState({ loading: false })
         })
-        .catch(alert)
+        .catch((err) => {
+          this.setState({ loading: false })
+          alert(err)
+        })
     }
   }
 
@@ -144,6 +151,7 @@ class ScheduleList extends React.Component {
   }
 
   handleSubmit = (data, cb) => {
+    this.setState({ loading: true })
     api.post('/schedules', data).then(() => {
       this.setState({ scheduleForm: true })
       toast(this.props.t('newMessage'))

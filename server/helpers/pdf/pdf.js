@@ -57,7 +57,7 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
       Date: date.format(getDateFormat(lang)),
       'Check Box01': task.task === 'Reading' ? true : false,
       'Check Box02': task.task === 'Initial Call' ? true : false,
-      'Check Box03': task.task === 'Return Visit' && task.rv === 1 ? true : false,
+      'Check Box03': task.task === 'Return Visit' && (task.rv === null || task.rv === 1) ? true : false,
       'Check Box04': task.task === 'Return Visit' && task.rv === 2 ? true : false,
       'Check Box05': task.task === 'Bible Study' ? true : false,
       'Check Box06': task.task === 'Talk' ? true : false,

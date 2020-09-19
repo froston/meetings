@@ -17,8 +17,10 @@ router.post('/', (req, res) => {
   const newTask = req.body
   const taskName = newTask.task
   if (taskName.includes('Return Visit')) {
-    newTask.task = taskName.substring(3)
-    newTask.rv = Number(taskName[0])
+    if (taskName !== 'Return Visit') {
+      newTask.task = taskName.substring(3)
+      newTask.rv = Number(taskName[0])
+    }
   }
   model.createTask(newTask, (err, task) => {
     if (err) {
