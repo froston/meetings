@@ -4,51 +4,38 @@ import PropTypes from 'prop-types'
 import { Section, Form, FormField, Header, Heading, Footer, Button, NumberInput } from 'grommet'
 import { toast } from 'react-toastify'
 import { api } from '../utils'
+import { AppContext } from '../utils/context'
 import { Loader } from '../components'
 
-const initState = {
-  loading: false,
-  settings: {},
-}
 class Settings extends React.Component {
-  state = initState
-
-  componentDidMount() {
-    this.loadData()
-  }
-
-  loadData = () => {
-    this.setState({ loading: true })
-    api.get(`/settings`).then((settings) => {
-      this.setState({ settings, loading: false })
-    })
+  static contextType = AppContext
+  state = {
+    loading: false,
   }
 
   handleSubmit = () => {
     this.setState({ loading: true })
-    api.post(`/settings`, this.state.settings).then(() => {
-      toast('settingsSaved')
-      this.loadData()
+    api.post(`/settings`, this.context.settings).then(() => {
+      toast(this.props.t('settingsSaved'))
+      this.setState({ loading: false })
     })
   }
 
   handleChange = (name, value) => {
-    const settings = {
-      ...this.state.settings,
-      [name]: value,
-    }
-    this.setState({ settings })
+    this.context.changeSetting(name, value)
   }
 
   render() {
     const { t } = this.props
-    const { loading, settings } = this.state
+    const { loading } = this.state
+    const { settings } = this.context
     return (
       <Section>
         <Loader loading={loading} />
         <Header>
           <Heading>{t('settings')}</Heading>
         </Header>
+        <br />
         <Form>
           <FormField label={t('terWarning')}>
             <NumberInput
@@ -58,6 +45,9 @@ class Settings extends React.Component {
           </FormField>
           <FormField label={t('terDanger')}>
             <NumberInput value={settings.terDanger} onChange={(e) => this.handleChange('terDanger', e.target.value)} />
+          </FormField>
+          <FormField label={t('flhsIndex')}>
+            <NumberInput value={settings.flhsIndex} onChange={(e) => this.handleChange('flhsIndex', e.target.value)} />
           </FormField>
           <Footer pad={{ vertical: 'medium' }}>
             <Button label={t('submit')} onClick={!loading ? this.handleSubmit : null} primary />

@@ -14,6 +14,7 @@ router.post('/', (req, res, next) => {
     ...appConfig,
     terWarning: req.body.terWarning,
     terDanger: req.body.terDanger,
+    flhsIndex: req.body.flhsIndex,
   }
   fs.writeFile(`${__dirname}/../appConfig.json`, JSON.stringify(settings), (err) => {
     if (err) throw err

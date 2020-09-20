@@ -6,8 +6,11 @@ import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
 import { Loader } from '../components'
 import { api, consts, functions, withAuth } from '../utils'
+import { AppContext } from '../utils/context'
 
 class Dashboard extends Component {
+  static contextType = AppContext
+
   state = {
     brothers: 0,
     sisters: 0,
@@ -66,8 +69,9 @@ class Dashboard extends Component {
   }
 
   getMessages = () => {
-    const { t, meta, settings } = this.props
+    const { t, meta } = this.props
     const { scheduleExists, territories } = this.state
+    const { settings } = this.context
     const dismissed = sessionStorage.getItem(`dismissMessageSchedules`) === 'true'
     let messages = []
     if (functions.hasAccess(meta, 'lifeministry') && !dismissed) {
@@ -140,8 +144,9 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { t, auth, meta, settings } = this.props
+    const { t, auth, meta } = this.props
     const { brothers, sisters, noParticipate, numbers, territories, loading } = this.state
+    const { settings } = this.context
     return (
       <Section>
         <Loader loading={loading} />

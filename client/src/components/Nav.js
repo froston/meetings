@@ -43,42 +43,36 @@ class Nav extends React.PureComponent {
           <Button icon={<CloseIcon />} onClick={this.props.handleClose} a11yTitle={t('closeMenu')} plain />
         </Header>
         <Box flex="grow" justify="start">
-          {meta && (
-            <Menu fill primary>
-              <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
-                {t('dashboard')}
+          <Menu fill primary>
+            <Link to="/" className={this.isActive('/')} onClick={this.handleClick}>
+              {t('dashboard')}
+            </Link>
+            {functions.hasAccess(meta, 'lifeministry') && (
+              <>
+                <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
+                  {t('students')}
+                </Link>
+                <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
+                  {t('schedules')}
+                </Link>
+              </>
+            )}
+            {(functions.hasAccess(meta, 'territories') || (isWorking && functions.hasAccess(meta, 'work'))) && (
+              <Link to="/territories" className={this.isActive('territories') || isWorking} onClick={this.handleClick}>
+                {t('territories')}
               </Link>
-              {functions.hasAccess(meta, 'lifeministry') && (
-                <>
-                  <Link to="/students" className={this.isActive('students')} onClick={this.handleClick}>
-                    {t('students')}
-                  </Link>
-                  <Link to="/schedules" className={this.isActive('schedules')} onClick={this.handleClick}>
-                    {t('schedules')}
-                  </Link>
-                </>
-              )}
-              {(functions.hasAccess(meta, 'territories') || (isWorking && functions.hasAccess(meta, 'work'))) && (
-                <Link
-                  to="/territories"
-                  className={this.isActive('territories') || isWorking}
-                  onClick={this.handleClick}
-                >
-                  {t('territories')}
-                </Link>
-              )}
-              {functions.hasAccess(meta, 'numbers') && (
-                <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
-                  {t('numbers')}
-                </Link>
-              )}
-              {functions.hasAccess(meta, 'admin') && (
-                <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
-                  {t('users')}
-                </Link>
-              )}
-            </Menu>
-          )}
+            )}
+            {functions.hasAccess(meta, 'numbers') && (
+              <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
+                {t('numbers')}
+              </Link>
+            )}
+            {functions.hasAccess(meta, 'admin') && (
+              <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
+                {t('users')}
+              </Link>
+            )}
+          </Menu>
         </Box>
         <Footer style={{ padding: 15, marginTop: 40 }}>
           <Box margin="small">
@@ -91,13 +85,15 @@ class Nav extends React.PureComponent {
           </Box>
           <Button title="Logout" icon={<LogoutIcon />} onClick={this.logout} a11yTitle="Logout" plain />
           <LangMenu lang={i18n.language} setLang={this.setLang} />
-          <Button
-            title="Settings"
-            icon={<SettingsOptionIcon />}
-            onClick={this.goToSettings}
-            a11yTitle="Settings"
-            plain
-          />
+          {functions.hasAccess(meta, 'admin') && (
+            <Button
+              title="Settings"
+              icon={<SettingsOptionIcon />}
+              onClick={this.goToSettings}
+              a11yTitle="Settings"
+              plain
+            />
+          )}
         </Footer>
       </Sidebar>
     )

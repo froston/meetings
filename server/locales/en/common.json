@@ -67,5 +67,10 @@
   "logoutSuccessfull": "You have successfully logged out.",
   "numberDuplicate": "Number already exists",
   "beforeLeaving": "You have unsaved changes, are you sure you want to leave?",
-  "workedMessage": "Done, thank you!"
+  "workedMessage": "Done, thank you!",
+  "settings": "Settings",
+  "settingsSaved": "Settings saved",
+  "terWarning": "Warning limit",
+  "terDanger": "Danger limit",
+  "flhsIndex": "FLHS index"
 }

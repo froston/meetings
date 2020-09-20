@@ -16,8 +16,11 @@ import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader } from '../components'
 import { api, consts, functions } from '../utils'
+import { AppContext } from '../utils/context'
 
 class TerritoryList extends React.Component {
+  static contextType = AppContext
+
   state = {
     online: navigator.onLine,
     loading: false,
@@ -180,7 +183,8 @@ class TerritoryList extends React.Component {
   }
 
   render() {
-    const { t, settings } = this.props
+    const { t } = this.props
+    const { settings } = this.context
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     return (
       <Section>

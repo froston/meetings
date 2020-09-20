@@ -69,5 +69,10 @@
   "logoutSuccessfull": "Ha cerrado su sesión con éxito.",
   "numberDuplicate": "Número ya existe",
   "beforeLeaving": "Tiene cambios sin guardar, ¿está seguro de que desea salir?",
-  "workedMessage": "Listo, muchas gracias!"
+  "workedMessage": "Listo, muchas gracias!",
+  "settings": "Ajustes",
+  "settingsSaved": "Los ajustes se han guardado",
+  "terWarning": "Límite de advertencia",
+  "terDanger": "Límite de peligro",
+  "flhsIndex": "FLHS index"
 }

@@ -28,7 +28,7 @@ export const getNumberStatusColor = (status, css = false) => {
   }
 }
 
-export const getTerritoryStatusColor = (ter, settings = {}) => {
+export const getTerritoryStatusColor = (ter, settings) => {
   let color = 'unknown'
 
   const assigned = ter.assigned && ter.assigned !== ''
@@ -38,10 +38,8 @@ export const getTerritoryStatusColor = (ter, settings = {}) => {
   var fromDif = moment().diff(dateFrom, 'days') + 1
   var toDif = moment().diff(dateTo, 'days') + 1
 
-  console.log(settings)
-
   // settings missing
-  if (!settings.terWarning || !settings.terDanger) {
+  if (!settings) {
     return 'unknown'
   }
 
@@ -75,6 +73,9 @@ export const getTerritoryStatusColor = (ter, settings = {}) => {
 }
 
 export const hasAccess = (meta, access) => {
+  if (!meta) {
+    return false
+  }
   if (meta.admin === 1) {
     return true
   }
