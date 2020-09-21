@@ -10,6 +10,7 @@ const config = require('./config')
 const router = require('./router')
 const { initDb } = require('./db')
 const { validateToken } = require('./auth/firebase')
+require('./helpers/async')
 
 const app = express()
 
