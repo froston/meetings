@@ -42,8 +42,7 @@ const getByTerritoryNumber = async (num) => {
 const createNumber = async (data) => {
   const exists = await numberExists(data.number)
   if (exists) {
-    err = { ...err, alreadyExists: true }
-    throw err
+    throw { alreadyExists: true }
   }
   const newNumber = {
     number: data.number,

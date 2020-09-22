@@ -42,7 +42,6 @@ const getAll = async (filters) => {
       ${order}`
   )
 }
-
 const getById = async (id) => {
   const ters = await db.query('SELECT * FROM territories WHERE id = ?', id)
   let ter = ters[0]

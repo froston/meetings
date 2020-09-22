@@ -1,8 +1,8 @@
 const db = require('../db')
-const { listUsers } = require('../auth/firebase')
+const auth = require('../auth/firebase')
 
 const getAll = async () => {
-  const res = await listUsers()
+  const res = await auth.listUsers()
   const users = res.users
   await users.mapAsync(async (user) => {
     const regUser = await getUserByUID(user.uid)
@@ -11,6 +11,7 @@ const getAll = async () => {
     }
     return user
   })
+  return users
 }
 
 const userExists = async ({ uid, email }) => {
