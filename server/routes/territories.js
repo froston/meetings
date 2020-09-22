@@ -3,121 +3,125 @@ const model = require('../models/territories')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  model.getAll(req.query, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+router.get('/', async (req, res) => {
+  try {
+    const data = await model.getAll(req.query)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const id = req.params.id
-  model.getById(id, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
+  try {
+    const data = await model.getById(id)
+    if (data) {
+      res.send(data)
+    } else {
+      res.status(404).send(`Territory #${id} not found.`)
     }
-    if (!data) {
-      res.status(404).send('Record not found.')
-    }
-    res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.post('/', (req, res) => {
-  const body = req.body
-  model.createTerritory(body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+router.post('/', async (req, res) => {
+  try {
+    const data = await model.createTerritory(req.body)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   const id = req.params.id
-  const body = req.body
-  model.updateTerritory(id, body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    const data = await model.updateTerritory(id, req.body)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = req.params.id
-  model.removeTerritory(id, (err) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    await model.removeTerritory(id)
     res.status(204).end()
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.get('/:id/history', (req, res) => {
+router.get('/:id/history', async (req, res) => {
   const id = req.params.id
-  model.getTerritoryHist(id, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
+  try {
+    const data = await model.getTerritoryHist(id)
+    if (data) {
+      res.send(data)
+    } else {
+      res.status(404).send(`Territory history #${id} not found.`)
     }
-    res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.delete('/:id/history/:history_id', (req, res) => {
+router.delete('/:id/history/:history_id', async (req, res) => {
   const id = req.params.id
   const history_id = req.params.history_id
-  model.removeHistory(id, history_id, (err) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    await model.removeHistory(id, history_id)
     res.status(204).end()
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.get('/:terNum/view', (req, res) => {
+router.get('/:terNum/view', async (req, res) => {
   const terNum = req.params.terNum
-  model.getTerritoryNumbers(terNum, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
+  try {
+    const data = await model.getTerritoryNumbers(terNum)
+    if (data) {
+      res.send(data)
+    } else {
+      res.status(404).send(`Territory #${terNum} not found.`)
     }
-    res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.post('/:id/history', (req, res) => {
+router.post('/:id/history', async (req, res) => {
   const id = req.params.id
-  const body = req.body
-  model.createAssignment(id, body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    const data = await model.createAssignment(id, req.body)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.patch('/:id/history/:history_id', (req, res) => {
+router.patch('/:id/history/:history_id', async (req, res) => {
   const id = req.params.history_id
-  const body = req.body
-  model.updateAssignment(id, body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    const data = await model.updateAssignment(id, req.body)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
-router.post('/:id/work', (req, res) => {
+router.post('/:id/work', async (req, res) => {
   const id = req.params.id
-  const body = req.body
-  model.workTerritory(id, body, (err, data) => {
-    if (err) {
-      res.status(500).send(err)
-    }
+  try {
+    const data = await model.workTerritory(id, req.body)
     res.send(data)
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 })
 
 module.exports = router

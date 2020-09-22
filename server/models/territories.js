@@ -1,9 +1,8 @@
-const async = require('async')
-const { getDb } = require('../db')
+const db = require('../db')
 const numberModel = require('./numbers')
 const consts = require('../helpers/consts')
 
-exports.getAll = (filters, cb) => {
+const getAll = async (filters) => {
   const query = filters.q ? filters.q.trim() : null
 
   let where = ''
@@ -30,7 +29,7 @@ exports.getAll = (filters, cb) => {
       order = 'ORDER BY T.id'
   }
 
-  getDb().query(
+  const ters = await db.query(
     `SELECT H.*, T.*, H.id AS history_id
       FROM territories T
       LEFT JOIN territories_hist H ON T.id = H.territory_id
@@ -40,196 +39,145 @@ exports.getAll = (filters, cb) => {
         WHERE H2.territory_id = H.territory_id
       )
       ${where}
-      ${order}
-    `,
-    (err, ters) => {
-      if (err) throw err
-
-      async.map(
-        ters,
-        (ter, done) => {
-          numberModel.getByTerritoryNumber(ter.number, (err, numbers) => {
-            if (err) throw err
-            ter.isAssigned = !!ter.date_from && !ter.date_to
-            ter.numbers = numbers
-            done(null, ter)
-          })
-        },
-        cb
-      )
-    }
+      ${order}`
   )
-}
 
-exports.getById = (id, cb) => {
-  getDb().query('SELECT * FROM territories WHERE id = ?', id, (err, ters) => {
-    if (err) throw err
-    cb(err, ters[0])
+  ters.mapAsync(async (ter) => {
+    const numbers = await numberModel.getByTerritoryNumber(ter.number)
+    ter.isAssigned = !!ter.date_from && !ter.date_to
+    ter.numbers = numbers
+    return ter
   })
 }
 
-exports.createTerritory = (data, cb) => {
-  const obj = {
-    number: data.number,
+const getById = async (id) => {
+  const ters = await db.query('SELECT * FROM territories WHERE id = ?', id)
+  return ters[0]
+}
+
+const createTerritory = async (data) => {
+  const res = await db.query('INSERT INTO territories SET ?', { number: data.number })
+
+  const newHistroy = {
+    territory_id: res.insertId,
+    assigned: data.assigned,
+    date_from: consts.formatDateTime(data.date_from),
   }
-  getDb().query('INSERT INTO territories SET ?', obj, (err, res) => {
-    if (err) throw err
-    const newHistroy = {
-      territory_id: res.insertId,
-      assigned: data.assigned,
-      date_from: consts.formatDateTime(data.date_from),
-    }
-    getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
-      if (err) throw err
-      cb(null)
-    })
-  })
+  await db.query('INSERT INTO territories_hist SET ?', newHistroy)
 }
 
-exports.updateTerritory = (id, data, cb) => {
+const updateTerritory = async (id, data) => {
   const updatedTer = {
     number: data.number,
   }
-  getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
-    if (err) throw err
-    const updatedHist = {
-      assigned: data.assigned,
-      date_from: consts.formatDateTime(data.date_from),
-      date_to: consts.formatDateTime(data.date_to),
-    }
-    getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
-      if (err) throw err
-      cb(null)
-    })
-  })
+  await db.query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id])
+
+  const updatedHist = {
+    assigned: data.assigned,
+    date_from: consts.formatDateTime(data.date_from),
+    date_to: consts.formatDateTime(data.date_to),
+  }
+  await db.query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, data.history_id])
 }
 
-exports.removeTerritory = (id, cb) => {
-  getDb().query('DELETE FROM territories WHERE id = ?', id, (err) => {
-    if (err) throw err
-    getDb().query('DELETE FROM territories_hist WHERE territory_id = ?', id, (err) => {
-      if (err) throw err
-      cb(null)
-    })
-  })
+const removeTerritory = async (id) => {
+  await db.query('DELETE FROM territories WHERE id = ?', id)
+  await db.query('DELETE FROM territories_hist WHERE territory_id = ?', id)
 }
 
-exports.createAssignment = (id, data, cb) => {
+const createAssignment = async (id, data) => {
   const newHistroy = {
     territory_id: id,
     assigned: data.assigned,
     date_from: consts.formatDateTime(data.date_from),
   }
-  getDb().query('INSERT INTO territories_hist SET ?', newHistroy, (err) => {
-    if (err) throw err
-    cb(null)
-  })
+  await db.query('INSERT INTO territories_hist SET ?', newHistroy)
 }
 
-exports.updateAssignment = (history_id, data, cb) => {
+const updateAssignment = async (history_id, data) => {
   const updatedHist = {
     assigned: data.assigned,
     date_from: consts.formatDateTime(data.date_from),
   }
-  getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, history_id], (err) => {
-    if (err) throw err
-    cb(null)
-  })
+  await db.query('UPDATE territories_hist SET ? WHERE id = ?', [updatedHist, history_id])
 }
 
-exports.workTerritory = (id, data, cb) => {
+const workTerritory = async (id, data) => {
   const updatedTer = {
     last_worked: consts.formatDateTime(data.date_to),
   }
-  getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
-    if (err) throw err
-    const terHist = {
-      assigned: data.assigned,
-      date_from: consts.formatDateTime(data.date_to),
-      date_to: consts.formatDateTime(data.date_to),
-    }
-    if (data.history_id > 0) {
-      getDb().query('UPDATE territories_hist SET ? WHERE id = ?', [terHist, data.history_id], (err) => {
-        if (err) throw err
-        async.each(
-          data.numbers,
-          (num, numCb) => {
-            numberModel.getNumberHist(num.id, (err, history) => {
-              if (err) throw err
-              const prevHist = history[0]
-              if (prevHist.status !== num.status) {
-                numberModel.createHistory(num, numCb)
-              } else {
-                num.history_id = prevHist.id
-                numberModel.updateHistory(num, numCb)
-              }
-            })
-          },
-          cb
-        )
-      })
-    } else {
-      terHist.territory_id = id
-      getDb().query('INSERT INTO territories_hist SET ?', terHist, (err) => {
-        if (err) throw err
-        async.each(
-          data.numbers,
-          (num, numCb) => {
-            numberModel.getNumberHist(num.id, (err, history) => {
-              if (err) throw err
-              const prevHist = history[0]
-              if (prevHist.status !== num.status) {
-                numberModel.createHistory(num, numCb)
-              } else {
-                num.history_id = prevHist.id
-                numberModel.updateHistory(num, numCb)
-              }
-            })
-          },
-          cb
-        )
-      })
-    }
-  })
-}
+  await db.query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id])
 
-const getTerritoryHist = (id, cb) => {
-  getDb().query('SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC', id, (err, hist) => {
-    if (err) throw err
-    cb(err, hist)
-  })
-}
+  const terHist = {
+    assigned: data.assigned,
+    date_from: consts.formatDateTime(data.date_to),
+    date_to: consts.formatDateTime(data.date_to),
+  }
+  if (data.history_id > 0) {
+    await db.query('UPDATE territories_hist SET ? WHERE id = ?', [terHist, data.history_id])
 
-exports.getTerritoryHist = getTerritoryHist
-
-exports.removeHistory = (id, history_id, cb) => {
-  getDb().query('DELETE FROM territories_hist WHERE id = ?', history_id, (err) => {
-    if (err) throw err
-    getTerritoryHist(id, (err, history) => {
-      if (err) throw err
-      const updatedTer = {
-        last_worked: consts.formatDateTime(history[0].date_to),
+    data.numbers.mapAsync(async (num) => {
+      const history = await numberModel.getNumberHist(num.id)
+      const prevHist = history[0]
+      if (prevHist.status !== num.status) {
+        await numberModel.createHistory(num)
+      } else {
+        num.history_id = prevHist.id
+        await numberModel.updateHistory(num)
       }
-      getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
-        if (err) throw err
-        cb(null)
-      })
     })
+  } else {
+    terHist.territory_id = id
+    await db.query('INSERT INTO territories_hist SET ?', terHist)
+
+    data.numbers.mapAsync(async (num) => {
+      const history = await numberModel.getNumberHist(num.id)
+      const prevHist = history[0]
+      if (prevHist.status !== num.status) {
+        await numberModel.createHistory(num)
+      } else {
+        num.history_id = prevHist.id
+        await numberModel.updateHistory(num)
+      }
+    })
+  }
+}
+
+const getTerritoryHist = async (id) => {
+  return await db.query('SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC', id)
+}
+
+const removeHistory = async (id, history_id) => {
+  await db.query('DELETE FROM territories_hist WHERE id = ?', history_id)
+
+  const history = await getTerritoryHist(id)
+
+  const updatedTer = {
+    last_worked: consts.formatDateTime(history[0].date_to),
+  }
+  await db.query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id])
+}
+
+const getTerritoryNumbers = async (terNum) => {
+  const nums = await numberModel.getByTerritoryNumber(terNum)
+
+  nums.mapAsync(async (num) => {
+    const hist = await numberModel.getNumberHist(num.id)
+
+    return { ...num, ...hist[0] }
   })
 }
 
-exports.getTerritoryNumbers = (terNum, cb) => {
-  numberModel.getByTerritoryNumber(terNum, (err, nums) => {
-    if (err) throw err
-    async.map(
-      nums,
-      (num, done) => {
-        numberModel.getNumberHist(num.id, (err, hist) => {
-          if (err) throw err
-          done(null, { ...num, ...hist[0] })
-        })
-      },
-      cb
-    )
-  })
+module.exports = {
+  getAll,
+  getById,
+  createTerritory,
+  removeTerritory,
+  updateTerritory,
+  createAssignment,
+  updateAssignment,
+  getTerritoryNumbers,
+  removeHistory,
+  getTerritoryHist,
+  workTerritory,
 }

@@ -1,14 +1,15 @@
-const { getDb } = require('../db')
+const db = require('../db')
 const consts = require('../helpers/consts')
 
-exports.getAll = (filters, cb) => {
+const getAll = async (filters) => {
   const query = filters.q ? filters.q.trim() : null
   let where = '' // to simplify dynamic conditions syntax
   where += query ? `AND (N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
   where += filters.status ? `AND H.status = "${filters.status}"` : ''
   let limit = ''
   limit += filters.offset && filters.limit ? `LIMIT ${filters.offset}, ${filters.limit}` : ''
-  getDb().query(
+
+  return await db.query(
     `SELECT H.*, N.*, H.id AS history_id
       FROM numbers N 
       LEFT JOIN numbers_hist H ON N.id = H.number_id
@@ -19,126 +20,104 @@ exports.getAll = (filters, cb) => {
       ))
       ${where} 
       ORDER BY N.id DESC
-      ${limit}`,
-    cb
+      ${limit}`
   )
 }
 
-exports.getById = (id, cb) => {
-  getDb().query('SELECT * FROM numbers WHERE id = ?', id, (err, nums) => {
-    if (err) throw err
-    cb(err, nums[0])
-  })
+const getById = async (id) => {
+  const nums = await db.query('SELECT * FROM numbers WHERE id = ?', id)
+  return nums[0]
 }
 
-exports.getByTerritoryNumber = (num, cb) => {
-  getDb().query('SELECT * FROM numbers WHERE territory = ?', num, (err, nums) => {
-    if (err) throw err
-    cb(err, nums)
-  })
+const getByTerritoryNumber = async (num) => {
+  return await db.query('SELECT * FROM numbers WHERE territory = ?', num)
 }
 
-exports.createNumber = (data, cb) => {
+const createNumber = async (data) => {
   const newNumber = {
     number: data.number,
     name: data.name,
     territory: data.territory,
   }
-  getDb().query('INSERT INTO numbers SET ?', newNumber, (err, res) => {
-    if (err) throw err
-    const newHistroy = {
-      number_id: res.insertId,
-      status: data.status,
-      details: data.details,
-    }
-    getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
-      if (err) throw err
-      cb(null)
-    })
-  })
+  const res = await db.query('INSERT INTO numbers SET ?', newNumber)
+
+  const newHistroy = {
+    number_id: res.insertId,
+    status: data.status,
+    details: data.details,
+  }
+  await db.query('INSERT INTO numbers_hist SET ?', newHistroy)
 }
 
-exports.updateNumber = (id, data, cb) => {
+const updateNumber = async (id, data) => {
   const updatedNumber = {
     number: data.number,
     name: data.name,
     territory: data.territory,
   }
-  getDb().query('UPDATE numbers SET ? WHERE id = ?', [updatedNumber, id], (err) => {
-    if (err) throw err
-    getNumberHist(id, (err, history) => {
-      if (err) throw err
-      const prevHist = history[0]
-      if (prevHist.status !== data.status) {
-        const newHistroy = {
-          number_id: id,
-          status: data.status,
-          details: data.details,
-        }
-        getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
-          if (err) throw err
-          cb(err)
-        })
-      } else {
-        const updatedHist = {
-          status: data.status,
-          details: data.details,
-        }
-        getDb().query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
-          if (err) throw err
-          cb(null)
-        })
-      }
-    })
-  })
+  await db.query('UPDATE numbers SET ? WHERE id = ?', [updatedNumber, id])
+
+  const history = await getNumberHist(id)
+
+  const prevHist = history[0]
+
+  if (prevHist.status !== data.status) {
+    const newHistroy = {
+      number_id: id,
+      status: data.status,
+      details: data.details,
+    }
+    await db.query('INSERT INTO numbers_hist SET ?', newHistroy)
+  } else {
+    const updatedHist = {
+      status: data.status,
+      details: data.details,
+    }
+    await db.query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id])
+  }
 }
 
-exports.removeNumber = (id, cb) => {
-  getDb().query('DELETE FROM numbers WHERE id = ?', id, (err) => {
-    if (err) throw err
-    getDb().query('DELETE FROM numbers_hist WHERE number_id = ?', id, (err) => {
-      if (err) throw err
-      cb(null)
-    })
-  })
+const removeNumber = async (id) => {
+  await db.query('DELETE FROM numbers WHERE id = ?', id)
+  await db.query('DELETE FROM numbers_hist WHERE number_id = ?', id)
 }
 
-exports.createHistory = (data, cb) => {
+const createHistory = async (data) => {
   const newHistroy = {
     number_id: data.id,
     status: data.status,
     details: data.details,
   }
-  getDb().query('INSERT INTO numbers_hist SET ?', newHistroy, (err) => {
-    if (err) throw err
-    cb(err)
-  })
+  await db.query('INSERT INTO numbers_hist SET ?', newHistroy)
 }
 
-exports.updateHistory = (data, cb) => {
+const updateHistory = async (data) => {
   const updatedHist = {
     status: data.status,
     details: data.details,
     changed_date: consts.getUpdateDate(),
   }
-  getDb().query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id], (err) => {
-    if (err) throw err
-    cb(null)
-  })
+  await db.query('UPDATE numbers_hist SET ? WHERE id = ?', [updatedHist, data.history_id])
 }
 
-const getNumberHist = (id, cb) => {
-  getDb().query('SELECT * FROM numbers_hist WHERE number_id = ? ORDER BY id DESC', id, (err, hist) => {
-    if (err) throw err
-    cb(err, hist)
-  })
+const getNumberHist = async (id) => {
+  return await db.query('SELECT * FROM numbers_hist WHERE number_id = ? ORDER BY id DESC', id)
 }
 
-exports.removeHistory = (id, history_id, cb) => {
-  getDb().query('DELETE FROM numbers_hist WHERE id = ?', history_id, (err) => {
-    if (err) throw err
-    cb(err)
-  })
+const removeHistory = async (id, history_id) => {
+  await db.query('DELETE FROM numbers_hist WHERE id = ?', history_id)
 }
 
-exports.getNumberHist = getNumberHist
+module.exports = {
+  getAll,
+  getById,
+  getByTerritoryNumber,
+  createNumber,
+  updateNumber,
+  removeNumber,
+  createHistory,
+  updateHistory,
+  getNumberHist,
+  getNumberHist,
+  removeHistory,
+}
