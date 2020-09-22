@@ -14,6 +14,8 @@ import NumberHistory from './NumberHistory'
 import TerritoryHistory from './TerritoryHistory'
 import TerritoryView from './TerritoryView'
 import Loader from './Loader'
+import UserForm from './UserForm'
+import Worked from './Worked'
 
 export {
   Nav,
@@ -32,4 +34,6 @@ export {
   TerritoryHistory,
   TerritoryView,
   Loader,
+  UserForm,
+  Worked,
 }

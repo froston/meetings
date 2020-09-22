@@ -6,8 +6,11 @@ import AnnotatedMeter from 'grommet-addons/components/AnnotatedMeter'
 import moment from 'moment'
 import { Loader } from '../components'
 import { api, consts, functions, withAuth } from '../utils'
+import { AppContext } from '../utils/context'
 
 class Dashboard extends Component {
+  static contextType = AppContext
+
   state = {
     brothers: 0,
     sisters: 0,
@@ -52,11 +55,14 @@ class Dashboard extends Component {
           loading: false,
         })
       })
-      .catch((err) => {
+      .catch(({ message, response }) => {
+        if (response && response.data && response.data.message) {
+          message = response.data.message
+        }
         this.props.auth.logout().then(() => {
           this.props.history.push({
             pathname: '/',
-            state: { message: err.message },
+            state: { message },
           })
         })
       })
@@ -65,6 +71,7 @@ class Dashboard extends Component {
   getMessages = () => {
     const { t, meta } = this.props
     const { scheduleExists, territories } = this.state
+    const { settings } = this.context
     const dismissed = sessionStorage.getItem(`dismissMessageSchedules`) === 'true'
     let messages = []
     if (functions.hasAccess(meta, 'lifeministry') && !dismissed) {
@@ -102,7 +109,7 @@ class Dashboard extends Component {
       }
     }
     if (functions.hasAccess(meta, 'territories')) {
-      const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t) === 'critical')
+      const criticals = territories.filter((t) => functions.getTerritoryStatusColor(t, settings) === 'critical')
       const dismissed = sessionStorage.getItem(`dismissMessageTerritories`) === 'true'
       if (criticals.length && !dismissed) {
         messages.push(
@@ -139,12 +146,13 @@ class Dashboard extends Component {
   render() {
     const { t, auth, meta } = this.props
     const { brothers, sisters, noParticipate, numbers, territories, loading } = this.state
+    const { settings } = this.context
     return (
       <Section>
         <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
-          <b>{auth.user.displayName}!</b>
+          <b> {auth.user.displayName}!</b>
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         {this.getMessages()}
@@ -207,8 +215,8 @@ class Dashboard extends Component {
                 type="circle"
                 max={territories.length}
                 series={['unknown', 'ok', 'warning', 'critical', 'graph-1'].map((c) => ({
-                  label: t(`common:color${c}`),
-                  value: territories.filter((s) => functions.getTerritoryStatusColor(s) === c).length,
+                  label: t(`common:color${c}`, settings),
+                  value: territories.filter((s) => functions.getTerritoryStatusColor(s, settings) === c).length,
                   colorIndex: c,
                 }))}
                 legend={true}

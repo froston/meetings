@@ -17,8 +17,10 @@ router.post('/', async (req, res) => {
   const newTask = req.body
   const taskName = newTask.task
   if (taskName.includes('Return Visit')) {
-    newTask.task = taskName.substring(3)
-    newTask.rv = Number(taskName[0])
+    if (taskName !== 'Return Visit') {
+      newTask.task = taskName.substring(3)
+      newTask.rv = Number(taskName[0])
+    }
   }
   try {
     const data = await model.createTask(newTask)
@@ -31,6 +33,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   const taskId = req.params.id
   const newTask = req.body
+  delete newTask.username
   try {
     const data = await model.updateTask(taskId, newTask)
     res.send(data)

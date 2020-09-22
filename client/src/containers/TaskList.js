@@ -3,12 +3,15 @@ import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Layer, Box, Header, Heading, Table, TableRow, Button } from 'grommet'
 import FormTrashIcon from 'grommet/components/icons/base/FormTrash'
+import moment from 'moment'
 import { api } from '../utils'
-import { TaskForm } from '../components'
+import { TaskForm, Loader } from '../components'
 
 class TaskList extends React.PureComponent {
   state = {
+    allTasks: [],
     tasks: [],
+    loading: false,
   }
 
   componentDidUpdate(prevProps) {
@@ -18,8 +21,10 @@ class TaskList extends React.PureComponent {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     api.get(`/tasks/${this.props.student.id}`).then((tasks) => {
-      this.setState({ tasks })
+      const latestTasks = tasks.filter((t) => t.year === moment().year())
+      this.setState({ allTasks: tasks, tasks: latestTasks, loading: false })
     })
   }
 
@@ -42,11 +47,16 @@ class TaskList extends React.PureComponent {
     }
   }
 
+  seeAll = () => {
+    this.setState({ tasks: this.state.allTasks })
+  }
+
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
-    const { tasks } = this.state
+    const { tasks, loading } = this.state
     return (
       <div>
+        <Loader loading={loading} />
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
@@ -54,7 +64,7 @@ class TaskList extends React.PureComponent {
             </Heading>
           </Header>
           {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} />}
-          <div style={{ overflowX: 'auto' }}>
+          <div style={{ overflowX: 'auto' }} className="tasks-list">
             <Table responsive={false} scrollable>
               <thead>
                 <tr>
@@ -95,6 +105,13 @@ class TaskList extends React.PureComponent {
                   })}
               </tbody>
             </Table>
+            {tasks.length < this.state.allTasks.length && (
+              <Box align="center" pad="medium">
+                <a href="#all" onClick={this.seeAll}>
+                  Ver todo
+                </a>
+              </Box>
+            )}
           </div>
         </Layer>
       </div>

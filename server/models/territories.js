@@ -6,9 +6,9 @@ const getAll = async (filters) => {
   const query = filters.q ? filters.q.trim() : null
 
   let where = ''
-  where += query ? `AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
+  where += query ? ` AND (T.number LIKE "%${query}%" OR H.assigned LIKE "%${query}%")` : ``
   where += filters.noAssigned
-    ? `AND ((H.date_from IS NOT NULL AND H.date_to IS NOT NULL) OR (H.date_from IS NULL))`
+    ? ` AND ((H.date_from IS NOT NULL AND H.date_to IS NOT NULL) OR (H.date_from IS NULL))`
     : ``
 
   let order
@@ -29,7 +29,7 @@ const getAll = async (filters) => {
       order = 'ORDER BY T.id'
   }
 
-  const ters = await db.query(
+  return await db.query(
     `SELECT H.*, T.*, H.id AS history_id
       FROM territories T
       LEFT JOIN territories_hist H ON T.id = H.territory_id
@@ -41,19 +41,23 @@ const getAll = async (filters) => {
       ${where}
       ${order}`
   )
-
-  await ters.mapAsync(async (ter) => {
-    const numbers = await numberModel.getByTerritoryNumber(ter.number)
-    ter.isAssigned = !!ter.date_from && !ter.date_to
-    ter.numbers = numbers
-    return ter
-  })
-  return ters
 }
 
 const getById = async (id) => {
   const ters = await db.query('SELECT * FROM territories WHERE id = ?', id)
-  return ters[0]
+  let ter = ters[0]
+
+  if (!ter) {
+    return null
+  }
+  const hist = await getTerritoryHist(ter.id)
+  ter = { ...hist[0], ...ter }
+
+  const numbers = await getTerritoryNumbers(ter.number)
+  ter.isAssigned = !!ter.date_from && !ter.date_to
+  ter.numbers = numbers
+
+  return ter
 }
 
 const createTerritory = async (data) => {
@@ -117,9 +121,10 @@ const workTerritory = async (id, data) => {
   if (data.history_id > 0) {
     await db.query('UPDATE territories_hist SET ? WHERE id = ?', [terHist, data.history_id])
 
-    await data.numbers.mapAsync(async (num) => {
+    await data.numbers.forEachAsync(async (num) => {
       const history = await numberModel.getNumberHist(num.id)
       const prevHist = history[0]
+
       if (prevHist.status !== num.status) {
         await numberModel.createHistory(num)
       } else {
@@ -131,10 +136,11 @@ const workTerritory = async (id, data) => {
     terHist.territory_id = id
     await db.query('INSERT INTO territories_hist SET ?', terHist)
 
-    await data.numbers.mapAsync(async (num) => {
+    await data.numbers.forEachAsync(async (num) => {
       const history = await numberModel.getNumberHist(num.id)
       const prevHist = history[0]
-      if (prevHist.status !== num.status) {
+
+      if (!prevHist || (prevHist && prevHist.status !== num.status)) {
         await numberModel.createHistory(num)
       } else {
         num.history_id = prevHist.id
@@ -164,8 +170,7 @@ const getTerritoryNumbers = async (terNum) => {
 
   await nums.mapAsync(async (num) => {
     const hist = await numberModel.getNumberHist(num.id)
-
-    return { ...num, ...hist[0] }
+    return { ...hist[0], ...num }
   })
 
   return nums

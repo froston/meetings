@@ -4,8 +4,14 @@ const consts = require('../helpers/consts')
 const getAll = async (filters) => {
   const query = filters.q ? filters.q.trim() : null
   let where = '' // to simplify dynamic conditions syntax
-  where += query ? `AND (N.number LIKE "%${query}%" OR N.name LIKE "%${query}%" OR H.details LIKE "%${query}%")` : ``
-  where += filters.status ? `AND H.status = "${filters.status}"` : ''
+  where += query ? `AND (N.number LIKE "%${query}%" OR H.details LIKE "%${query}%") ` : ``
+  where += filters.status ? `AND H.status = "${filters.status}" ` : ''
+  if (filters.territory == 0) {
+    where += `AND N.territory IS NULL `
+  } else if (filters.territory > 0) {
+    where += `AND N.territory = ${filters.territory} `
+  }
+
   let limit = ''
   limit += filters.offset && filters.limit ? `LIMIT ${filters.offset}, ${filters.limit}` : ''
 
@@ -34,10 +40,15 @@ const getByTerritoryNumber = async (num) => {
 }
 
 const createNumber = async (data) => {
+  const exists = await numberExists(data.number)
+  if (exists) {
+    err = { ...err, alreadyExists: true }
+    throw err
+  }
   const newNumber = {
     number: data.number,
-    name: data.name,
     territory: data.territory,
+    user: data.username,
   }
   const res = await db.query('INSERT INTO numbers SET ?', newNumber)
 
@@ -52,7 +63,6 @@ const createNumber = async (data) => {
 const updateNumber = async (id, data) => {
   const updatedNumber = {
     number: data.number,
-    name: data.name,
     territory: data.territory,
   }
   await db.query('UPDATE numbers SET ? WHERE id = ?', [updatedNumber, id])
@@ -108,6 +118,11 @@ const removeHistory = async (id, history_id) => {
   await db.query('DELETE FROM numbers_hist WHERE id = ?', history_id)
 }
 
+const numberExists = async (number) => {
+  const nums = await db.query('SELECT * FROM numbers WHERE number = ?', number)
+  return nums && nums[0] ? true : false
+}
+
 module.exports = {
   getAll,
   getById,
@@ -119,4 +134,5 @@ module.exports = {
   updateHistory,
   getNumberHist,
   removeHistory,
+  numberExists,
 }

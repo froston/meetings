@@ -18,6 +18,7 @@ import {
 import { StopFillIcon, ViewIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
 import { consts, functions } from '../utils'
+import { AppContext } from '../utils/context'
 
 const initState = {
   number: '',
@@ -29,6 +30,8 @@ const initState = {
 }
 
 class TerritoryForm extends React.PureComponent {
+  static contextType = AppContext
+
   state = initState
 
   componentDidUpdate(prevProps) {
@@ -107,12 +110,15 @@ class TerritoryForm extends React.PureComponent {
   render() {
     const { t, hidden, territory, online } = this.props
     const { number, assigned, date_from, errors, loading } = this.state
+    const { settings } = this.context
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
           <Form pad="medium">
             <Header>
-              {territory && <StopFillIcon size="small" colorIndex={functions.getTerritoryStatusColor(territory)} />}
+              {territory && (
+                <StopFillIcon size="small" colorIndex={functions.getTerritoryStatusColor(territory, settings)} />
+              )}
               <Heading>{territory ? `${t('territory')} ${territory.number}` : t('new')}</Heading>
             </Header>
             <FormField label={t('number')} error={errors.number}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, List, ListItem, Button, Label, Search, Columns, Select } from 'grommet'
+import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search, TextInput, Select } from 'grommet'
 import { FormTrashIcon, StopFillIcon, AddIcon, HistoryIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
@@ -19,6 +19,7 @@ class NumberList extends React.Component {
     number: {},
     searchTerm: '',
     status: null,
+    territory: null,
   }
 
   componentDidMount() {
@@ -57,10 +58,11 @@ class NumberList extends React.Component {
 
   loadData = (showLoading = true, cb, more = false) => {
     showLoading && this.setState({ loading: true })
-    const { searchTerm, status, numbers } = this.state
+    const { searchTerm, status, numbers, territory } = this.state
     let filter = `?offset=${more ? numbers.length : 0}&limit=20`
     filter += searchTerm ? `&q=${searchTerm}` : ''
     filter += status ? `&status=${status}` : ''
+    filter += territory ? `&territory=${territory}` : ''
     api.get(`/numbers${filter}`).then((data) => {
       this.setState({
         numbers: more ? [...numbers, ...data] : data,
@@ -93,7 +95,7 @@ class NumberList extends React.Component {
     this.setState({ toRemove: toRemove.filter((t) => t !== id) })
   }
 
-  handleSubmit = (id, values) => {
+  handleSubmit = (id, values, cbError) => {
     const { t } = this.props
     const data = {
       ...this.state.number,
@@ -105,10 +107,13 @@ class NumberList extends React.Component {
         this.setState({ numberForm: true }, this.loadData)
       })
     } else {
-      api.post('/numbers', data).then(() => {
-        toast(t('numberCreated', { number: data.number }))
-        this.setState({ numberForm: true }, this.loadData)
-      })
+      api
+        .post('/numbers', data)
+        .then(() => {
+          toast(t('numberCreated', { number: data.number }))
+          this.setState({ numberForm: true }, this.loadData)
+        })
+        .catch(cbError)
     }
   }
 
@@ -147,7 +152,7 @@ class NumberList extends React.Component {
 
   render() {
     const { t } = this.props
-    const { numbers, online, loading, toRemove, searchTerm, status } = this.state
+    const { numbers, online, loading, toRemove, searchTerm, status, territory } = this.state
     const statusOptions = ['', ...consts.statusOptions]
     return (
       <Section>
@@ -167,8 +172,8 @@ class NumberList extends React.Component {
           />
         </Box>
 
-        <Columns size="medium">
-          <Box justify="between" align="stretch" pad="small">
+        <Box direction="row" wrap={true}>
+          <Box pad="small">
             <Search
               fill
               inline
@@ -179,7 +184,7 @@ class NumberList extends React.Component {
               placeHolder={t('search')}
             />
           </Box>
-          <Box justify="between" align="stretch" pad="small">
+          <Box pad="small">
             <Select
               label={t('status')}
               options={statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
@@ -188,7 +193,14 @@ class NumberList extends React.Component {
               placeHolder={t('status')}
             />
           </Box>
-        </Columns>
+          <Box pad="small">
+            <TextInput
+              value={territory}
+              onDOMChange={(e) => this.handleFilter('territory', e.target.value)}
+              placeHolder={t('territory')}
+            />
+          </Box>
+        </Box>
 
         <List selectable onSelect={this.handleSelect} onMore={numbers.length >= 20 ? this.handleMore : null}>
           {numbers
@@ -207,7 +219,6 @@ class NumberList extends React.Component {
                   <div title={num.status}>
                     <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
                     <strong> {num.number}</strong>
-                    {num.name && <Label size="small"> | {num.name}</Label>}
                   </div>
                 </Box>
                 <Box direction="row" responsive={false}>

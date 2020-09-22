@@ -7,7 +7,6 @@ import { consts, functions } from '../utils'
 
 const initState = {
   number: '',
-  name: '',
   status: '',
   details: '',
   errors: {},
@@ -42,7 +41,6 @@ class NumberForm extends React.PureComponent {
     const { t, number } = this.props
     const state = {
       number: number.number || '',
-      name: number.name || '',
       territory: number.territory || '',
       status: number.status
         ? {
@@ -60,6 +58,16 @@ class NumberForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
+  handleError = (err) => {
+    if (err && err.response && err.response.data) {
+      let errors = {
+        ...this.state.errors,
+        number: err.response.data.message,
+      }
+      this.setState({ errors, loading: false })
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
@@ -72,7 +80,7 @@ class NumberForm extends React.PureComponent {
       if (number && number.id) {
         this.props.handleSubmit(number && number.id, newValues)
       } else {
-        this.props.handleSubmit(null, newValues)
+        this.props.handleSubmit(null, newValues, this.handleError)
       }
     })
   }
@@ -83,7 +91,7 @@ class NumberForm extends React.PureComponent {
 
   render() {
     const { t, hidden, online } = this.props
-    const { errors, number, name, territory, status, details, loading } = this.state
+    const { errors, number, territory, status, details, loading } = this.state
     const numberObj = this.props.number
     const statusOptions = consts.statusOptions
     return (
@@ -99,10 +107,8 @@ class NumberForm extends React.PureComponent {
                 value={number}
                 onChange={(e) => this.handleChange('number', e.target.value)}
                 maxLength={20}
+                placeHolder={t('number')}
               />
-            </FormField>
-            <FormField label={t('name')}>
-              <TextInput value={name} onDOMChange={(e) => this.handleChange('name', e.target.value)} maxLength={100} />
             </FormField>
             <FormField label={t('status')} error={errors.status}>
               <Select
@@ -110,10 +116,15 @@ class NumberForm extends React.PureComponent {
                 options={statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
                 value={status}
                 onChange={({ value }) => this.handleChange('status', value)}
+                placeHolder={t('status')}
               />
             </FormField>
             <FormField label={t('territory')}>
-              <NumberInput value={territory} onChange={(e) => this.handleChange('territory', e.target.value)} />
+              <NumberInput
+                value={territory}
+                onChange={(e) => this.handleChange('territory', e.target.value)}
+                placeHolder={t('territory')}
+              />
             </FormField>
             <FormField label={t('details')}>
               <textarea

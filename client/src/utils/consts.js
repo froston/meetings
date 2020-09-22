@@ -27,7 +27,6 @@ export const scheduleOptions = [
   AVAILABLE_INITIAL_CALL,
   AVAILABLE_RETURN_VISIT_1,
   AVAILABLE_RETURN_VISIT_2,
-  AVAILABLE_RETURN_VISIT_3,
   AVAILABLE_BIBLE_STUDY,
   AVAILABLE_TALK,
 ]
@@ -41,3 +40,5 @@ export const DATE_FORMAT = 'D/M/YYYY'
 export const DATETIME_FORMAT = 'D/M/YYYY HH:mm'
 
 export const orderByOpt = ['numberDesc', 'numberAsc', 'dateDesc', 'dateAsc']
+
+export const permissions = ['lifeministry', 'territories', 'numbers', 'work']

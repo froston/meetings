@@ -54,9 +54,14 @@ const createSchedule = async (newSchedule) => {
   await scheduleWeeks.forEachAsync(async (week) => {
     if (scheduleTasks[week]) {
       await scheduleTasks[week].forEachAsync(async (task) => {
-        const taskName = task.includes('Return Visit') ? task.substring(3) : task
-        const rvNumber = task.includes('Return Visit') ? Number(task[0]) : null
-
+        let taskName = task
+        let rvNumber = null
+        if (task.includes('Return Visit')) {
+          if (task !== 'Return Visit') {
+            taskName = task.substring(3)
+            rvNumber = Number(task[0])
+          }
+        }
         await scheduleHalls.forEachAsync(async (hall) => {
           // dont generate reading if 'reading only in main' checked
           const onlyMain =

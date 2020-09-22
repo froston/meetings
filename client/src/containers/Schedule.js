@@ -79,13 +79,13 @@ class Schedule extends React.Component {
 
   handleSelectNew = (student) => {
     const { taskToChange, helpers } = this.state
-    this.setState({ oldTask: taskToChange })
+    this.setState({ oldTask: taskToChange, loading: true })
     const task = helpers ? { helper_id: student.id } : { student_id: student.id }
     api.patch(`/tasks`, taskToChange.id, task).then(() => {
       toast(<Undo text={`${this.props.t('reassigned')} ${student.name}.`} undo={this.handleUndo} />, {
         onClose: () => this.setState({ oldTask: {} }),
       })
-      this.setState({ availableList: true })
+      this.setState({ availableList: true, loading: false })
       this.loadData()
     })
   }

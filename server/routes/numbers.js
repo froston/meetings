@@ -31,6 +31,13 @@ router.post('/', async (req, res) => {
     const data = await model.createNumber(req.body)
     res.send(data)
   } catch (err) {
+    if (err) {
+      if (err.alreadyExists) {
+        err.message = req.t('numberDuplicate')
+        return res.status(400).send(err)
+      }
+      return res.status(500).send(err)
+    }
     res.status(500).send(err)
   }
 })

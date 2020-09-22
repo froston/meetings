@@ -114,6 +114,7 @@
 }
 
 .grommet .week-tab a,
+.grommet .tasks-list a,
 .grommetux-menu__drop .grommetux-anchor {
   color: #0a64a0 !important;
 }
@@ -163,6 +164,7 @@ a.grommetux-button:hover {
   right: 0;
   left: 0;
   width: 100%;
+  z-index: 999999;
 }
 .grommet-loader {
   height: 4px;

@@ -16,8 +16,11 @@ import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader } from '../components'
 import { api, consts, functions } from '../utils'
+import { AppContext } from '../utils/context'
 
 class TerritoryList extends React.Component {
+  static contextType = AppContext
+
   state = {
     online: navigator.onLine,
     loading: false,
@@ -164,11 +167,7 @@ class TerritoryList extends React.Component {
   handleWork = (e, territory) => {
     e.preventDefault()
     e.stopPropagation()
-
-    this.props.history.push({
-      pathname: '/work',
-      state: { territory },
-    })
+    this.props.history.push(`/work/${territory.id}`)
   }
 
   handleHistory = (e, territory) => {
@@ -185,6 +184,7 @@ class TerritoryList extends React.Component {
 
   render() {
     const { t } = this.props
+    const { settings } = this.context
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     return (
       <Section>
@@ -249,7 +249,7 @@ class TerritoryList extends React.Component {
               >
                 <Box>
                   <div>
-                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter)} />
+                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
                     <strong>{`  ${t('territory')} ${ter.number}`}</strong>
                     {ter.last_worked && (
                       <Label size="small"> | {moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
@@ -329,6 +329,7 @@ class TerritoryList extends React.Component {
 }
 
 TerritoryList.propTypes = {
+  settings: PropTypes.object,
   history: PropTypes.object,
 }
 

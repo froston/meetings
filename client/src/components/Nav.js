@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Sidebar, Header, Title, Box, Menu, Button, Footer, Image } from 'grommet'
-import { CloseIcon, LogoutIcon } from 'grommet/components/icons/base'
+import { CloseIcon, LogoutIcon, SettingsOptionIcon } from 'grommet/components/icons/base'
 import { LangMenu } from './'
 import { withAuth, functions } from '../utils'
 
@@ -28,8 +28,12 @@ class Nav extends React.PureComponent {
   logout = () => {
     this.props.logout()
   }
+  goToSettings = () => {
+    this.props.history.push('/settings')
+  }
   render() {
     const { t, i18n, auth, meta } = this.props
+    const isWorking = this.isActive('work') || this.isActive('worked')
     return (
       <Sidebar colorIndex="neutral-1">
         <Header size="large" justify="between" pad={{ horizontal: 'medium' }}>
@@ -53,18 +57,19 @@ class Nav extends React.PureComponent {
                 </Link>
               </>
             )}
-            {functions.hasAccess(meta, 'territories') && (
-              <Link
-                to="/territories"
-                className={this.isActive('territories') || this.isActive('work')}
-                onClick={this.handleClick}
-              >
+            {(functions.hasAccess(meta, 'territories') || (isWorking && functions.hasAccess(meta, 'work'))) && (
+              <Link to="/territories" className={this.isActive('territories') || isWorking} onClick={this.handleClick}>
                 {t('territories')}
               </Link>
             )}
             {functions.hasAccess(meta, 'numbers') && (
               <Link to="/numbers" className={this.isActive('numbers')} onClick={this.handleClick}>
                 {t('numbers')}
+              </Link>
+            )}
+            {functions.hasAccess(meta, 'admin') && (
+              <Link to="/users" className={this.isActive('users')} onClick={this.handleClick}>
+                {t('users')}
               </Link>
             )}
           </Menu>
@@ -80,6 +85,15 @@ class Nav extends React.PureComponent {
           </Box>
           <Button title="Logout" icon={<LogoutIcon />} onClick={this.logout} a11yTitle="Logout" plain />
           <LangMenu lang={i18n.language} setLang={this.setLang} />
+          {functions.hasAccess(meta, 'admin') && (
+            <Button
+              title="Settings"
+              icon={<SettingsOptionIcon />}
+              onClick={this.goToSettings}
+              a11yTitle="Settings"
+              plain
+            />
+          )}
         </Footer>
       </Sidebar>
     )
@@ -87,10 +101,12 @@ class Nav extends React.PureComponent {
 }
 
 Nav.propTypes = {
-  responsive: PropTypes.string,
+  auth: PropTypes.object,
+  history: PropTypes.object,
   location: PropTypes.object,
+  responsive: PropTypes.string,
   setLang: PropTypes.func,
   logout: PropTypes.func,
 }
 
-export default withTranslation('nav')(withAuth(Nav))
+export default withTranslation('nav')(withRouter(withAuth(Nav)))
