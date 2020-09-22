@@ -11,8 +11,9 @@ const getAll = async (filters) => {
 
   const results = await db.query(`SELECT * FROM students ${like} ORDER BY name`)
 
-  results.forEach((student) => {
+  results.map((student) => {
     student.available = consts.getAvailable(student)
+    return student
   })
 
   return results

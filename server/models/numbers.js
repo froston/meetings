@@ -118,6 +118,5 @@ module.exports = {
   createHistory,
   updateHistory,
   getNumberHist,
-  getNumberHist,
   removeHistory,
 }

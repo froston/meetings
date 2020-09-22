@@ -17,14 +17,12 @@ exports.validateToken = async (req, res, next) => {
     try {
       req.currentUser = await firebaseAdmin.auth().verifyIdToken(idToken)
 
-      userModel.userExists(req.currentUser, (err, userExists) => {
-        if (err) throw err
-        if (userExists) {
-          next()
-        } else {
-          res.status(401).send({ message: 'User is not registred' })
-        }
-      })
+      const userExists = await userModel.userExists(req.currentUser)
+      if (userExists) {
+        next()
+      } else {
+        res.status(401).send({ message: 'User is not registred' })
+      }
     } catch (err) {
       res.status(401).send(err)
     }
