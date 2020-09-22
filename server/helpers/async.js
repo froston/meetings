@@ -9,14 +9,9 @@ Array.prototype.mapAsync = async function (cb) {
 }
 
 Array.prototype.forEachAsync = async function (cb) {
-  const res = []
   for (let i = 0; i < this.length; i++) {
     if (i in this) {
-      const p = Promise.resolve(this[i]).then((val) => {
-        return cb(val, i)
-      })
-      res.push(p)
+      await cb(await this[i], i)
     }
   }
-  await Promise.all(res)
 }

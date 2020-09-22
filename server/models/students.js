@@ -61,10 +61,11 @@ const getSortedAvailables = async (type, options) => {
   const year = options.year
   switch (type) {
     case 'student':
-      return await getAvailableStudents(taskName, hall)
+      const students = await getAvailableStudents(taskName, hall)
+      return students.sort(sorting.sortStudents(taskName, hall, month, year))
     case 'helper':
-      const students = await getAvailableHelpers(gender, hall)
-      return students.sort(sorting.sortHelpers(taskName, month, year))
+      const helpers = await getAvailableHelpers(gender, hall)
+      return helpers.sort(sorting.sortHelpers(taskName, month, year))
     default:
       return []
   }

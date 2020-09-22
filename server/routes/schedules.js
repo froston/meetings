@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
   const newSchedule = req.body
   try {
     const data = await model.createSchedule(newSchedule)
-    res.send(data)
+    res.status(201).end()
   } catch (err) {
     res.status(500).send(err)
   }

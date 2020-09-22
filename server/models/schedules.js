@@ -1,4 +1,3 @@
-const async = require('async')
 const db = require('../db')
 const taskModel = require('./tasks')
 const studentModel = require('./students')
@@ -24,15 +23,13 @@ const getById = async (id) => {
 
   let tasks = await taskModel.getBySchedule(schedule.month, schedule.year)
 
-  tasks = await Promise.all(
-    tasks.map(async (task) => {
-      let dup = false
-      if (task.student_id > 0 && task.helper_id > 0) {
-        dup = await taskModel.hasDuplicate(task.student_id, task.helper_id)
-      }
-      return { dup, ...task }
-    })
-  )
+  await tasks.mapAsync(async (task) => {
+    let dup = false
+    if (task.student_id > 0 && task.helper_id > 0) {
+      dup = await taskModel.hasDuplicate(task.student_id, task.helper_id)
+    }
+    return { dup, ...task }
+  })
 
   schedule.tasks = tasks
 
@@ -54,73 +51,76 @@ const createSchedule = async (newSchedule) => {
   const { insertId } = await db.query('INSERT INTO schedules SET ?', scheduleToInsert)
   newSchedule.id = insertId
 
-  for (const week of scheduleWeeks) {
-    for (const task of scheduleTasks[week]) {
-      const taskName = task.includes('Return Visit') ? task.substring(3) : task
-      const rvNumber = task.includes('Return Visit') ? Number(task[0]) : null
+  await scheduleWeeks.forEachAsync(async (week) => {
+    if (scheduleTasks[week]) {
+      await scheduleTasks[week].forEachAsync(async (task) => {
+        const taskName = task.includes('Return Visit') ? task.substring(3) : task
+        const rvNumber = task.includes('Return Visit') ? Number(task[0]) : null
 
-      for (const hall of scheduleHalls) {
-        // dont generate reading if 'reading only in main' checked
-        const onlyMain = taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
-        if (!onlyMain) {
-          // sorting and query options
-          const sortingOpt = {
-            taskName,
-            hall,
-            month: scheduleMonth,
-            year: scheduleYear,
-          }
-          const students = await studentModel.getSortedAvailables('student', sortingOpt)
-          if (students && students.length) {
-            const limit = students.length > config.limit ? config.limit : students.length
-            const flhsIndex = Math.floor(Math.random() * limit)
-            const finalStudent = students[flhsIndex]
-            // assign task
-            const studentTask = {
-              student_id: finalStudent.id,
-              schedule_id: newSchedule.id,
-              task: taskName,
-              rv: rvNumber,
-              week: Number(week),
-              month: Number(newSchedule.month),
-              year: Number(newSchedule.year),
-              hall: hall,
+        await scheduleHalls.forEachAsync(async (hall) => {
+          // dont generate reading if 'reading only in main' checked
+          const onlyMain =
+            taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
+          if (!onlyMain) {
+            // sorting and query options
+            const sortingOpt = {
+              taskName,
+              hall,
+              month: scheduleMonth,
+              year: scheduleYear,
             }
-
-            const { insertId } = await taskModel.createTask(studentTask)
-
-            const newTask = {
-              ...studentTask,
-              id: insertId,
-              gender: finalStudent.gender,
-            }
-
-            if (taskName !== 'Reading' && taskName !== 'Talk') {
-              // sorting and query options
-              const sortingOpt = {
-                taskName,
-                gender: newTask.gender,
-                month: scheduleMonth,
-                year: scheduleYear,
+            const students = await studentModel.getSortedAvailables('student', sortingOpt)
+            if (students && students.length) {
+              const limit = students.length > config.limit ? config.limit : students.length
+              const flhsIndex = Math.floor(Math.random() * limit)
+              const finalStudent = students[flhsIndex]
+              // assign task
+              const studentTask = {
+                student_id: finalStudent.id,
+                schedule_id: newSchedule.id,
+                task: taskName,
+                rv: rvNumber,
+                week: Number(week),
+                month: Number(newSchedule.month),
+                year: Number(newSchedule.year),
+                hall: hall,
               }
-              const helpers = await studentModel.getSortedAvailables('helper', sortingOpt)
 
-              if (helpers && helpers.length) {
-                const limit = helpers.length > config.limit ? config.limit : helpers.length
-                const flhsIndex = Math.floor(Math.random() * limit)
-                const finalHelper = helpers[flhsIndex]
-                // add helper to new task
-                const updatedHelper = {
-                  helper_id: finalHelper.id,
+              const { insertId } = await taskModel.createTask(studentTask)
+
+              const newTask = {
+                ...studentTask,
+                id: insertId,
+                gender: finalStudent.gender,
+              }
+
+              if (taskName !== 'Reading' && taskName !== 'Talk') {
+                // sorting and query options
+                const sortingOpt = {
+                  taskName,
+                  gender: newTask.gender,
+                  month: scheduleMonth,
+                  year: scheduleYear,
                 }
-                await taskModel.updateTask(newTask.id, updatedHelper)
+                const helpers = await studentModel.getSortedAvailables('helper', sortingOpt)
+
+                if (helpers && helpers.length) {
+                  const limit = helpers.length > config.limit ? config.limit : helpers.length
+                  const flhsIndex = Math.floor(Math.random() * limit)
+                  const finalHelper = helpers[flhsIndex]
+                  // add helper to new task
+                  const updatedHelper = {
+                    helper_id: finalHelper.id,
+                  }
+                  await taskModel.updateTask(newTask.id, updatedHelper)
+                }
               }
             }
           }
-        }
-      }
+        })
+      })
     }
-  }
+  })
 }
 
 const removeSchedule = async (id) => {
