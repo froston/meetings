@@ -22,7 +22,7 @@ import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/i
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'
-import { TerritoryView, Loader } from '../components'
+import { TerritoryView, Loader, ColorOption } from '../components'
 
 const initState = {
   territory: {},
@@ -61,7 +61,7 @@ class Work extends React.Component {
       }
       // set territory to state
       let terState = { territory, numbers, history_id: null, loading: false }
-      if (territory.isAssigned || (!territory.date_from && !territory.date_to)) {
+      if (territory.isAssigned) {
         terState.history_id = territory.history_id
         terState.assigned = territory.assigned
         terState.date_from = territory.date_from
@@ -239,8 +239,14 @@ class Work extends React.Component {
                     <FormField label={t('numbers:status')} error={numError.status}>
                       <Select
                         label={t('common:status')}
-                        options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
-                        value={{ value: status, label: status && t(`common:status${status}`) }}
+                        options={consts.statusOptions.map((value) => ({
+                          value,
+                          label: <ColorOption status={value} text={t(`common:status${value}`)} option />,
+                        }))}
+                        value={{
+                          value: status,
+                          label: status && <ColorOption status={status} text={t(`common:status${status}`)} />,
+                        }}
                         onChange={({ value }) => this.handleNumChange('status', value.value, num.number)}
                         placeHolder={t('numbers:status')}
                       />
@@ -250,7 +256,7 @@ class Work extends React.Component {
                         rows={3}
                         type="text"
                         placeholder={t('numbers:details')}
-                        value={details}
+                        value={details || ''}
                         onChange={(e) => this.handleNumChange('details', e.target.value, num.number)}
                         maxLength={500}
                       />

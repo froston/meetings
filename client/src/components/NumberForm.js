@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Box, Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, Select } from 'grommet'
 import { StopFillIcon } from 'grommet/components/icons/base'
+import { ColorOption } from '../components'
 import { consts, functions } from '../utils'
 
 const initState = {
   number: '',
-  status: '',
+  status: null,
   details: '',
   errors: {},
   loading: false,
@@ -42,12 +43,7 @@ class NumberForm extends React.PureComponent {
     const state = {
       number: number.number || '',
       territory: number.territory || '',
-      status: number.status
-        ? {
-            value: number.status,
-            label: t(`common:status${number.status}`),
-          }
-        : '',
+      status: number.status,
       details: number.details || '',
       loading: false,
     }
@@ -75,7 +71,6 @@ class NumberForm extends React.PureComponent {
       const { number } = this.props
       const values = { ...this.state }
       const newValues = Object.assign({}, values)
-      newValues.status = this.state.status.value
       newValues.territory = this.state.territory > 0 ? this.state.territory : null
       if (number && number.id) {
         this.props.handleSubmit(number && number.id, newValues)
@@ -93,7 +88,6 @@ class NumberForm extends React.PureComponent {
     const { t, hidden, online } = this.props
     const { errors, number, territory, status, details, loading } = this.state
     const numberObj = this.props.number
-    const statusOptions = consts.statusOptions
     return (
       <div>
         <Layer closer overlayClose align="right" onClose={this.handleClose} hidden={hidden}>
@@ -113,9 +107,15 @@ class NumberForm extends React.PureComponent {
             <FormField label={t('status')} error={errors.status}>
               <Select
                 label={t('common:status')}
-                options={statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
-                value={status}
-                onChange={({ value }) => this.handleChange('status', value)}
+                options={consts.statusOptions.map((value) => ({
+                  value,
+                  label: <ColorOption status={value} text={t(`common:status${value}`)} option />,
+                }))}
+                value={{
+                  value: status,
+                  label: status && <ColorOption status={status} text={t(`common:status${status}`)} />,
+                }}
+                onChange={({ value }) => this.handleChange('status', value.value)}
                 placeHolder={t('status')}
               />
             </FormField>

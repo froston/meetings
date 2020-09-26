@@ -4,11 +4,13 @@ import { withTranslation } from 'react-i18next'
 import { Layer, Header, Heading, Table, TableRow, Button } from 'grommet'
 import { FormTrashIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
+import { Loader } from '../components'
 import { api, consts } from '../utils'
 
 class TerritoryHistory extends React.PureComponent {
   state = {
     hist: [],
+    loading: false,
   }
 
   componentDidUpdate(prevProps) {
@@ -18,8 +20,9 @@ class TerritoryHistory extends React.PureComponent {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     api.get(`/territories/${this.props.territory.id}/history`).then((hist) => {
-      this.setState({ hist })
+      this.setState({ hist, loading: false })
     })
   }
 
@@ -40,9 +43,10 @@ class TerritoryHistory extends React.PureComponent {
 
   render() {
     const { t, hidden, territory, handleClose } = this.props
-    const { hist } = this.state
+    const { hist, loading } = this.state
     return (
       <div>
+        <Loader loading={loading} />
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">

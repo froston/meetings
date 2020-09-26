@@ -70,7 +70,7 @@ exports.getById = (id, cb) => {
     }
     getTerritoryHist(ter.id, (err, hist) => {
       if (err) throw err
-      ter = { ...hist[0], ...ter }
+      ter = { ...hist[0], ...ter, history_id: hist[0].id }
       getTerritoryNumbers(ter.number, (err, numbers) => {
         if (err) throw err
         ter.isAssigned = !!ter.date_from && !ter.date_to
