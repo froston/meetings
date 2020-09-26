@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
-import { Box, Layer, Form, FormField, Header, Heading, Footer, Button, TextInput, NumberInput, Select } from 'grommet'
+import { Box, Layer, Form, FormField, Header, Heading, Footer, Button, NumberInput, Select } from 'grommet'
 import { StopFillIcon } from 'grommet/components/icons/base'
 import { ColorOption } from '../components'
 import { consts, functions } from '../utils'
@@ -39,7 +39,7 @@ class NumberForm extends React.PureComponent {
   }
 
   loadForm = () => {
-    const { t, number } = this.props
+    const { number } = this.props
     const state = {
       number: number.number || '',
       territory: number.territory || '',

@@ -25,16 +25,16 @@ class UserForm extends React.PureComponent {
   }
 
   loadForm = () => {
-    const { t, user } = this.props
+    const { user } = this.props
     let metaArr = []
     for (let meta in user.meta) {
-      if (meta != 'admin' && user.meta[meta] == 1) {
+      if (meta !== 'admin' && user.meta[meta] === 1) {
         metaArr.push({ value: meta })
       }
     }
     const state = {
       meta: metaArr,
-      admin: user.meta.admin == 1,
+      admin: user.meta.admin === 1,
       loading: false,
     }
     this.setState({ ...state })
@@ -54,10 +54,10 @@ class UserForm extends React.PureComponent {
       ...user,
       meta: {
         admin: this.state.admin ? 1 : 0,
-        lifeministry: meta.find((m) => m.value == 'lifeministry') ? 1 : 0,
-        territories: meta.find((m) => m.value == 'territories') ? 1 : 0,
-        numbers: meta.find((m) => m.value == 'numbers') ? 1 : 0,
-        work: meta.find((m) => m.value == 'work') ? 1 : 0,
+        lifeministry: meta.find((m) => m.value === 'lifeministry') ? 1 : 0,
+        territories: meta.find((m) => m.value === 'territories') ? 1 : 0,
+        numbers: meta.find((m) => m.value === 'numbers') ? 1 : 0,
+        work: meta.find((m) => m.value === 'work') ? 1 : 0,
       },
     })
     this.props.handleSubmit(user && user.id, newValues)
@@ -110,7 +110,7 @@ class UserForm extends React.PureComponent {
                 </FormField>
               </>
             )}
-            {admin == 0 && (
+            {admin === 0 && (
               <FormField label={t('meta')}>
                 <Select
                   label={t('meta')}

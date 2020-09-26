@@ -248,3 +248,16 @@ const getTerritoryNumbers = (terNum, cb) => {
 }
 
 exports.getTerritoryNumbers = getTerritoryNumbers
+
+exports.getSuggestions = (cb) => {
+  getDb().query('SELECT assigned FROM territories_hist GROUP BY assigned', (err, suggestions) => {
+    if (err) throw err
+    async.map(
+      suggestions,
+      (sug, done) => {
+        done(null, sug.assigned)
+      },
+      cb
+    )
+  })
+}

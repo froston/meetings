@@ -311,6 +311,7 @@ class TerritoryList extends React.Component {
           territory={this.state.territory}
           handleClose={() => this.handleForm('assignForm', true)}
           handleSubmit={this.handleAssignment}
+          suggestions={this.context.suggestions}
         />
         <TerritoryHistory
           hidden={this.state.territoryHist}

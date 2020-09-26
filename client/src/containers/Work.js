@@ -24,6 +24,7 @@ import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'
 import { TerritoryView, Loader, ColorOption } from '../components'
+import { AppContext } from '../utils/context'
 
 const initState = {
   territory: {},
@@ -38,7 +39,12 @@ const initState = {
 }
 
 class Work extends React.Component {
-  state = initState
+  static contextType = AppContext
+
+  state = {
+    ...initState,
+    suggestions: [],
+  }
 
   componentDidMount() {
     const { match } = this.props
@@ -47,6 +53,11 @@ class Work extends React.Component {
     } else {
       this.handleReturn()
     }
+    this.setSuggestions(this.context.suggestions)
+  }
+
+  setSuggestions = (suggestions) => {
+    this.setState({ suggestions })
   }
 
   loadData = () => {
@@ -89,12 +100,12 @@ class Work extends React.Component {
       if (!value.status && !value.details) {
         return
       } else {
-        if (value.status == 'RV' && (!value.details || value.details.trim() == '')) {
+        if (value.status === 'RV' && (!value.details || value.details.trim() === '')) {
           errors[key] = {}
           errors[key].details = t('common:requiredRV')
           errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredRV')}`
         }
-        if (value.status == 'X' && (!value.details || value.details.trim() == '')) {
+        if (value.status === 'X' && (!value.details || value.details.trim() === '')) {
           errors[key] = {}
           errors[key].details = t('common:requiredX')
           errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredX')}`
@@ -127,6 +138,12 @@ class Work extends React.Component {
     const numbers = { ...this.state.numbers }
     numbers[number][name] = value
     this.setState({ numbers, errors: {} })
+  }
+
+  handleAssignedChange = (val) => {
+    var filtered = this.context.suggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
+    this.setSuggestions(filtered)
+    this.handleChange('assigned', val)
   }
 
   handleReturn = () => {
@@ -164,7 +181,7 @@ class Work extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territory, assigned, date_from, date_to, errors, loading } = this.state
+    const { territory, assigned, date_from, date_to, errors, loading, suggestions } = this.state
     return (
       <Section>
         <Loader loading={loading} />
@@ -189,7 +206,12 @@ class Work extends React.Component {
           ) : (
             <>
               <FormField label={t('assigned')} error={errors.assigned}>
-                <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
+                <TextInput
+                  value={assigned}
+                  suggestions={suggestions}
+                  onDOMChange={(e) => this.handleAssignedChange(e.target.value)}
+                  onSelect={(obj) => this.handleAssignedChange(obj.suggestion)}
+                />
               </FormField>
               <FormField label={t('date_from')} error={errors.date_from}>
                 <DateTime
