@@ -11,6 +11,6 @@
   "messageOkDesc": "Your schedule for {{month}} is ready.",
   "numbers": "Numbers status",
   "territories": "Territories status",
-  "messageTerWarning": "There are territories that has not been worked for more than 3 months",
+  "messageTerWarning": "There are {{amount}} territories that has not been worked for more than {{days}} days",
   "messageTerDesc": "Territories {{territories}}"
 }

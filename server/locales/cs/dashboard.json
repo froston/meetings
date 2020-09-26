@@ -11,6 +11,6 @@
   "messageOkDesc": "Váš rozvrh pro {{month}} je hotov.",
   "numbers": "Stav čísel",
   "territories": "Stav obvodů",
-  "messageTerWarning": "Některé obvody nebyly propracovány více než 3 měsíce.",
+  "messageTerWarning": "{{amount}} obvodů nebylo propracováno více než {{days}} dnů",
   "messageTerDesc": "Obvody {{territories}}"
 }

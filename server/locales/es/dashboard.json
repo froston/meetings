@@ -11,6 +11,6 @@
   "messageOkDesc": "Su programa para el {{month}} está listo.",
   "numbers": "Estados de números",
   "territories": "Estados de territorios",
-  "messageTerWarning": "Hay territorios que no se han hecho mas de 3 meses",
+  "messageTerWarning": "Hay {{amount}} territorios que no se han hecho mas de {{days}} días",
   "messageTerDesc": "Territorios {{territories}}"
 }

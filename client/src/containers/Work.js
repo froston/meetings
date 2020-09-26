@@ -17,6 +17,7 @@ import {
   Columns,
   DateTime,
   Anchor,
+  Paragraph,
 } from 'grommet'
 import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
@@ -71,29 +72,37 @@ class Work extends React.Component {
   }
 
   validate = (cb) => {
+    const { t } = this.props
     const { territory, assigned, date_from, date_to, numbers } = this.state
     let errors = {}
     if (!territory.isAssigned) {
       const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
-      if (!fromValid) errors.date_from = this.props.t('common:dateNotValid')
-      if (!assigned) errors.assigned = this.props.t('common:required')
-      if (!date_from) errors.date_from = this.props.t('common:required')
+      if (!fromValid) errors.date_from = t('common:dateNotValid')
+      if (!assigned) errors.assigned = t('common:required')
+      if (!date_from) errors.date_from = t('common:required')
     }
     const toValid = moment(date_to, consts.DATETIME_FORMAT).isValid()
-    if (!toValid) errors.date_to = this.props.t('common:dateNotValid')
-    if (!date_to) errors.date_to = this.props.t('common:required')
+    if (!toValid) errors.date_to = t('common:dateNotValid')
+    if (!date_to) errors.date_to = t('common:required')
 
     Object.entries(numbers).forEach(([key, value]) => {
       if (!value.status && !value.details) {
         return
       } else {
-        if ((value.status == 'RV' || value.status == 'X') && (!value.details || value.details.trim() == '')) {
+        if (value.status == 'RV' && (!value.details || value.details.trim() == '')) {
           errors[key] = {}
-          errors[key].details = this.props.t('common:required')
+          errors[key].details = t('common:requiredRV')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredRV')}`
+        }
+        if (value.status == 'X' && (!value.details || value.details.trim() == '')) {
+          errors[key] = {}
+          errors[key].details = t('common:requiredX')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredX')}`
         }
         if (!value.status && !!value.details) {
           errors[key] = {}
-          errors[key].status = this.props.t('common:required')
+          errors[key].status = t('common:requiredStatus')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredStatus')}`
         }
       }
     })
@@ -105,7 +114,8 @@ class Work extends React.Component {
     }
   }
 
-  handleView = () => {
+  handleView = (e) => {
+    e.preventDefault()
     this.setState({ territoryView: !this.state.territoryView })
   }
 
@@ -197,6 +207,13 @@ class Work extends React.Component {
               format={consts.DATETIME_FORMAT}
             />
           </FormField>
+          {errors.numbers && (
+            <Box>
+              <Paragraph margin="small" style={{ color: '#ff324d' }}>
+                <strong>{errors.numbers}</strong>
+              </Paragraph>
+            </Box>
+          )}
           <Footer pad={{ vertical: 'medium' }}>
             <Box>
               <Button
