@@ -1,3 +1,4 @@
+const async = require('async')
 const { getDb } = require('../db')
 const consts = require('../helpers/consts')
 
@@ -157,6 +158,19 @@ const numberExists = (number, cb) => {
   getDb().query('SELECT * FROM numbers WHERE number = ?', number, (err, nums) => {
     if (err) throw err
     cb(err, nums && nums[0] ? true : false)
+  })
+}
+
+exports.getSuggestions = (cb) => {
+  getDb().query('SELECT details FROM numbers_hist WHERE status = "RV" GROUP BY details', (err, suggestions) => {
+    if (err) throw err
+    async.map(
+      suggestions,
+      (sug, done) => {
+        done(null, sug.details)
+      },
+      cb
+    )
   })
 }
 

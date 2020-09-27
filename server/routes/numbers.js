@@ -3,6 +3,15 @@ const model = require('../models/numbers')
 
 const router = express.Router()
 
+router.get('/suggestions', (req, res) => {
+  model.getSuggestions((err, data) => {
+    if (err) {
+      res.status(500).send(err)
+    }
+    res.send(data)
+  })
+})
+
 router.get('/', (req, res) => {
   model.getAll(req.query, (err, data) => {
     if (err) {

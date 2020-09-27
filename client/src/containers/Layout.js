@@ -29,6 +29,7 @@ class Layout extends React.PureComponent {
     meta: null,
     settings: {},
     suggestions: [],
+    suggestionsRv: [],
   }
 
   componentDidMount() {
@@ -44,6 +45,9 @@ class Layout extends React.PureComponent {
     })
     api.get(`/territories/suggestions`).then((suggestions) => {
       this.setState({ suggestions })
+    })
+    api.get(`/numbers/suggestions`).then((suggestionsRv) => {
+      this.setState({ suggestionsRv })
     })
   }
 
@@ -79,7 +83,7 @@ class Layout extends React.PureComponent {
   }
 
   render() {
-    const { navActive, responsive, meta, settings, suggestions } = this.state
+    const { navActive, responsive, meta, settings, suggestions, suggestionsRv } = this.state
     const priority = navActive ? 'left' : 'right'
     let nav
     let openNav
@@ -99,7 +103,7 @@ class Layout extends React.PureComponent {
     }
     return (
       <div>
-        <AppContext.Provider value={{ settings, changeSetting: this.changeSetting, suggestions }}>
+        <AppContext.Provider value={{ settings, changeSetting: this.changeSetting, suggestions, suggestionsRv }}>
           <Split flex="right" priority={priority} onResponsive={this.handleResponsive}>
             {nav}
             <Box pad="medium">

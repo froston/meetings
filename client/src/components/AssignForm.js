@@ -18,25 +18,10 @@ class AssignForm extends React.PureComponent {
     suggestions: [],
   }
 
-  componentDidMount() {
-    if (!!this.props.suggestions.length) {
-      this.setSuggestions(this.props.suggestions)
-    }
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.hidden !== this.props.hidden) {
       this.setState(initState)
     }
-    if (!!this.props.suggestions.length) {
-      if (prevProps.suggestions.length !== this.props.suggestions.length) {
-        this.setSuggestions(this.props.suggestions)
-      }
-    }
-  }
-
-  setSuggestions = (suggestions) => {
-    this.setState({ suggestions })
   }
 
   validate = (cb) => {
@@ -69,10 +54,10 @@ class AssignForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
-  handleAssignedChange = (val) => {
-    var filtered = this.props.suggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
-    this.setSuggestions(filtered)
-    this.handleChange('assigned', val)
+  handleAssignedChange = (assigned) => {
+    const suggestions = this.props.suggestions.filter((s) => s.toLowerCase().includes(assigned.toLowerCase()))
+    this.setState({ suggestions })
+    this.handleChange('assigned', assigned)
   }
 
   render() {
@@ -93,7 +78,7 @@ class AssignForm extends React.PureComponent {
                 onDOMChange={(e) => this.handleAssignedChange(e.target.value)}
                 onSelect={(obj) => this.handleAssignedChange(obj.suggestion)}
                 placeHolder={t('nameAssigned')}
-                suggestions={suggestions}
+                suggestions={assigned ? suggestions : []}
               />
             </FormField>
             <FormField label={t('date_from')} error={errors.date_from}>

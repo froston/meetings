@@ -53,11 +53,6 @@ class Work extends React.Component {
     } else {
       this.handleReturn()
     }
-    this.setSuggestions(this.context.suggestions)
-  }
-
-  setSuggestions = (suggestions) => {
-    this.setState({ suggestions })
   }
 
   loadData = () => {
@@ -141,8 +136,8 @@ class Work extends React.Component {
   }
 
   handleAssignedChange = (val) => {
-    var filtered = this.context.suggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
-    this.setSuggestions(filtered)
+    var suggestions = this.context.suggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
+    this.setState({ suggestions })
     this.handleChange('assigned', val)
   }
 
@@ -208,7 +203,8 @@ class Work extends React.Component {
               <FormField label={t('assigned')} error={errors.assigned}>
                 <TextInput
                   value={assigned}
-                  suggestions={suggestions}
+                  placeHolder={t('nameAssigned')}
+                  suggestions={assigned ? suggestions : []}
                   onDOMChange={(e) => this.handleAssignedChange(e.target.value)}
                   onSelect={(obj) => this.handleAssignedChange(obj.suggestion)}
                 />
