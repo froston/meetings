@@ -23,7 +23,7 @@ import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/i
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'
-import { TerritoryView, Loader, ColorOption } from '../components'
+import { TerritoryView, Loader, ColorOption, Badge } from '../components'
 import { AppContext } from '../utils/context'
 
 const initState = {
@@ -182,7 +182,10 @@ class Work extends React.Component {
         <Loader loading={loading} />
         <Header>
           <Heading>
-            {t('workTerritory')} {territory.number}
+            <span style={{ marginRight: 16 }}>
+              {t('workTerritory')} {territory.number}
+            </span>
+            {!!territory.isCompany && <Badge label={t('common:isCompany')} />}
           </Heading>
         </Header>
         <Form pad="medium">

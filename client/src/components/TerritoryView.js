@@ -4,6 +4,7 @@ import { withTranslation } from 'react-i18next'
 import { Layer, Header, Heading, Table, TableRow } from 'grommet'
 import { StopFillIcon } from 'grommet/components/icons/base'
 import { api, functions } from '../utils'
+import { Badge } from '../components'
 
 class TerritoryView extends React.PureComponent {
   state = {
@@ -29,7 +30,10 @@ class TerritoryView extends React.PureComponent {
         <Layer closer overlayClose onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
-              {t('territory')} {territory && territory.number}
+              <span style={{ marginRight: 16 }}>
+                {t('territory')} {territory && territory.number}
+              </span>
+              {territory && !!territory.isCompany && <Badge label={t('common:isCompany')} />}
             </Heading>
           </Header>
           <div style={{ overflowX: 'auto', width: '70vw' }}>

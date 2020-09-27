@@ -84,6 +84,7 @@ exports.getById = (id, cb) => {
 exports.createTerritory = (data, cb) => {
   const obj = {
     number: data.number,
+    isCompany: data.isCompany,
   }
   getDb().query('INSERT INTO territories SET ?', obj, (err, res) => {
     if (err) throw err
@@ -102,6 +103,7 @@ exports.createTerritory = (data, cb) => {
 exports.updateTerritory = (id, data, cb) => {
   const updatedTer = {
     number: data.number,
+    isCompany: data.isCompany,
   }
   getDb().query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id], (err) => {
     if (err) throw err

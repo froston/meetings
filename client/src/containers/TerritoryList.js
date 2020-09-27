@@ -14,7 +14,7 @@ import {
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
-import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader } from '../components'
+import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader, Badge } from '../components'
 import { api, consts, functions } from '../utils'
 import { AppContext } from '../utils/context'
 
@@ -247,15 +247,20 @@ class TerritoryList extends React.Component {
                 separator={index === 0 ? 'horizontal' : 'bottom'}
                 style={{ paddingTop: 0, paddingBottom: 0 }}
               >
-                <Box>
+                <Box direction="row" align="start" justify="start">
                   <div>
-                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
-                    <strong>{`  ${t('territory')} ${ter.number}`}</strong>
+                    <strong style={{ marginRight: 8 }}>
+                      <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
+                      {`  ${t('territory')} ${ter.number}`}
+                    </strong>
+                  </div>
+                  <div style={{ marginRight: 8 }}>
                     {ter.last_worked && (
-                      <Label size="small"> | {moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
+                      <Label size="small">{moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
                     )}
                     {ter.isAssigned && <Label size="small"> | {ter.assigned}</Label>}
                   </div>
+                  <div>{!!ter.isCompany && <Badge label={t('common:isCompany')} />}</div>
                 </Box>
                 <Box direction="row" responsive={false}>
                   {!ter.isAssigned && (

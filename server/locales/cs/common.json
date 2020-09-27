@@ -70,5 +70,6 @@
   "logoutSuccessfull": "Úspěšně jste se odhlásili.",
   "numberDuplicate": "Číslo již existuje",
   "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?",
-  "workedMessage": "Hotovo, díky!"
+  "workedMessage": "Hotovo, díky!",
+  "isCompany": "Firmy"
 }

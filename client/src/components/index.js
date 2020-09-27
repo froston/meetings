@@ -17,6 +17,7 @@ import Loader from './Loader'
 import UserForm from './UserForm'
 import Worked from './Worked'
 import ColorOption from './ColorOption'
+import Badge from './Badge'
 
 export {
   Nav,
@@ -38,4 +39,5 @@ export {
   UserForm,
   Worked,
   ColorOption,
+  Badge,
 }
