@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Heading, Box, Button } from 'grommet'
 import { LikeIcon, LogoutIcon } from 'grommet/components/icons/base'
-import { withAuth, functions } from '../utils'
+import { withAuth } from '../utils'
 
 const Worked = (props) => {
   const logout = () => {

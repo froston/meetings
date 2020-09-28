@@ -14,6 +14,7 @@ import {
   NumberInput,
   DateTime,
   Anchor,
+  CheckBox,
 } from 'grommet'
 import { StopFillIcon, ViewIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
@@ -25,6 +26,7 @@ const initState = {
   assigned: '',
   date_from: '',
   date_to: '',
+  isCompany: false,
   errors: {},
   loading: false,
 }
@@ -70,6 +72,7 @@ class TerritoryForm extends React.PureComponent {
     const state = {
       number: territory.number,
       assigned: territory.assigned || '',
+      isCompany: territory.isCompany,
       date_from: dateFrom,
       date_to: dateTo,
       loading: false,
@@ -109,7 +112,7 @@ class TerritoryForm extends React.PureComponent {
 
   render() {
     const { t, hidden, territory, online } = this.props
-    const { number, assigned, date_from, errors, loading } = this.state
+    const { number, assigned, isCompany, date_from, errors, loading } = this.state
     const { settings } = this.context
     return (
       <div>
@@ -123,6 +126,13 @@ class TerritoryForm extends React.PureComponent {
             </Header>
             <FormField label={t('number')} error={errors.number}>
               <NumberInput value={number} onChange={(e) => this.handleChange('number', e.target.value)} />
+            </FormField>
+            <FormField label={t('common:isCompany')}>
+              <CheckBox
+                checked={!!isCompany}
+                onChange={({ target }) => this.handleChange('isCompany', target.checked)}
+                toggle
+              />
             </FormField>
             {(!territory || (territory && territory.isAssigned)) && (
               <>

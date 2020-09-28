@@ -122,6 +122,25 @@ const numberExists = async (number) => {
   return nums && nums[0] ? true : false
 }
 
+const getSuggestions = async () => {
+  const suggestions = await db.query(`
+    SELECT H.details
+    FROM numbers N 
+    INNER JOIN numbers_hist H ON N.id = H.number_id
+    WHERE (H.id = (
+      SELECT MAX(H2.id) 
+      FROM numbers_hist H2 
+      WHERE H2.number_id = H.number_id
+    ))
+    AND H.status = "RV"
+    GROUP BY details
+  `)
+
+  suggestions.mapAsync(async (sug) => sug.details)
+
+  return suggestions
+}
+
 module.exports = {
   getAll,
   getById,
@@ -134,4 +153,5 @@ module.exports = {
   getNumberHist,
   removeHistory,
   numberExists,
+  getSuggestions,
 }

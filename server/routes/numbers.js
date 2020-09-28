@@ -3,6 +3,15 @@ const model = require('../models/numbers')
 
 const router = express.Router()
 
+router.get('/suggestions', async (req, res) => {
+  try {
+    const data = await model.getSuggestions()
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
 router.get('/', async (req, res) => {
   try {
     const data = await model.getAll(req.query)

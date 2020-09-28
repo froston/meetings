@@ -17,12 +17,14 @@ import {
   Columns,
   DateTime,
   Anchor,
+  Paragraph,
 } from 'grommet'
 import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'
-import { TerritoryView, Loader } from '../components'
+import { TerritoryView, Loader, ColorOption, Badge } from '../components'
+import { AppContext } from '../utils/context'
 
 const initState = {
   territory: {},
@@ -37,7 +39,12 @@ const initState = {
 }
 
 class Work extends React.Component {
-  state = initState
+  static contextType = AppContext
+
+  state = {
+    ...initState,
+    suggestions: [],
+  }
 
   componentDidMount() {
     const { match } = this.props
@@ -61,7 +68,7 @@ class Work extends React.Component {
       }
       // set territory to state
       let terState = { territory, numbers, history_id: null, loading: false }
-      if (territory.isAssigned || (!territory.date_from && !territory.date_to)) {
+      if (territory.isAssigned) {
         terState.history_id = territory.history_id
         terState.assigned = territory.assigned
         terState.date_from = territory.date_from
@@ -71,29 +78,37 @@ class Work extends React.Component {
   }
 
   validate = (cb) => {
+    const { t } = this.props
     const { territory, assigned, date_from, date_to, numbers } = this.state
     let errors = {}
     if (!territory.isAssigned) {
       const fromValid = moment(date_from, consts.DATETIME_FORMAT).isValid()
-      if (!fromValid) errors.date_from = this.props.t('common:dateNotValid')
-      if (!assigned) errors.assigned = this.props.t('common:required')
-      if (!date_from) errors.date_from = this.props.t('common:required')
+      if (!fromValid) errors.date_from = t('common:dateNotValid')
+      if (!assigned) errors.assigned = t('common:required')
+      if (!date_from) errors.date_from = t('common:required')
     }
     const toValid = moment(date_to, consts.DATETIME_FORMAT).isValid()
-    if (!toValid) errors.date_to = this.props.t('common:dateNotValid')
-    if (!date_to) errors.date_to = this.props.t('common:required')
+    if (!toValid) errors.date_to = t('common:dateNotValid')
+    if (!date_to) errors.date_to = t('common:required')
 
     Object.entries(numbers).forEach(([key, value]) => {
       if (!value.status && !value.details) {
         return
       } else {
-        if ((value.status == 'RV' || value.status == 'X') && (!value.details || value.details.trim() == '')) {
+        if (value.status === 'RV' && (!value.details || value.details.trim() === '')) {
           errors[key] = {}
-          errors[key].details = this.props.t('common:required')
+          errors[key].details = t('common:requiredRV')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredRV')}`
+        }
+        if (value.status === 'X' && (!value.details || value.details.trim() === '')) {
+          errors[key] = {}
+          errors[key].details = t('common:requiredX')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredX')}`
         }
         if (!value.status && !!value.details) {
           errors[key] = {}
-          errors[key].status = this.props.t('common:required')
+          errors[key].status = t('common:requiredStatus')
+          errors.numbers = `${t('numbers:number')} ${value.number} - ${t('common:requiredStatus')}`
         }
       }
     })
@@ -105,7 +120,8 @@ class Work extends React.Component {
     }
   }
 
-  handleView = () => {
+  handleView = (e) => {
+    e.preventDefault()
     this.setState({ territoryView: !this.state.territoryView })
   }
 
@@ -117,6 +133,12 @@ class Work extends React.Component {
     const numbers = { ...this.state.numbers }
     numbers[number][name] = value
     this.setState({ numbers, errors: {} })
+  }
+
+  handleAssignedChange = (val) => {
+    var suggestions = this.context.suggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()))
+    this.setState({ suggestions })
+    this.handleChange('assigned', val)
   }
 
   handleReturn = () => {
@@ -154,13 +176,16 @@ class Work extends React.Component {
 
   render() {
     const { t } = this.props
-    const { territory, assigned, date_from, date_to, errors, loading } = this.state
+    const { territory, assigned, date_from, date_to, errors, loading, suggestions } = this.state
     return (
       <Section>
         <Loader loading={loading} />
         <Header>
           <Heading>
-            {t('workTerritory')} {territory.number}
+            <span style={{ marginRight: 16 }}>
+              {t('workTerritory')} {territory.number}
+            </span>
+            {!!territory.isCompany && <Badge label={t('common:isCompany')} />}
           </Heading>
         </Header>
         <Form pad="medium">
@@ -179,7 +204,13 @@ class Work extends React.Component {
           ) : (
             <>
               <FormField label={t('assigned')} error={errors.assigned}>
-                <TextInput value={assigned} onDOMChange={(e) => this.handleChange('assigned', e.target.value)} />
+                <TextInput
+                  value={assigned}
+                  placeHolder={t('nameAssigned')}
+                  suggestions={assigned ? suggestions : []}
+                  onDOMChange={(e) => this.handleAssignedChange(e.target.value)}
+                  onSelect={(obj) => this.handleAssignedChange(obj.suggestion)}
+                />
               </FormField>
               <FormField label={t('date_from')} error={errors.date_from}>
                 <DateTime
@@ -197,6 +228,13 @@ class Work extends React.Component {
               format={consts.DATETIME_FORMAT}
             />
           </FormField>
+          {errors.numbers && (
+            <Box>
+              <Paragraph margin="small" style={{ color: '#ff324d' }}>
+                <strong>{errors.numbers}</strong>
+              </Paragraph>
+            </Box>
+          )}
           <Footer pad={{ vertical: 'medium' }}>
             <Box>
               <Button
@@ -239,8 +277,14 @@ class Work extends React.Component {
                     <FormField label={t('numbers:status')} error={numError.status}>
                       <Select
                         label={t('common:status')}
-                        options={consts.statusOptions.map((value) => ({ value, label: t(`common:status${value}`) }))}
-                        value={{ value: status, label: status && t(`common:status${status}`) }}
+                        options={consts.statusOptions.map((value) => ({
+                          value,
+                          label: <ColorOption status={value} text={t(`common:status${value}`)} option />,
+                        }))}
+                        value={{
+                          value: status,
+                          label: status && <ColorOption status={status} text={t(`common:status${status}`)} />,
+                        }}
                         onChange={({ value }) => this.handleNumChange('status', value.value, num.number)}
                         placeHolder={t('numbers:status')}
                       />
@@ -250,7 +294,7 @@ class Work extends React.Component {
                         rows={3}
                         type="text"
                         placeholder={t('numbers:details')}
-                        value={details}
+                        value={details || ''}
                         onChange={(e) => this.handleNumChange('details', e.target.value, num.number)}
                         maxLength={500}
                       />

@@ -50,7 +50,7 @@ const getById = async (id) => {
     return null
   }
   const hist = await getTerritoryHist(ter.id)
-  ter = { ...hist[0], ...ter }
+  ter = { ...hist[0], ...ter, history_id: hist[0].id }
 
   const numbers = await getTerritoryNumbers(ter.number)
   ter.isAssigned = !!ter.date_from && !ter.date_to
@@ -60,7 +60,11 @@ const getById = async (id) => {
 }
 
 const createTerritory = async (data) => {
-  const res = await db.query('INSERT INTO territories SET ?', { number: data.number })
+  const newTer = {
+    number: data.number,
+    isCompany: data.isCompany,
+  }
+  const res = await db.query('INSERT INTO territories SET ?', newTer)
 
   const newHistroy = {
     territory_id: res.insertId,
@@ -73,6 +77,7 @@ const createTerritory = async (data) => {
 const updateTerritory = async (id, data) => {
   const updatedTer = {
     number: data.number,
+    isCompany: data.isCompany,
   }
   await db.query('UPDATE territories SET ? WHERE id = ?', [updatedTer, id])
 
@@ -175,6 +180,12 @@ const getTerritoryNumbers = async (terNum) => {
   return nums
 }
 
+const getSuggestions = async () => {
+  const suggestions = await db.query('SELECT assigned FROM territories_hist GROUP BY assigned')
+  suggestions.mapAsync(async (sug) => sug.assigned)
+  return suggestions
+}
+
 module.exports = {
   getAll,
   getById,
@@ -187,4 +198,5 @@ module.exports = {
   removeHistory,
   getTerritoryHist,
   workTerritory,
+  getSuggestions,
 }

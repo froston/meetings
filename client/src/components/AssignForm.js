@@ -13,7 +13,10 @@ const initState = {
 }
 
 class AssignForm extends React.PureComponent {
-  state = initState
+  state = {
+    ...initState,
+    suggestions: [],
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.hidden !== this.props.hidden) {
@@ -51,9 +54,15 @@ class AssignForm extends React.PureComponent {
     this.setState({ [name]: value, errors: {} })
   }
 
+  handleAssignedChange = (assigned) => {
+    const suggestions = this.props.suggestions.filter((s) => s.toLowerCase().includes(assigned.toLowerCase()))
+    this.setState({ suggestions })
+    this.handleChange('assigned', assigned)
+  }
+
   render() {
     const { t, hidden, territory, handleClose } = this.props
-    const { errors, assigned, date_from, loading } = this.state
+    const { errors, assigned, date_from, loading, suggestions } = this.state
     return (
       <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
         <Header size="medium">
@@ -66,8 +75,10 @@ class AssignForm extends React.PureComponent {
             <FormField label={t('assigneTo')} error={errors.assigned}>
               <TextInput
                 value={assigned}
-                onDOMChange={(e) => this.handleChange('assigned', e.target.value)}
-                placeHolder="Nombre del hermano"
+                onDOMChange={(e) => this.handleAssignedChange(e.target.value)}
+                onSelect={(obj) => this.handleAssignedChange(obj.suggestion)}
+                placeHolder={t('nameAssigned')}
+                suggestions={assigned ? suggestions : []}
               />
             </FormField>
             <FormField label={t('date_from')} error={errors.date_from}>

@@ -16,6 +16,8 @@ import TerritoryView from './TerritoryView'
 import Loader from './Loader'
 import UserForm from './UserForm'
 import Worked from './Worked'
+import ColorOption from './ColorOption'
+import Badge from './Badge'
 
 export {
   Nav,
@@ -36,4 +38,6 @@ export {
   Loader,
   UserForm,
   Worked,
+  ColorOption,
+  Badge,
 }

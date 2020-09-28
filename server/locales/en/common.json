@@ -14,6 +14,9 @@
   "point": "Point",
   "generate": "Generate",
   "required": "Required",
+  "requiredStatus": "Select status",
+  "requiredRV": "Who will call?",
+  "requiredX": "Give a reason",
   "gender": "Gender",
   "available": "Available",
   "notes": "Notes",
@@ -72,5 +75,6 @@
   "settingsSaved": "Settings saved",
   "terWarning": "Warning limit",
   "terDanger": "Danger limit",
-  "flhsIndex": "FLHS index"
+  "flhsIndex": "FLHS index",
+  "isCompany": "Companies"
 }

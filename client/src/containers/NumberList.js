@@ -7,11 +7,15 @@ import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import { Undo, NumberForm, NumberHistory, Loader } from '../components'
 import { api, functions, consts } from '../utils'
+import { AppContext } from '../utils/context'
 
 class NumberList extends React.Component {
+  static contextType = AppContext
+
   state = {
     online: navigator.onLine,
     loading: false,
+    suggestions: [],
     numbers: [],
     toRemove: [],
     numberForm: true,
@@ -51,9 +55,12 @@ class NumberList extends React.Component {
     }
   }
 
-  handleSearch = (e) => {
-    const searchTerm = e.target.value
-    this.setState({ searchTerm }, this.debounceSearch)
+  handleSearch = (searchTerm) => {
+    let suggestions = []
+    if (searchTerm) {
+      suggestions = this.context.suggestionsRv.filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
+    }
+    this.setState({ searchTerm, suggestions }, this.debounceSearch)
   }
 
   loadData = (showLoading = true, cb, more = false) => {
@@ -150,9 +157,14 @@ class NumberList extends React.Component {
     }
   }
 
+  showSuggestions = () => {
+    const val = this.state.searchTerm
+    return val && !!val.length && isNaN(parseFloat(val)) && !isFinite(val)
+  }
+
   render() {
     const { t } = this.props
-    const { numbers, online, loading, toRemove, searchTerm, status, territory } = this.state
+    const { numbers, online, loading, toRemove, searchTerm, status, territory, suggestions } = this.state
     const statusOptions = ['', ...consts.statusOptions]
     return (
       <Section>
@@ -179,9 +191,11 @@ class NumberList extends React.Component {
               inline
               responsive={false}
               iconAlign="start"
-              value={searchTerm}
-              onDOMChange={this.handleSearch}
               placeHolder={t('search')}
+              value={searchTerm}
+              onDOMChange={(e) => this.handleSearch(e.target.value)}
+              onSelect={(obj) => this.handleSearch(obj.suggestion)}
+              suggestions={this.showSuggestions() && suggestions}
             />
           </Box>
           <Box pad="small">

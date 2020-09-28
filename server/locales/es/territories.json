@@ -32,5 +32,6 @@
   "noNumbers": "No hay números",
   "noAssigned": "Sin asignación",
   "history": "Historial",
-  "territoryView": "Ver territorio"
+  "territoryView": "Ver territorio",
+  "nameAssigned": "Nombre del hermano"
 }

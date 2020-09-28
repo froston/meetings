@@ -115,7 +115,7 @@ class Dashboard extends Component {
         messages.push(
           <Box key={2} pad={{ vertical: 'small' }} onClick={() => this.navigate('/territories')}>
             <Notification
-              message={t('messageTerWarning')}
+              message={t('messageTerWarning', { amount: criticals.length, days: settings.terDanger })}
               state={t('messageTerDesc', {
                 territories: criticals.map((c) => c.number).join(', '),
               })}

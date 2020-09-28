@@ -6,7 +6,8 @@ CREATE TABLE `numbers` (
   `id` int(11) NOT NULL,
   `number` varchar(20) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `territory` int(11) DEFAULT NULL
+  `territory` int(11) DEFAULT NULL,
+  `user` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `numbers_hist` (
@@ -53,7 +54,8 @@ CREATE TABLE `tasks` (
 
 CREATE TABLE `territories` (
   `id` int(11) NOT NULL,
-  `number` int(11) DEFAULT NULL
+  `number` int(11) DEFAULT NULL,
+  `isCompany` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `territories_hist` (

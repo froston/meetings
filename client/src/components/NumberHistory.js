@@ -2,13 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
 import { Layer, Header, Heading, Table, TableRow, Button } from 'grommet'
-import { FormTrashIcon } from 'grommet/components/icons/base'
+import { FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
 import moment from 'moment'
-import { api, consts } from '../utils'
+import { Loader } from '../components'
+import { api, consts, functions } from '../utils'
 
 class NumberHistory extends React.PureComponent {
   state = {
     hist: [],
+    loading: false,
   }
 
   componentDidUpdate(prevProps) {
@@ -18,8 +20,9 @@ class NumberHistory extends React.PureComponent {
   }
 
   loadData = () => {
+    this.setState({ loading: true })
     api.get(`/numbers/${this.props.number.id}/history`).then((hist) => {
-      this.setState({ hist })
+      this.setState({ hist, loading: false })
     })
   }
 
@@ -40,9 +43,10 @@ class NumberHistory extends React.PureComponent {
 
   render() {
     const { t, hidden, number, handleClose } = this.props
-    const { hist } = this.state
+    const { hist, loading } = this.state
     return (
       <div>
+        <Loader loading={loading} />
         <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
           <Header size="medium">
             <Heading tag="h2" margin="medium">
@@ -65,7 +69,12 @@ class NumberHistory extends React.PureComponent {
                     return (
                       <TableRow key={index}>
                         <td>{moment(numHist.changed_date).format(consts.DATE_FORMAT)}</td>
-                        <td>{t(`common:status${numHist.status}`)}</td>
+                        <td>
+                          <span>
+                            <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(numHist.status)} />
+                            {` ${t(`common:status${numHist.status}`)}`}
+                          </span>
+                        </td>
                         <td>{numHist.details}</td>
                         {hist.length > 1 && (
                           <td>

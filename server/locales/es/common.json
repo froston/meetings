@@ -14,6 +14,9 @@
   "point": "Punto",
   "generate": "Generar",
   "required": "Requerido",
+  "requiredStatus": "Seleccione el estado",
+  "requiredRV": "Indique de quien es la revisita",
+  "requiredX": "Indique la razón",
   "dateNotValid": "Fecha inválida",
   "gender": "Genero",
   "available": "Disponible",
@@ -74,5 +77,6 @@
   "settingsSaved": "Los ajustes se han guardado",
   "terWarning": "Límite de advertencia",
   "terDanger": "Límite de peligro",
-  "flhsIndex": "FLHS index"
+  "flhsIndex": "FLHS index",
+  "isCompany": "Empresas"
 }
