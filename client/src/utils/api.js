@@ -7,7 +7,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   async (options) => {
-    options.headers['Authorization'] = `Bearer ${await firebase.auth().currentUser.getIdToken(true)}`
+    options.headers['Authorization'] = `Bearer ${await firebase.auth().currentUser.getIdToken()}`
     return options
   },
   function (error) {
