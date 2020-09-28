@@ -135,9 +135,7 @@ const getSuggestions = async () => {
     AND H.status = "RV"
     GROUP BY details
   `)
-
-  suggestions.mapAsync(async (sug) => sug.details)
-
+  await suggestions.mapAsync(async (sug) => sug.details)
   return suggestions
 }
 

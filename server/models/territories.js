@@ -182,7 +182,7 @@ const getTerritoryNumbers = async (terNum) => {
 
 const getSuggestions = async () => {
   const suggestions = await db.query('SELECT assigned FROM territories_hist GROUP BY assigned')
-  suggestions.mapAsync(async (sug) => sug.assigned)
+  await suggestions.mapAsync(async (sug) => sug.assigned)
   return suggestions
 }
 
