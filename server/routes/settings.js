@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
   }
   fs.writeFile(`${__dirname}/../appConfig.json`, JSON.stringify(settings), (err) => {
     if (err) {
-      res.status(500).send(err)
+      return next(err)
     }
     res.status(200).end()
   })

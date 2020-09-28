@@ -29,7 +29,7 @@ const getAll = async (filters) => {
       order = 'ORDER BY T.id'
   }
 
-  return await db.query(
+  const ters = await db.query(
     `SELECT H.*, T.*, H.id AS history_id
       FROM territories T
       LEFT JOIN territories_hist H ON T.id = H.territory_id
@@ -41,6 +41,13 @@ const getAll = async (filters) => {
       ${where}
       ${order}`
   )
+  await ters.mapAsync(async (ter) => {
+    const numbers = await numberModel.getByTerritoryNumber(ter.number)
+    ter.isAssigned = !!ter.date_from && !ter.date_to
+    ter.numbers = numbers
+    return ter
+  })
+  return ters
 }
 const getById = async (id) => {
   const ters = await db.query('SELECT * FROM territories WHERE id = ?', id)
@@ -119,7 +126,7 @@ const workTerritory = async (id, data) => {
 
   const terHist = {
     assigned: data.assigned,
-    date_from: consts.formatDateTime(data.date_to),
+    date_from: consts.formatDateTime(data.date_from),
     date_to: consts.formatDateTime(data.date_to),
   }
   if (data.history_id > 0) {

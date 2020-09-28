@@ -3,16 +3,16 @@ const model = require('../models/users')
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const data = await model.getAll()
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.get('/:uid', async (req, res) => {
+router.get('/:uid', async (req, res, next) => {
   const uid = req.params.uid
   try {
     const data = await model.getUserByUID(uid)
@@ -21,37 +21,37 @@ router.get('/:uid', async (req, res) => {
     }
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const data = await model.createUser(req.body)
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   const id = req.params.id
   const body = req.body
   try {
     const data = await model.updateUser(id, body)
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   const id = req.params.id
   try {
     await model.removeUser(id)
     res.status(204).end()
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 

@@ -71,7 +71,7 @@ class Work extends React.Component {
       if (territory.isAssigned) {
         terState.history_id = territory.history_id
         terState.assigned = territory.assigned
-        terState.date_from = territory.date_from
+        terState.date_from = moment(territory.date_from).format(consts.DATETIME_FORMAT)
       }
       this.setState(terState)
     })
@@ -198,7 +198,7 @@ class Work extends React.Component {
                 <TextInput value={territory.assigned} disabled />
               </FormField>
               <FormField label={t('date_from')}>
-                <TextInput value={moment(territory.date_from).format(consts.DATETIME_FORMAT)} disabled />
+                <TextInput value={date_from} disabled />
               </FormField>
             </>
           ) : (

@@ -110,7 +110,7 @@ class UserForm extends React.PureComponent {
                 </FormField>
               </>
             )}
-            {admin === 0 && (
+            {!admin && (
               <FormField label={t('meta')}>
                 <Select
                   label={t('meta')}

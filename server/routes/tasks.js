@@ -3,17 +3,17 @@ const model = require('../models/tasks')
 
 const router = express.Router()
 
-router.get('/:studentId', async (req, res) => {
+router.get('/:studentId', async (req, res, next) => {
   const studentId = req.params.studentId
   try {
     const data = await model.getAllTasks(studentId)
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const newTask = req.body
   const taskName = newTask.task
   if (taskName.includes('Return Visit')) {
@@ -26,11 +26,11 @@ router.post('/', async (req, res) => {
     const data = await model.createTask(newTask)
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   const taskId = req.params.id
   const newTask = req.body
   delete newTask.username
@@ -38,17 +38,17 @@ router.patch('/:id', async (req, res) => {
     const data = await model.updateTask(taskId, newTask)
     res.send(data)
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   const id = req.params.id
   try {
     await model.removeTask(id)
     res.status(204).end()
   } catch (err) {
-    res.status(500).send(err)
+    next(err)
   }
 })
 

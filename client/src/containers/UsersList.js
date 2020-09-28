@@ -87,7 +87,7 @@ class UsersList extends React.Component {
         <List>
           {users.map((user, index) => (
             <ListItem
-              key={user.id}
+              key={user.uid}
               pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
               justify="between"
               align="center"
@@ -100,7 +100,7 @@ class UsersList extends React.Component {
                   <Image
                     style={{ width: '40px', borderRadius: 20 }}
                     src={user.photoURL}
-                    size="xsmall"
+                    size="small"
                     title={user.displayName}
                   />
                   <strong style={{ margin: 10 }}>{user.displayName}</strong>
