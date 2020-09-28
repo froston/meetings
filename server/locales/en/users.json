@@ -8,7 +8,7 @@
   "meta": "Permissions",
   "confirmRemove": "Seguro de eliminar al usuario? Sure to remove user?",
   "userRemoved": "User was removed.",
-  "userUpdated": "User {{name} was updated.",
+  "userUpdated": "User {{name}} was updated.",
   "userRegistred": "User {{name}} was registered.",
   "lifeministry": "Life and Ministry",
   "territories": "Territories",

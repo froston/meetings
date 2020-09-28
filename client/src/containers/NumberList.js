@@ -195,7 +195,7 @@ class NumberList extends React.Component {
               value={searchTerm}
               onDOMChange={(e) => this.handleSearch(e.target.value)}
               onSelect={(obj) => this.handleSearch(obj.suggestion)}
-              suggestions={this.showSuggestions() && suggestions}
+              suggestions={this.showSuggestions() ? suggestions : []}
             />
           </Box>
           <Box pad="small">

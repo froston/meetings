@@ -77,6 +77,7 @@ class TaskList extends React.PureComponent {
               </thead>
               <tbody>
                 {tasks &&
+                  student &&
                   tasks.map((task, index) => {
                     const isHelper = task.helper_id === student.id
                     const taskName = task.rv ? t(`common:${task.rv}. ${task.task}`) : t(`common:${task.task}`)
