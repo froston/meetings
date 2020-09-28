@@ -58,7 +58,7 @@ class NumberList extends React.Component {
   handleSearch = (searchTerm) => {
     let suggestions = []
     if (searchTerm) {
-      suggestions = this.context.suggestions.filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
+      suggestions = this.context.suggestionsRv.filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
     }
     this.setState({ searchTerm, suggestions }, this.debounceSearch)
   }

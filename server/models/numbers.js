@@ -162,16 +162,30 @@ const numberExists = (number, cb) => {
 }
 
 exports.getSuggestions = (cb) => {
-  getDb().query('SELECT details FROM numbers_hist WHERE status = "RV" GROUP BY details', (err, suggestions) => {
-    if (err) throw err
-    async.map(
-      suggestions,
-      (sug, done) => {
-        done(null, sug.details)
-      },
-      cb
-    )
-  })
+  getDb().query(
+    `
+    SELECT H.details
+    FROM numbers N 
+    INNER JOIN numbers_hist H ON N.id = H.number_id
+    WHERE (H.id = (
+      SELECT MAX(H2.id) 
+      FROM numbers_hist H2 
+      WHERE H2.number_id = H.number_id
+    ))
+    AND H.status = "RV"
+    GROUP BY details
+  `,
+    (err, suggestions) => {
+      if (err) throw err
+      async.map(
+        suggestions,
+        (sug, done) => {
+          done(null, sug.details)
+        },
+        cb
+      )
+    }
+  )
 }
 
 exports.numberExists = numberExists
