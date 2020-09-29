@@ -1,7 +1,6 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-const cors = require('cors')
 const i18next = require('i18next')
 const i18nextMiddleware = require('i18next-express-middleware')
 const Backend = require('i18next-node-fs-backend')
@@ -13,13 +12,6 @@ const { initDb } = require('./db')
 require('./helpers/async')
 
 const app = express()
-
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200,
-}
-
-app.use(cors(corsOptions))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
