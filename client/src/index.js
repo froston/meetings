@@ -17,4 +17,5 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-serviceWorker.register({}, i18n.language)
+//serviceWorker.register({}, i18n.language)
+serviceWorker.unregister()

@@ -14,24 +14,24 @@ if ('function' === typeof importScripts) {
     /* injection point for manifest files.  */
     workbox.precaching.precacheAndRoute([])
 
-    /*     const fs = [
-          'common',
-          'dashboard',
-          'login',
-          'nav',
-          'schedules',
-          'students',
-          'tasks',
-          'numbers',
-          'territories',
-          'users',
-        ]
-    
-        workbox.precaching.precacheAndRoute([
-          ...fs.map((f) => ({ url: `/locales/es/${f}.json`, revision: null })),
-          ...fs.map((f) => ({ url: `/locales/en/${f}.json`, revision: null })),
-          ...fs.map((f) => ({ url: `/locales/cs/${f}.json`, revision: null })),
-        ]) */
+    const fs = [
+      'common',
+      'dashboard',
+      'login',
+      'nav',
+      'schedules',
+      'students',
+      'tasks',
+      'numbers',
+      'territories',
+      'users',
+    ]
+
+    workbox.precaching.precacheAndRoute([
+      ...fs.map((f) => ({ url: `/locales/es/${f}.json`, revision: null })),
+      ...fs.map((f) => ({ url: `/locales/en/${f}.json`, revision: null })),
+      ...fs.map((f) => ({ url: `/locales/cs/${f}.json`, revision: null })),
+    ])
 
     /* custom cache rules*/
     workbox.routing.registerNavigationRoute('/index.html', {
