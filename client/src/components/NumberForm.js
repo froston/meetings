@@ -9,7 +9,7 @@ import { consts, functions } from '../utils'
 const initState = {
   number: '',
   status: null,
-  territory: null,
+  territory: '',
   details: '',
   errors: {},
   loading: false,
