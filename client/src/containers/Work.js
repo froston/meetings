@@ -57,8 +57,15 @@ class Work extends React.Component {
 
   loadData = () => {
     this.setState({ loading: true })
-    const id = this.props.match.params.id
-    api.get(`/territories/${id}`).then((territory) => {
+    const { id } = this.props.match.params
+    api.get(`/territories/number/${id}`).then((territory) => {
+      const assigned = new URLSearchParams(this.props.location.search).get('assigned')
+      if (assigned && (!territory || assigned !== territory.assigned || !territory.isAssigned)) {
+        return this.setState({ submitted: true }, () => {
+          toast(this.props.t('territoryNotAssigned', { assigned }))
+          this.props.history.push('/territories')
+        })
+      }
       let numbers = {}
       if (territory && territory.numbers && !!territory.numbers.length) {
         territory.numbers.forEach((n) => {
@@ -121,7 +128,7 @@ class Work extends React.Component {
   }
 
   handleView = (e) => {
-    e.preventDefault()
+    e && e.preventDefault()
     this.setState({ territoryView: !this.state.territoryView })
   }
 

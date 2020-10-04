@@ -67,7 +67,7 @@ const getById = async (id) => {
 }
 
 const getByNumber = async (number) => {
-  const ters = await db.query('SELECT * FROM territories WHERE number = ?', id)
+  const ters = await db.query('SELECT * FROM territories WHERE number = ?', number)
   let ter = ters[0]
 
   if (!ter) {

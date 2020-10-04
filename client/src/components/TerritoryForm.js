@@ -156,6 +156,13 @@ class TerritoryForm extends React.PureComponent {
                     format={consts.DATETIME_FORMAT}
                   />
                 </FormField>
+                {territory && territory.isAssigned && (
+                  <FormField label={t('share')}>
+                    <TextInput
+                      value={encodeURI(`${window.origin}/work/${territory.number}?assigned=${territory.assigned}`)}
+                    />
+                  </FormField>
+                )}
               </>
             )}
             {territory && territory.last_worked && (

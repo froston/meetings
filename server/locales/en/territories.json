@@ -33,5 +33,7 @@
   "noAssigned": "Not assigned",
   "history": "History",
   "territoryView": "Watch territory",
-  "nameAssigned": "Assigned brother"
+  "nameAssigned": "Assigned brother",
+  "share": "Work link",
+  "territoryNotAssigned": "This territory has not been assigned to you"
 }

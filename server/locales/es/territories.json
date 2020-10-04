@@ -33,5 +33,7 @@
   "noAssigned": "Sin asignación",
   "history": "Historial",
   "territoryView": "Ver territorio",
-  "nameAssigned": "Nombre del hermano"
+  "nameAssigned": "Nombre del hermano",
+  "share": "Enlace para trabajar",
+  "territoryNotAssigned": "No tiene asignado este territorio"
 }

@@ -35,6 +35,20 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/number/:number', async (req, res, next) => {
+  const number = req.params.number
+  try {
+    const data = await model.getByNumber(number)
+    if (data) {
+      res.send(data)
+    } else {
+      res.status(404).send(`Territory No. ${number} not found.`)
+    }
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.post('/', async (req, res, next) => {
   try {
     const data = await model.createTerritory(req.body)
