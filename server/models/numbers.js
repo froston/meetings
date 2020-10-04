@@ -60,6 +60,10 @@ const createNumber = async (data) => {
 }
 
 const updateNumber = async (id, data) => {
+  const exists = await numberExists(data.number, id)
+  if (exists) {
+    throw { alreadyExists: true }
+  }
   const updatedNumber = {
     number: data.number,
     territory: data.territory,
@@ -117,8 +121,8 @@ const removeHistory = async (id, history_id) => {
   await db.query('DELETE FROM numbers_hist WHERE id = ?', history_id)
 }
 
-const numberExists = async (number) => {
-  const nums = await db.query('SELECT * FROM numbers WHERE number = ?', number)
+const numberExists = async (number, id = null) => {
+  const nums = await db.query(`SELECT * FROM numbers WHERE number = ? AND id <> ?`, [number, Number(id)])
   return nums && nums[0] ? true : false
 }
 

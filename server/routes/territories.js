@@ -40,6 +40,13 @@ router.post('/', async (req, res, next) => {
     const data = await model.createTerritory(req.body)
     res.send(data)
   } catch (err) {
+    if (err) {
+      if (err.alreadyExists) {
+        err.message = req.t('territoryDuplicate')
+        return res.status(400).send(err)
+      }
+      return next(err)
+    }
     next(err)
   }
 })
@@ -50,6 +57,10 @@ router.patch('/:id', async (req, res, next) => {
     const data = await model.updateTerritory(id, req.body)
     res.send(data)
   } catch (err) {
+    if (err.alreadyExists) {
+      err.message = req.t('territoryDuplicate')
+      return res.status(400).send(err)
+    }
     next(err)
   }
 })

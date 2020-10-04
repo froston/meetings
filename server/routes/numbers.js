@@ -57,6 +57,10 @@ router.patch('/:id', async (req, res, next) => {
     const data = await model.updateNumber(id, req.body)
     res.send(data)
   } catch (err) {
+    if (err.alreadyExists) {
+      err.message = req.t('numberDuplicate')
+      return res.status(400).send(err)
+    }
     next(err)
   }
 })

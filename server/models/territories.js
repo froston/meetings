@@ -66,7 +66,28 @@ const getById = async (id) => {
   return ter
 }
 
+const getByNumber = async (number) => {
+  const ters = await db.query('SELECT * FROM territories WHERE number = ?', id)
+  let ter = ters[0]
+
+  if (!ter) {
+    return null
+  }
+  const hist = await getTerritoryHist(ter.id)
+  ter = { ...hist[0], ...ter, history_id: hist[0].id }
+
+  const numbers = await getTerritoryNumbers(ter.number)
+  ter.isAssigned = !!ter.date_from && !ter.date_to
+  ter.numbers = numbers
+
+  return ter
+}
+
 const createTerritory = async (data) => {
+  const exists = await territoryExists(data.number)
+  if (exists) {
+    throw { alreadyExists: true }
+  }
   const newTer = {
     number: data.number,
     isCompany: data.isCompany,
@@ -82,6 +103,10 @@ const createTerritory = async (data) => {
 }
 
 const updateTerritory = async (id, data) => {
+  const exists = await territoryExists(data.number, id)
+  if (exists) {
+    throw { alreadyExists: true }
+  }
   const updatedTer = {
     number: data.number,
     isCompany: data.isCompany,
@@ -193,9 +218,15 @@ const getSuggestions = async () => {
   return suggestions
 }
 
+const territoryExists = async (number, id = null) => {
+  const ters = await db.query(`SELECT * FROM territories WHERE number = ? AND id <> ?`, [number, Number(id)])
+  return ters && ters[0] ? true : false
+}
+
 module.exports = {
   getAll,
   getById,
+  getByNumber,
   createTerritory,
   removeTerritory,
   updateTerritory,
@@ -206,4 +237,5 @@ module.exports = {
   getTerritoryHist,
   workTerritory,
   getSuggestions,
+  territoryExists,
 }

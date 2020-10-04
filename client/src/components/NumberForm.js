@@ -74,7 +74,7 @@ class NumberForm extends React.PureComponent {
       const newValues = Object.assign({}, values)
       newValues.territory = this.state.territory > 0 ? this.state.territory : null
       if (number && number.id) {
-        this.props.handleSubmit(number && number.id, newValues)
+        this.props.handleSubmit(number && number.id, newValues, this.handleError)
       } else {
         this.props.handleSubmit(null, newValues, this.handleError)
       }

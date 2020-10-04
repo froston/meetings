@@ -109,10 +109,13 @@ class NumberList extends React.Component {
       ...values,
     }
     if (id) {
-      api.patch('/numbers', id, data).then(() => {
-        toast(t('numberUpdated', { number: data.number }))
-        this.setState({ numberForm: true }, this.loadData)
-      })
+      api
+        .patch('/numbers', id, data)
+        .then(() => {
+          toast(t('numberUpdated', { number: data.number }))
+          this.setState({ numberForm: true }, this.loadData)
+        })
+        .catch(cbError)
     } else {
       api
         .post('/numbers', data)

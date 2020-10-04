@@ -110,22 +110,28 @@ class TerritoryList extends React.Component {
     })
   }
 
-  handleSubmit = (id, values) => {
+  handleSubmit = (id, values, cbError) => {
     const { t } = this.props
     const data = {
       ...this.state.territory,
       ...values,
     }
     if (id) {
-      api.patch('/territories', id, data).then(() => {
-        toast(t('territoryUpdated', { number: data.number }))
-        this.setState({ territoryForm: true }, this.loadData)
-      })
+      api
+        .patch('/territories', id, data)
+        .then(() => {
+          toast(t('territoryUpdated', { number: data.number }))
+          this.setState({ territoryForm: true }, this.loadData)
+        })
+        .catch(cbError)
     } else {
-      api.post('/territories', data).then(() => {
-        toast(t('territoryCreated', { number: data.number }))
-        this.setState({ territoryForm: true }, this.loadData)
-      })
+      api
+        .post('/territories', data)
+        .then(() => {
+          toast(t('territoryCreated', { number: data.number }))
+          this.setState({ territoryForm: true }, this.loadData)
+        })
+        .catch(cbError)
     }
   }
 

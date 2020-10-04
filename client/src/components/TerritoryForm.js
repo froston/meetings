@@ -80,6 +80,16 @@ class TerritoryForm extends React.PureComponent {
     this.setState({ ...state, errors: {} })
   }
 
+  handleError = (err) => {
+    if (err && err.response && err.response.data) {
+      let errors = {
+        ...this.state.errors,
+        number: err.response.data.message,
+      }
+      this.setState({ errors, loading: false })
+    }
+  }
+
   handleChange = (name, value) => {
     this.setState({ [name]: value, errors: {} })
   }
@@ -94,9 +104,9 @@ class TerritoryForm extends React.PureComponent {
       newValues.date_from = moment(newValues.date_from, consts.DATETIME_FORMAT).isValid() ? newValues.date_from : null
       newValues.date_to = moment(newValues.date_to, consts.DATETIME_FORMAT).isValid() ? newValues.date_to : null
       if (territory && territory.id) {
-        this.props.handleSubmit(territory && territory.id, newValues)
+        this.props.handleSubmit(territory && territory.id, newValues, this.handleError)
       } else {
-        this.props.handleSubmit(null, newValues)
+        this.props.handleSubmit(null, newValues, this.handleError)
       }
     })
   }
