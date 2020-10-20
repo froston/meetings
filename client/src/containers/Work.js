@@ -23,7 +23,7 @@ import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/i
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'
-import { TerritoryView, Loader, ColorOption, Badge } from '../components'
+import { TerritoryView, Loader, ColorOption, Badge, ConfirmWork } from '../components'
 import { AppContext } from '../utils/context'
 
 const initState = {
@@ -35,6 +35,7 @@ const initState = {
   errors: {},
   loading: false,
   territoryView: true,
+  confirmWork: true,
   submitted: false,
 }
 
@@ -160,25 +161,34 @@ class Work extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault()
     this.validate(() => {
-      const { t } = this.props
-      this.setState({ loading: true })
-      const data = {
-        ...this.state.territory,
-        ...this.state,
+      this.setState({ confirmWork: false })
+    })
+  }
+
+  handleConfirm = () => {
+    const { t } = this.props
+    this.setState({ loading: true, confirmWork: true })
+    const data = {
+      ...this.state.territory,
+      ...this.state,
+    }
+    data.numbers = []
+    Object.entries(this.state.numbers).forEach(([key, value]) => {
+      if (value.status) {
+        data.numbers.push(value)
       }
-      data.numbers = []
-      Object.entries(this.state.numbers).forEach(([key, value]) => {
-        if (value.status) {
-          data.numbers.push(value)
-        }
-      })
-      api.post(`/territories/${data.id}/work`, data).then(() => {
-        toast(t('territoryWorked', { number: data.number }))
-        this.setState({ submitted: true }, () => {
-          this.handleReturn()
-        })
+    })
+    api.post(`/territories/${data.id}/work`, data).then(() => {
+      toast(t('territoryWorked', { number: data.number }))
+      this.setState({ submitted: true }, () => {
+        this.handleReturn()
       })
     })
+  }
+
+  handleConfirmClose = (e) => {
+    e && e.preventDefault()
+    this.setState({ confirmWork: true })
   }
 
   render() {
@@ -247,7 +257,7 @@ class Work extends React.Component {
               <Button
                 onClick={!loading ? this.handleSubmit : null}
                 icon={<SettingsOptionIcon />}
-                label={t('workTerritory')}
+                label={t('submit')}
                 primary
               />
               <br />
@@ -319,6 +329,16 @@ class Work extends React.Component {
         )}
         <TerritoryView hidden={this.state.territoryView} handleClose={this.handleView} territory={territory} />
         <Prompt when={!this.state.submitted} message={t('common:beforeLeaving')} />
+        <ConfirmWork
+          hidden={this.state.confirmWork}
+          handleSubmit={this.handleConfirm}
+          handleClose={this.handleConfirmClose}
+          territory={territory}
+          numbers={this.state.numbers}
+          assigned={assigned}
+          date_from={date_from}
+          date_to={date_to}
+        />
       </Section>
     )
   }

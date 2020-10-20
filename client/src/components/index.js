@@ -18,6 +18,7 @@ import UserForm from './UserForm'
 import Worked from './Worked'
 import ColorOption from './ColorOption'
 import Badge from './Badge'
+import ConfirmWork from './ConfirmWork'
 
 export {
   Nav,
@@ -40,4 +41,5 @@ export {
   Worked,
   ColorOption,
   Badge,
+  ConfirmWork,
 }
