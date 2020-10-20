@@ -3,11 +3,25 @@ const moment = require('moment')
 const sumTask = (task) => (task ? Number(moment(`${task.week}/${task.month}/${task.year}`, 'D/M/YYYY').format('x')) : 0)
 
 const hadTask = (lastMain, lastHelper, month, year) => {
-  if (lastMain && lastMain.month === month && lastMain.year === year) {
-    return true
+  // Calc last month/year
+  const lastMonth = month === 1 ? 12 : month - 1
+  const lastYear = month === 1 ? year - 1 : year
+
+  if (lastMain) {
+    if (lastMain.month === month && lastMain.year === year) {
+      return true
+    }
+    if (lastMain.month === lastMonth && lastMain.year === lastYear) {
+      return true
+    }
   }
-  if (lastHelper && lastHelper.month === month && lastHelper.year === year) {
-    return true
+  if (lastHelper) {
+    if (lastHelper.month === month && lastHelper.year === year) {
+      return true
+    }
+    if (lastHelper.month === lastMonth && lastHelper.year === lastYear) {
+      return true
+    }
   }
   return false
 }
@@ -30,7 +44,7 @@ exports.sortStudents = (taskName, hall, month, year) => {
     const bLastTaskPoint = bTasksFiltered[0]
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
-    /* HAD TASK THIS MONTH */
+    /* HAD TASK THIS OR LAST MONTH */
     if (hadTask(a.tasks[0], a.helpTasks[0], month, year) && !hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return 1
     }
@@ -115,26 +129,11 @@ exports.sortHelpers = (taskName, month, year) => {
     // LAST TIME HELPER
     const aLastHelperSum = sumTask(aTasksFiltered[0])
     const bLastHelperSum = sumTask(bTasksFiltered[0])
-    /* HAD TASK THIS MONTH */
+    /* HAD TASK THIS OR LAST MONTH */
     if (hadTask(a.tasks[0], a.helpTasks[0], month, year) && !hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
       return 1
     }
     if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
-      return -1
-    }
-    /* HAD TASK LAST MONTH (to not assign tasks too often)*/
-    const lastMonth = month === 1 ? 12 : month - 1
-    const lastYear = month === 1 ? year - 1 : year
-    if (
-      hadTask(a.tasks[0], a.helpTasks[0], lastMonth, lastYear) &&
-      !hadTask(b.tasks[0], b.helpTasks[0], lastMonth, lastYear)
-    ) {
-      return 1
-    }
-    if (
-      !hadTask(a.tasks[0], a.helpTasks[0], lastMonth, lastYear) &&
-      hadTask(b.tasks[0], b.helpTasks[0], lastMonth, lastYear)
-    ) {
       return -1
     }
     /* LAST TIME GAVE TALK VS HELPER (ONLY SISTERS) */
