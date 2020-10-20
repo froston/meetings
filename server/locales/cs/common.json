@@ -72,5 +72,6 @@
   "territoryDuplicate": "Obvod již existuje",
   "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?",
   "workedMessage": "Hotovo, díky!",
-  "isCompany": "Firmy"
+  "isCompany": "Firmy",
+  "emptyResult": "Žádné výsledky"
 }

@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver'
 import moment from 'moment'
 import { ScheduleForm, Undo, Loader } from '../components'
 import { api } from '../utils'
+import Empty from '../images/Empty'
 
 class ScheduleList extends React.Component {
   state = {
@@ -169,6 +170,7 @@ class ScheduleList extends React.Component {
   render() {
     const { t } = this.props
     const { online, schedules, toRemove, scheduleForm, loading, year } = this.state
+    const scheduleArr = schedules.filter((s) => !toRemove.includes(s.id))
     return (
       <Section>
         <Loader loading={loading} />
@@ -199,49 +201,48 @@ class ScheduleList extends React.Component {
           </Box>
         </Box>
         <List selectable>
-          {schedules
-            .filter((s) => !toRemove.includes(s.id))
-            .map((schedule, index) => (
-              <ListItem
-                key={schedule.id}
-                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
-                justify="between"
-                align="center"
-                responsive={false}
-                onClick={(e) => this.handleSelect(e, schedule.id)}
-                separator={index === 0 ? 'horizontal' : 'bottom'}
-              >
-                <Box>
-                  <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
-                </Box>
-                <Box direction="row" responsive={false}>
-                  <Button
-                    icon={<DocumentTextIcon size="medium" />}
-                    onClick={(e) => this.downloadPdfs(e, schedule)}
-                    a11yTitle={t('reportPdf')}
-                    title={t('reportPdf')}
-                  />
-                  <Button
-                    icon={<DocumentExcelIcon size="medium" />}
-                    onClick={(e) => this.downloadXls(e, schedule)}
-                    a11yTitle={t('report')}
-                    title={t('report')}
-                  />
-                  <Button
-                    icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? (e) => this.handleRemove(e, schedule.id) : undefined}
-                    a11yTitle={t('remove')}
-                    title={t('remove')}
-                    disabled={!online}
-                  />
-                </Box>
-              </ListItem>
-            ))}
+          {scheduleArr.map((schedule, index) => (
+            <ListItem
+              key={schedule.id}
+              pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
+              justify="between"
+              align="center"
+              responsive={false}
+              onClick={(e) => this.handleSelect(e, schedule.id)}
+              separator={index === 0 ? 'horizontal' : 'bottom'}
+            >
+              <Box>
+                <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
+              </Box>
+              <Box direction="row" responsive={false}>
+                <Button
+                  icon={<DocumentTextIcon size="medium" />}
+                  onClick={(e) => this.downloadPdfs(e, schedule)}
+                  a11yTitle={t('reportPdf')}
+                  title={t('reportPdf')}
+                />
+                <Button
+                  icon={<DocumentExcelIcon size="medium" />}
+                  onClick={(e) => this.downloadXls(e, schedule)}
+                  a11yTitle={t('report')}
+                  title={t('report')}
+                />
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={online ? (e) => this.handleRemove(e, schedule.id) : undefined}
+                  a11yTitle={t('remove')}
+                  title={t('remove')}
+                  disabled={!online}
+                />
+              </Box>
+            </ListItem>
+          ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />
             </div>
           )}
+          <Empty show={!scheduleArr.length && !loading} text={t('common:emptyResult')} />
         </List>
         <ScheduleForm
           hidden={scheduleForm}

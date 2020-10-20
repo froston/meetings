@@ -8,6 +8,7 @@ import Spinning from 'grommet/components/icons/Spinning'
 import { Undo, NumberForm, NumberHistory, Loader } from '../components'
 import { api, functions, consts } from '../utils'
 import { AppContext } from '../utils/context'
+import Empty from '../images/Empty'
 
 class NumberList extends React.Component {
   static contextType = AppContext
@@ -36,7 +37,7 @@ class NumberList extends React.Component {
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
 
-    this.debounceSearch = functions.debounce(this.loadData, 300)
+    this.debounceSearch = functions.debounce(this.loadData, 500)
   }
 
   componentWillUnmount() {
@@ -169,6 +170,7 @@ class NumberList extends React.Component {
     const { t } = this.props
     const { numbers, online, loading, toRemove, searchTerm, status, territory, suggestions } = this.state
     const statusOptions = ['', ...consts.statusOptions]
+    const numbersArr = numbers.filter((t) => !toRemove.includes(t.id))
     return (
       <Section>
         <Loader loading={loading} />
@@ -219,49 +221,52 @@ class NumberList extends React.Component {
           </Box>
         </Box>
 
-        <List selectable onSelect={this.handleSelect} onMore={numbers.length >= 20 ? this.handleMore : null}>
-          {numbers
-            .filter((t) => !toRemove.includes(t.id))
-            .map((num, index) => (
-              <ListItem
-                key={num.id}
-                justify="between"
-                align="center"
-                responsive={false}
-                onClick={this.handleSelect}
-                separator={index === 0 ? 'horizontal' : 'bottom'}
-                style={{ paddingTop: 0, paddingBottom: 0 }}
-              >
-                <Box>
-                  <div title={num.status}>
-                    <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
-                    <strong> {num.number}</strong>
-                  </div>
-                </Box>
-                <Box direction="row" responsive={false}>
-                  {num.history_id > 0 && (
-                    <Button
-                      icon={<HistoryIcon size="small" />}
-                      onClick={(e) => this.handleHistory(e, num)}
-                      a11yTitle={t('history')}
-                      title={t('history')}
-                    />
-                  )}
+        <List
+          selectable
+          onSelect={numbersArr.length && this.handleSelect}
+          onMore={numbersArr.length >= 20 ? this.handleMore : null}
+        >
+          {numbersArr.map((num, index) => (
+            <ListItem
+              key={num.id}
+              justify="between"
+              align="center"
+              responsive={false}
+              onClick={this.handleSelect}
+              separator={index === 0 ? 'horizontal' : 'bottom'}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+            >
+              <Box>
+                <div title={num.status}>
+                  <StopFillIcon size="xsmall" colorIndex={functions.getNumberStatusColor(num.status)} />
+                  <strong> {num.number}</strong>
+                </div>
+              </Box>
+              <Box direction="row" responsive={false}>
+                {num.history_id > 0 && (
                   <Button
-                    icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? (e) => this.handleRemove(e, num.id) : undefined}
-                    a11yTitle={t('remove')}
-                    title={t('remove')}
-                    disabled={!online}
+                    icon={<HistoryIcon size="small" />}
+                    onClick={(e) => this.handleHistory(e, num)}
+                    a11yTitle={t('history')}
+                    title={t('history')}
                   />
-                </Box>
-              </ListItem>
-            ))}
+                )}
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={online ? (e) => this.handleRemove(e, num.id) : undefined}
+                  a11yTitle={t('remove')}
+                  title={t('remove')}
+                  disabled={!online}
+                />
+              </Box>
+            </ListItem>
+          ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />
             </div>
           )}
+          <Empty show={!numbersArr.length && !loading} text={t('common:emptyResult')} />
         </List>
         <NumberForm
           online={online}

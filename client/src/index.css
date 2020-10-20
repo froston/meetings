@@ -221,3 +221,32 @@ a.grommetux-button:hover {
     right: -8%;
   }
 }
+
+.ant-empty-image svg {
+  height: 100%;
+  margin: auto;
+}
+.ant-empty-img-default-ellipse {
+  fill-opacity: 0.8;
+  fill: #f5f5f5;
+}
+.ant-empty-img-default-path-1 {
+  fill: #aeb8c2;
+}
+.ant-empty-img-default-path-2 {
+  fill: url(#linearGradient-1);
+}
+.ant-empty-img-default-path-3 {
+  fill: #f5f5f7;
+}
+.ant-empty-img-default-path-4,
+.ant-empty-img-default-path-5 {
+  fill: #dce0e6;
+}
+.ant-empty-img-default-path-4,
+.ant-empty-img-default-path-5 {
+  fill: #dce0e6;
+}
+.ant-empty-img-default-g {
+  fill: #fff;
+}

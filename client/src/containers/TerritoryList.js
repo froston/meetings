@@ -17,6 +17,7 @@ import moment from 'moment'
 import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader, Badge } from '../components'
 import { api, consts, functions } from '../utils'
 import { AppContext } from '../utils/context'
+import Empty from '../images/Empty'
 
 class TerritoryList extends React.Component {
   static contextType = AppContext
@@ -46,7 +47,7 @@ class TerritoryList extends React.Component {
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
 
-    this.debounceSearch = functions.debounce(this.loadData, 300)
+    this.debounceSearch = functions.debounce(this.loadData, 500)
   }
 
   componentWillUnmount() {
@@ -192,6 +193,7 @@ class TerritoryList extends React.Component {
     const { t } = this.props
     const { settings } = this.context
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
+    const territoriesArr = territories.filter((t) => !toRemove.includes(t.id))
     return (
       <Section>
         <Loader loading={loading} />
@@ -240,74 +242,71 @@ class TerritoryList extends React.Component {
           </Box>
         </div>
         <br />
-        <List selectable onSelect={this.handleSelect}>
-          {territories
-            .filter((t) => !toRemove.includes(t.id))
-            .map((ter, index) => (
-              <ListItem
-                key={ter.id}
-                justify="between"
-                align="center"
-                responsive={false}
-                onClick={this.handleSelect}
-                separator={index === 0 ? 'horizontal' : 'bottom'}
-                style={{ paddingTop: 0, paddingBottom: 0 }}
-              >
-                <Box direction="row" align="start" justify="start">
-                  <div>
-                    <strong style={{ marginRight: 8 }}>
-                      <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
-                      {`  ${t('territory')} ${ter.number}`}
-                    </strong>
-                  </div>
-                  <div style={{ marginRight: 8 }}>
-                    {ter.last_worked && (
-                      <Label size="small">{moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>
-                    )}
-                    {ter.isAssigned && <Label size="small"> | {ter.assigned}</Label>}
-                  </div>
-                  <div>{!!ter.isCompany && <Badge label={t('common:isCompany')} />}</div>
-                </Box>
-                <Box direction="row" responsive={false}>
-                  {!ter.isAssigned && (
-                    <Button
-                      icon={<UserExpertIcon size="small" />}
-                      onClick={online ? (e) => this.handleAssignForm(e, ter) : undefined}
-                      a11yTitle={t('assign')}
-                      title={t('assign')}
-                      disabled={!online}
-                    />
-                  )}
+        <List selectable onSelect={!!territoriesArr.length && this.handleSelect}>
+          {territoriesArr.map((ter, index) => (
+            <ListItem
+              key={ter.id}
+              justify="between"
+              align="center"
+              responsive={false}
+              onClick={this.handleSelect}
+              separator={index === 0 ? 'horizontal' : 'bottom'}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+            >
+              <Box direction="row" align="start" justify="start">
+                <div>
+                  <strong style={{ marginRight: 8 }}>
+                    <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
+                    {`  ${t('territory')} ${ter.number}`}
+                  </strong>
+                </div>
+                <div style={{ marginRight: 8 }}>
+                  {ter.last_worked && <Label size="small">{moment(ter.last_worked).format(consts.DATE_FORMAT)}</Label>}
+                  {ter.isAssigned && <Label size="small"> | {ter.assigned}</Label>}
+                </div>
+                <div>{!!ter.isCompany && <Badge label={t('common:isCompany')} />}</div>
+              </Box>
+              <Box direction="row" responsive={false}>
+                {!ter.isAssigned && (
                   <Button
-                    icon={<SettingsOptionIcon size="small" />}
-                    onClick={online ? (e) => this.handleWork(e, ter) : undefined}
-                    a11yTitle={t('workTerritory')}
-                    title={t('workTerritory')}
+                    icon={<UserExpertIcon size="small" />}
+                    onClick={online ? (e) => this.handleAssignForm(e, ter) : undefined}
+                    a11yTitle={t('assign')}
+                    title={t('assign')}
                     disabled={!online}
                   />
-                  {ter.history_id > 0 && (
-                    <Button
-                      icon={<HistoryIcon size="small" />}
-                      onClick={(e) => this.handleHistory(e, ter)}
-                      a11yTitle={t('history')}
-                      title={t('history')}
-                    />
-                  )}
+                )}
+                <Button
+                  icon={<SettingsOptionIcon size="small" />}
+                  onClick={online ? (e) => this.handleWork(e, ter) : undefined}
+                  a11yTitle={t('workTerritory')}
+                  title={t('workTerritory')}
+                  disabled={!online}
+                />
+                {ter.history_id > 0 && (
                   <Button
-                    icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? (e) => this.handleRemove(e, ter.id) : undefined}
-                    a11yTitle={t('remove')}
-                    title={t('remove')}
-                    disabled={!online}
+                    icon={<HistoryIcon size="small" />}
+                    onClick={(e) => this.handleHistory(e, ter)}
+                    a11yTitle={t('history')}
+                    title={t('history')}
                   />
-                </Box>
-              </ListItem>
-            ))}
+                )}
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={online ? (e) => this.handleRemove(e, ter.id) : undefined}
+                  a11yTitle={t('remove')}
+                  title={t('remove')}
+                  disabled={!online}
+                />
+              </Box>
+            </ListItem>
+          ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />
             </div>
           )}
+          <Empty show={!territoriesArr.length && !loading} text={t('common:emptyResult')} />
         </List>
         <TerritoryForm
           online={online}
