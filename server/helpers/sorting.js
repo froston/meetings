@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-const sumTask = task => (task ? Number(moment(`${task.week}/${task.month}/${task.year}`, 'D/M/YYYY').format('x')) : 0)
+const sumTask = (task) => (task ? Number(moment(`${task.week}/${task.month}/${task.year}`, 'D/M/YYYY').format('x')) : 0)
 
 const hadTask = (lastMain, lastHelper, month, year) => {
   if (lastMain && lastMain.month === month && lastMain.year === year) {
@@ -18,8 +18,8 @@ exports.sortStudents = (taskName, hall, month, year) => {
     const aTasks = a.tasks
     const bTasks = b.tasks
     // TASKS FILTERED BY TASK NAME
-    const aTasksFiltered = aTasks.filter(task => task.task == taskName)
-    const bTasksFiltered = bTasks.filter(task => task.task == taskName)
+    const aTasksFiltered = aTasks.filter((task) => task.task == taskName)
+    const bTasksFiltered = bTasks.filter((task) => task.task == taskName)
     // TASKS EVER SUM
     const aLastTaskAll = aTasks[0]
     const bLastLastAll = bTasks[0]
@@ -110,8 +110,8 @@ exports.sortHelpers = (taskName, month, year) => {
     const aHelperSum = sumTask(a.helpTasks[0])
     const bHelperSum = sumTask(b.helpTasks[0])
     // HELP TASKS FILTERED BY TASK NAME
-    const aTasksFiltered = a.helpTasks.filter(task => task.task == taskName)
-    const bTasksFiltered = b.helpTasks.filter(task => task.task == taskName)
+    const aTasksFiltered = a.helpTasks.filter((task) => task.task == taskName)
+    const bTasksFiltered = b.helpTasks.filter((task) => task.task == taskName)
     // LAST TIME HELPER
     const aLastHelperSum = sumTask(aTasksFiltered[0])
     const bLastHelperSum = sumTask(bTasksFiltered[0])
@@ -120,6 +120,21 @@ exports.sortHelpers = (taskName, month, year) => {
       return 1
     }
     if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+      return -1
+    }
+    /* HAD TASK LAST MONTH (to not assign tasks too often)*/
+    const lastMonth = month === 1 ? 12 : month - 1
+    const lastYear = month === 1 ? year - 1 : year
+    if (
+      hadTask(a.tasks[0], a.helpTasks[0], lastMonth, lastYear) &&
+      !hadTask(b.tasks[0], b.helpTasks[0], lastMonth, lastYear)
+    ) {
+      return 1
+    }
+    if (
+      !hadTask(a.tasks[0], a.helpTasks[0], lastMonth, lastYear) &&
+      hadTask(b.tasks[0], b.helpTasks[0], lastMonth, lastYear)
+    ) {
       return -1
     }
     /* LAST TIME GAVE TALK VS HELPER (ONLY SISTERS) */
