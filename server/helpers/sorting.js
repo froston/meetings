@@ -45,10 +45,10 @@ exports.sortStudents = (taskName, hall, month, year) => {
     const aLastTaskPointSum = sumTask(aLastTaskPoint)
     const bLastTaskPointSum = sumTask(bLastTaskPoint)
     /* HAD TASK THIS OR LAST MONTH */
-    if (hadTask(a.tasks[0], a.helpTasks[0], month, year) && !hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+    if (hadTask(a.allTasks[0], a.helpTasks[0], month, year) && !hadTask(b.allTasks[0], b.helpTasks[0], month, year)) {
       return 1
     }
-    if (!hadTask(a.tasks[0], a.helpTasks[0], month, year) && hadTask(b.tasks[0], b.helpTasks[0], month, year)) {
+    if (!hadTask(a.allTasks[0], a.helpTasks[0], month, year) && hadTask(b.allTasks[0], b.helpTasks[0], month, year)) {
       return -1
     }
     /* LAST TIME GAVE TALK VS HELPER (ONLY SISTERS) */
