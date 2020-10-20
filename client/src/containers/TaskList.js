@@ -11,6 +11,7 @@ class TaskList extends React.PureComponent {
   state = {
     allTasks: [],
     tasks: [],
+    helpers: [],
     loading: false,
   }
 
@@ -25,6 +26,9 @@ class TaskList extends React.PureComponent {
     api.get(`/tasks/${this.props.student.id}`).then((tasks) => {
       const latestTasks = tasks.filter((t) => t.year === moment().year())
       this.setState({ allTasks: tasks, tasks: latestTasks, loading: false })
+    })
+    api.get(`/students`).then((helpers) => {
+      this.setState({ helpers: helpers || [] })
     })
   }
 
@@ -53,7 +57,7 @@ class TaskList extends React.PureComponent {
 
   render() {
     const { t, hidden, student, handleClose, showForm } = this.props
-    const { tasks, loading } = this.state
+    const { tasks, loading, helpers } = this.state
     return (
       <div>
         <Loader loading={loading} />
@@ -63,7 +67,7 @@ class TaskList extends React.PureComponent {
               {t('title')} {student && student.name}
             </Heading>
           </Header>
-          {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} />}
+          {showForm && <TaskForm student={student} handleSubmit={this.handleSubmit} helpers={helpers} />}
           <div style={{ overflowX: 'auto' }} className="tasks-list">
             <Table responsive={false} scrollable>
               <thead>
