@@ -47,8 +47,8 @@ class Login extends React.PureComponent {
         <Sidebar justify="between" align="center" pad="none" size="large">
           <Box />
           <Box margin="medium" className="login-form">
-            <Heading>{t('title')}</Heading>
-            <p>{t('welcome')}</p>
+            <Heading>{t('title', { congregation: process.env.REACT_APP_CONGREGATION })}</Heading>
+            <p>{t('welcome', { congregation: process.env.REACT_APP_CONGREGATION })}</p>
             {loginError && <p style={{ color: '#FF324D' }}>{loginError}</p>}
             <Button primary label={loading ? t('logging') : t('login')} onClick={!loading ? this.handleLogin : null} />
           </Box>

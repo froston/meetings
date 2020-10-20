@@ -154,7 +154,7 @@ class Dashboard extends Component {
           {t('title')}
           <b> {auth.user.displayName}!</b>
         </Heading>
-        <Paragraph margin="small">{t('desc')}</Paragraph>
+        <Paragraph margin="small">{t('desc', { congregation: process.env.REACT_APP_CONGREGATION })}</Paragraph>
         {this.getMessages()}
         {functions.hasAccess(meta, 'lifeministry') && (!!brothers || !!sisters || !!noParticipate) && (
           <Box pad={{ vertical: 'small' }}>

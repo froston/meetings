@@ -1,6 +1,6 @@
 {
   "title": "Bienvenido",
-  "desc": "Bienvenido a la aplicación 'Reunión Vida y Ministerio Cristianos'. Aquí puede administrar los estudiantes y programas mensuales. También los territorios telefónicos.",
+  "desc": "Bienvenido a la aplicación 'Congregación {{congregation}}'. Aquí puede administrar los estudiantes y programas mensuales. También los territorios telefónicos.",
   "dist": "Distribución de los Estudiantes",
   "brothers": "Hermanos",
   "sisters": "Hermanas",

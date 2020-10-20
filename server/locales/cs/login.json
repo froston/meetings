@@ -1,6 +1,6 @@
 {
-  "title": "Shromáždění",
-  "welcome": "Vítejte v aplikaci pro shromáždění Život a Služba.",
+  "title": "Sbor {{congregation}}",
+  "welcome": "Vítejte v aplikaci sbor {{congregation}}. Pro vstup se prosím přihlašte.",
   "login": "Přihlásit se",
   "logging": "...Přihlašuji"
 }
