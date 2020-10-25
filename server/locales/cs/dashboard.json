@@ -1,6 +1,6 @@
 {
   "title": "Úvod",
-  "desc": "Vítejte v aplikaci 'Shromáždění Náš Křesťanský život a služba'. Zde můžete spravovat studenty a měsíční rozvrhy.",
+  "desc": "Vítejte v aplikaci 'Sbor {{congregation}}'. Zde můžete spravovat studenty a měsíční rozvrhy.",
   "dist": "Rozdělení Studentů",
   "brothers": "Bratři",
   "sisters": "Sestry",

@@ -1,6 +1,6 @@
 {
-  "title": "Reuniones",
-  "welcome": "Bienvenido a la aplicación de las reuniones Vida y Ministerio",
+  "title": "Congregación {{congregation}}",
+  "welcome": "Bienvenido a la aplicación de la congregación {{congregation}}. Por favor, inicie la sesión para ingresar.",
   "login": "Entrar",
   "logging": "...Entrando"
 }

@@ -86,6 +86,9 @@ const getAvailableStudents = async (taskName, hall) => {
   await students.mapAsync(async (student) => {
     const tasks = await taskModel.getStudentTasks(student.id)
 
+    // keep all together for sorting
+    student.allTasks = tasks
+
     // distinguish reading task from other tasks
     if (taskName === 'Reading') {
       student.tasks = tasks.filter((t) => t.task === 'Reading')

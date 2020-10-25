@@ -77,5 +77,6 @@
   "terWarning": "Warning limit",
   "terDanger": "Danger limit",
   "flhsIndex": "FLHS index",
-  "isCompany": "Companies"
+  "isCompany": "Companies",
+  "emptyResult": "No results"
 }

@@ -154,9 +154,9 @@ class Dashboard extends Component {
           {t('title')}
           <b> {auth.user.displayName}!</b>
         </Heading>
-        <Paragraph margin="small">{t('desc')}</Paragraph>
+        <Paragraph margin="small">{t('desc', { congregation: process.env.REACT_APP_CONGREGATION })}</Paragraph>
         {this.getMessages()}
-        {functions.hasAccess(meta, 'lifeministry') && (
+        {functions.hasAccess(meta, 'lifeministry') && (!!brothers || !!sisters || !!noParticipate) && (
           <Box pad={{ vertical: 'small' }}>
             <Heading tag="h2" margin="small">
               {t('dist')}
@@ -187,7 +187,7 @@ class Dashboard extends Component {
         )}
 
         <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-          {functions.hasAccess(meta, 'numbers') && (
+          {functions.hasAccess(meta, 'numbers') && !!numbers.length && (
             <Box margin={{ vertical: 'small' }}>
               <Heading tag="h2" margin="small">
                 {t('numbers')}
@@ -205,7 +205,7 @@ class Dashboard extends Component {
               />
             </Box>
           )}
-          {functions.hasAccess(meta, 'territories') && (
+          {functions.hasAccess(meta, 'territories') && !!territories.length && (
             <Box margin={{ vertical: 'small' }}>
               <Heading tag="h2" margin="small">
                 {t('territories')}

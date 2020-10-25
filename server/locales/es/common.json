@@ -79,5 +79,6 @@
   "terWarning": "Límite de advertencia",
   "terDanger": "Límite de peligro",
   "flhsIndex": "FLHS index",
-  "isCompany": "Empresas"
+  "isCompany": "Empresas",
+  "emptyResult": "No hay resultados"
 }

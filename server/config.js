@@ -4,7 +4,7 @@ module.exports = {
   dbName: process.env.DB_NAME,
   dbUser: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
-  limit: 3,
+  limit: 2,
   firebase: {
     project_id: process.env.FIREBASE_PROJECT_ID,
     private_key: process.env.FIREBASE_PRIVATE_KEY,

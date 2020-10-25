@@ -52,10 +52,11 @@ CREATE TABLE `tasks` (
   `year` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `territories` (
+CREATE TABLE IF NOT EXISTS `territories` (
   `id` int(11) NOT NULL,
   `number` int(11) DEFAULT NULL,
-  `isCompany` tinyint(1) DEFAULT NULL
+  `isCompany` tinyint(1) DEFAULT 0,
+  `last_worked` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `territories_hist` (
@@ -66,12 +67,12 @@ CREATE TABLE `territories_hist` (
   `date_to` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `email` varchar(200) DEFAULT NULL,
-  `password` varchar(200) DEFAULT NULL
+  `uid` varchar(200) DEFAULT NULL,
+  `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 ALTER TABLE `numbers`
   ADD PRIMARY KEY (`id`);
@@ -126,4 +127,4 @@ ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-INSERT INTO `users` (`id`, `email`, `password`) VALUES ('1', 'muller.pav@gmail.com', '');
+INSERT INTO `users` (`id`, `email`, `meta`) VALUES ('1', 'muller.pav@gmail.com', '{"admin":1,"lifeministry":0,"territories":0,"numbers":1}');

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { TaskList } from './'
 import { StudentForm, StudentFilters, Undo, Loader } from '../components'
 import { api, consts, functions } from '../utils'
+import Empty from '../images/Empty'
 
 class StudentList extends React.Component {
   state = {
@@ -32,7 +33,7 @@ class StudentList extends React.Component {
     window.addEventListener('online', this.handleConnection)
     window.addEventListener('offline', this.handleConnection)
 
-    this.debounceSearch = functions.debounce(this.loadData, 300)
+    this.debounceSearch = functions.debounce(this.loadData, 500)
   }
 
   componentWillUnmount() {
@@ -149,6 +150,7 @@ class StudentList extends React.Component {
   render() {
     const { t } = this.props
     const { online, students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
+    const studentsArr = students.filter((s) => !toRemove.includes(s.id))
     return (
       <Section>
         <Loader loading={loading} />
@@ -185,53 +187,52 @@ class StudentList extends React.Component {
           />
         </Box>
 
-        <List selectable onSelect={this.handleSelect}>
-          {students
-            .filter((s) => !toRemove.includes(s.id))
-            .map((student, index) => (
-              <ListItem
-                key={student.id}
-                pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
-                justify="between"
-                align="center"
-                responsive={false}
-                onClick={this.handleSelect}
-                separator={index === 0 ? 'horizontal' : 'bottom'}
-              >
-                <Box>
-                  <div>
-                    <StopFillIcon
-                      size="xsmall"
-                      colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
-                    />
-                    <strong> {student.name}</strong>
-                    <Paragraph size="small" style={{ display: 'inline', marginLeft: 10 }}>
-                      {student.notes && student.notes.substring(0, 150)}
-                    </Paragraph>
-                  </div>
-                </Box>
-                <Box direction="row" responsive={false}>
-                  <Button
-                    icon={<CatalogIcon size="medium" />}
-                    onClick={(e) => this.handleTasks(e, student)}
-                    a11yTitle={t('tasks')}
-                    title={t('tasks')}
+        <List selectable onSelect={!!studentsArr.length && this.handleSelect}>
+          {studentsArr.map((student, index) => (
+            <ListItem
+              key={student.id}
+              pad={{ vertical: 'small', horizontal: 'small', between: 'small' }}
+              justify="between"
+              align="center"
+              responsive={false}
+              onClick={this.handleSelect}
+              separator={index === 0 ? 'horizontal' : 'bottom'}
+            >
+              <Box>
+                <div>
+                  <StopFillIcon
+                    size="xsmall"
+                    colorIndex={student.gender === consts.GENDER_BROTHER ? 'graph-1' : 'graph-2'}
                   />
-                  <Button
-                    icon={<FormTrashIcon size="medium" />}
-                    onClick={online ? (e) => this.handleRemove(e, student.id) : undefined}
-                    a11yTitle={t('remove')}
-                    title={t('remove')}
-                    disabled={!online}
-                  />
-                </Box>
-              </ListItem>
-            ))}
+                  <strong> {student.name}</strong>
+                  <Paragraph size="small" style={{ display: 'inline', marginLeft: 10 }}>
+                    {student.notes && student.notes.substring(0, 150)}
+                  </Paragraph>
+                </div>
+              </Box>
+              <Box direction="row" responsive={false}>
+                <Button
+                  icon={<CatalogIcon size="medium" />}
+                  onClick={(e) => this.handleTasks(e, student)}
+                  a11yTitle={t('tasks')}
+                  title={t('tasks')}
+                />
+                <Button
+                  icon={<FormTrashIcon size="medium" />}
+                  onClick={online ? (e) => this.handleRemove(e, student.id) : undefined}
+                  a11yTitle={t('remove')}
+                  title={t('remove')}
+                  disabled={!online}
+                />
+              </Box>
+            </ListItem>
+          ))}
           {loading && (
             <div style={{ textAlign: 'center', marginTop: 30 }}>
               <Spinning size="xlarge" />
             </div>
           )}
+          <Empty show={!studentsArr.length && !loading} text={t('common:emptyResult')} />
         </List>
         <StudentForm
           online={online}
