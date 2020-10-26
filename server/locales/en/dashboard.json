@@ -12,5 +12,7 @@
   "numbers": "Numbers status",
   "territories": "Territories status",
   "messageTerWarning": "There are {{amount}} territories that has not been worked for more than {{days}} days",
-  "messageTerDesc": "Territories {{territories}}"
+  "messageTerDesc": "Territories {{territories}}",
+  "messageNoAccessTitle": "No access",
+  "messageNoAccessDesc": "You do not have access to any part of the application. Please contact with the adminsitrator to get the permissions."
 }

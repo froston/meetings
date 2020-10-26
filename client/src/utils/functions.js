@@ -93,6 +93,19 @@ export const hasAccess = (meta, access) => {
   }
 }
 
+export const hasNoAccess = (meta) => {
+  if (!meta) return true
+  if (Object(meta).keys === 0) return true
+  return (
+    meta.admin === 0 &&
+    meta.lifeministry === 0 &&
+    meta.territories === 0 &&
+    meta.numbers === 0 &&
+    meta.territories === 0 &&
+    meta.work === 0
+  )
+}
+
 export const debounce = (callback, wait, immediate = false) => {
   let timeout = null
   return function () {

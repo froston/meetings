@@ -74,6 +74,21 @@ class Dashboard extends Component {
     const { settings } = this.context
     const dismissed = sessionStorage.getItem(`dismissMessageSchedules`) === 'true'
     let messages = []
+    if (functions.hasNoAccess(meta)) {
+      messages.push(
+        <Box key={1} pad={{ vertical: 'small' }} onClick={() => this.navigate('/schedules')}>
+          <Notification
+            message={t('messageNoAccessTitle')}
+            state={t('messageNoAccessDesc')}
+            size="medium"
+            status="disabled"
+            onClose={(e) => this.handleCloseMessage(e, 'Schedules')}
+            closer
+          />
+        </Box>
+      )
+      return messages
+    }
     if (functions.hasAccess(meta, 'lifeministry') && !dismissed) {
       if (this.day > 1 && this.day < 15) {
         if (scheduleExists) {

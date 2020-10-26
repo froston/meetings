@@ -37,18 +37,38 @@ class Layout extends React.PureComponent {
     moment.locale(lang)
     Cookies.set('languages', [lang])
 
-    api.get(`/users/${this.props.auth.user.uid}`).then((user) => {
-      this.setState({ meta: user.meta })
-    })
-    api.get(`/settings`).then((settings) => {
-      this.setState({ settings })
-    })
-    api.get(`/territories/suggestions`).then((suggestions) => {
-      this.setState({ suggestions })
-    })
-    api.get(`/numbers/suggestions`).then((suggestionsRv) => {
-      this.setState({ suggestionsRv })
-    })
+    const promises = [
+      api.get(`/users/${this.props.auth.user.uid}`),
+      api.get(`/settings`),
+      api.get(`/territories/suggestions`),
+      api.get(`/numbers/suggestions`),
+    ]
+
+    Promise.all(promises)
+      .then((res) => {
+        const user = res[0] || []
+        const settings = res[1] || {}
+        const suggestions = res[2] || []
+        const suggestionsRv = res[3] || []
+
+        this.setState({
+          meta: user.meta,
+          settings,
+          suggestions,
+          suggestionsRv,
+        })
+      })
+      .catch(({ message, response }) => {
+        if (response && response.data && response.data.message) {
+          message = response.data.message
+        }
+        this.props.auth.logout().then(() => {
+          this.props.history.push({
+            pathname: '/',
+            state: { message },
+          })
+        })
+      })
   }
 
   handleNav = () => {
@@ -88,7 +108,7 @@ class Layout extends React.PureComponent {
     let nav
     let openNav
     if (navActive) {
-      nav = (
+      nav = meta && (
         <Nav
           setLang={this.setLang}
           handleClose={this.handleNav}

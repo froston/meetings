@@ -12,5 +12,7 @@
   "numbers": "Estados de números",
   "territories": "Estados de territorios",
   "messageTerWarning": "Hay {{amount}} territorios que no se han hecho mas de {{days}} días",
-  "messageTerDesc": "Territorios {{territories}}"
+  "messageTerDesc": "Territorios {{territories}}",
+  "messageNoAccessTitle": "No tiene accesso",
+  "messageNoAccessDesc": "No tiene accesso a nignuna funcionalidad de la aplicación. Contáctese por favor con el administrador para obtener los permisos."
 }

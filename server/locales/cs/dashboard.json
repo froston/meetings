@@ -12,5 +12,7 @@
   "numbers": "Stav čísel",
   "territories": "Stav obvodů",
   "messageTerWarning": "{{amount}} obvodů nebylo propracováno více než {{days}} dnů",
-  "messageTerDesc": "Obvody {{territories}}"
+  "messageTerDesc": "Obvody {{territories}}",
+  "messageNoAccessTitle": "Přístup odepřen",
+  "messageNoAccessDesc": "Nemáte přístup k žádné části aplikace. Kontaktuje prosím administrátora."
 }
