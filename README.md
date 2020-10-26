@@ -42,10 +42,6 @@ npm start
 - [Hummus JS](https://github.com/galkahana/HummusJS) - High performance creation, modification and parsing of PDF files and streams
 - [Async](https://caolan.github.io/async/) - Async utilities for Node
 
-## Author
-
-- **Pavel Müller**
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

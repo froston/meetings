@@ -73,5 +73,7 @@
   "beforeLeaving": "Máte neuložené změny, opravdu chcete odejít?",
   "workedMessage": "Hotovo, díky!",
   "isCompany": "Firmy",
-  "emptyResult": "Žádné výsledky"
+  "emptyResult": "Žádné výsledky",
+  "confirm": "Potvrdit",
+  "return": "Zpět"
 }

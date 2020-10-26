@@ -53,7 +53,7 @@ class Login extends React.PureComponent {
             <Button primary label={loading ? t('logging') : t('login')} onClick={!loading ? this.handleLogin : null} />
           </Box>
           <Footer direction="row" size="small" pad={{ horizontal: 'medium', vertical: 'small', between: 'small' }}>
-            <span className="secondary">&copy; 2018 Pavel Müller</span>
+            <span className="secondary">&copy; 2018</span>
           </Footer>
         </Sidebar>
       </Split>

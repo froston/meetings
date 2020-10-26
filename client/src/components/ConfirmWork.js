@@ -12,27 +12,27 @@ const ConfirmWork = (props) => {
   return (
     <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
       <Box full="vertical" responsive direction="column" justify="center" margin={{ vertical: 'medium' }}>
-        <Heading>Confirmación</Heading>
-        <Paragraph>Confirme por favor que todos los datos ingresados estan bien.</Paragraph>
-        <Heading tag="h4">
+        <Heading>{t('workConfirm')}</Heading>
+        <Paragraph>{t('workConfirmText')}</Paragraph>
+        <Heading tag="h5">
           <strong>{t('territory')}:</strong> {territory.number}
         </Heading>
-        <Heading tag="h4">
+        <Heading tag="h5">
           <strong>{t('assigned')}:</strong> {assigned}
         </Heading>
-        <Heading tag="h4">
+        <Heading tag="h5">
           <strong>{t('date_from')}:</strong> {date_from}
         </Heading>
-        <Heading tag="h4">
+        <Heading tag="h5">
           <strong>{t('date_to')}:</strong> {date_to}
         </Heading>
         <Box margin={{ vertical: 'small' }}>
-          <Heading tag="h4">
+          <Heading tag="h5">
             <strong>{t('numbers')}:</strong>
           </Heading>
           {noChanges && (
-            <Heading tag="h4" uppercase>
-              No anoto ningunos numeros!
+            <Heading tag="h5" uppercase>
+              {t('workNoNumbers')}
             </Heading>
           )}
           {numberArr.map(([key, num]) => {
@@ -50,10 +50,10 @@ const ConfirmWork = (props) => {
         </Box>
         <Box direction="column">
           <Box margin={{ vertical: 'small' }}>
-            <Button label="Confirmar" icon={<CheckmarkIcon />} onClick={this.props.handleSubmit} primary />
+            <Button label={t('common:confirm')} icon={<CheckmarkIcon />} onClick={props.handleSubmit} primary />
           </Box>
           <Box margin={{ vertical: 'small' }}>
-            <Button label="Volver" icon={<CloseIcon />} onClick={this.props.handleClose} href="#" />
+            <Button label={t('common:return')} icon={<CloseIcon />} onClick={props.handleClose} href="#" />
           </Box>
         </Box>
       </Box>

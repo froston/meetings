@@ -35,5 +35,8 @@
   "territoryView": "Otevřít obvod",
   "nameAssigned": "Přidělený bratr",
   "share": "Link",
-  "territoryNotAssigned": "This territory has not been assigned to you"
+  "territoryNotAssigned": "Tento obvod nebyl přidělen",
+  "workConfirm": "Potvrzení",
+  "workConfirmText": "Potvďte prosím uvedené data.",
+  "workNoNumbers": "Nebylo uvedeno žádné číslo."
 }

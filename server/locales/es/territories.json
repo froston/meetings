@@ -35,5 +35,8 @@
   "territoryView": "Ver territorio",
   "nameAssigned": "Nombre del hermano",
   "share": "Enlace para trabajar",
-  "territoryNotAssigned": "No tiene asignado este territorio"
+  "territoryNotAssigned": "No tiene asignado este territorio",
+  "workConfirm": "Confirmación",
+  "workConfirmText": "Confirme por favor que todos los datos ingresados están bien.",
+  "workNoNumbers": "No anotó ningunos números."
 }

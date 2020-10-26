@@ -253,16 +253,12 @@ class Work extends React.Component {
             </Box>
           )}
           <Footer pad={{ vertical: 'medium' }}>
-            <Box>
-              <Button
-                onClick={!loading ? this.handleSubmit : null}
-                icon={<SettingsOptionIcon />}
-                label={t('submit')}
-                primary
-              />
-              <br />
+            <Box direction="row" align="center">
+              <Button onClick={!loading ? this.handleSubmit : null} label={t('submit')} primary />
               {territory && (
-                <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
+                <Box margin={{ horizontal: 'medium' }}>
+                  <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
+                </Box>
               )}
             </Box>
           </Footer>
