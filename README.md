@@ -11,6 +11,7 @@ Life and Minsitry App - Schedule and Administrate Life and Minsitry Meetings.
 ## Installation
 
 - Install `Git` and `Node JS` + `npm` locally
+- Install global packages `npm install -g node-gyp` and `npm install -g --production windows-build-tools`
 
 ```
 git clone <repo>

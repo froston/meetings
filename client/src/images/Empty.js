@@ -5,7 +5,7 @@ const Empty = ({ text, show }) =>
   show && (
     <Box align="center" margin="medium">
       <svg
-        class="ant-empty-img-default"
+        className="ant-empty-img-default"
         width="184"
         height="152"
         viewBox="0 0 184 152"

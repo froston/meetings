@@ -19,7 +19,7 @@ import {
   Anchor,
   Paragraph,
 } from 'grommet'
-import { SettingsOptionIcon, ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
+import { ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { consts, api, functions, withAuth } from '../utils'

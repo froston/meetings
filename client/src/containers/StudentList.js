@@ -197,6 +197,7 @@ class StudentList extends React.Component {
               responsive={false}
               onClick={this.handleSelect}
               separator={index === 0 ? 'horizontal' : 'bottom'}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
             >
               <Box>
                 <div>

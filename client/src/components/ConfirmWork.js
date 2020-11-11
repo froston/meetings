@@ -8,24 +8,26 @@ import { functions } from '../utils'
 const ConfirmWork = (props) => {
   const { t, hidden, handleClose, numbers, assigned, territory, date_from, date_to } = props
   const numberArr = Object.entries(numbers)
-  const noChanges = numberArr.filter(([key, value]) => !!value.status).length == 0
+  const noChanges = numberArr.filter(([key, value]) => !!value.status).length === 0
   return (
     <Layer closer overlayClose align="center" onClose={handleClose} hidden={hidden}>
-      <Box full="vertical" responsive direction="column" justify="center" margin={{ vertical: 'medium' }}>
-        <Heading>{t('workConfirm')}</Heading>
-        <Paragraph>{t('workConfirmText')}</Paragraph>
-        <Heading tag="h5">
-          <strong>{t('territory')}:</strong> {territory.number}
-        </Heading>
-        <Heading tag="h5">
-          <strong>{t('assigned')}:</strong> {assigned}
-        </Heading>
-        <Heading tag="h5">
-          <strong>{t('date_from')}:</strong> {date_from}
-        </Heading>
-        <Heading tag="h5">
-          <strong>{t('date_to')}:</strong> {date_to}
-        </Heading>
+      <Box full="vertical" responsive direction="column" justify="start" margin={{ vertical: 'medium' }}>
+        <Box>
+          <Heading>{t('workConfirm')}</Heading>
+          <Paragraph>{t('workConfirmText')}</Paragraph>
+          <Heading tag="h5">
+            <strong>{t('territory')}:</strong> {territory.number}
+          </Heading>
+          <Heading tag="h5">
+            <strong>{t('assigned')}:</strong> {assigned}
+          </Heading>
+          <Heading tag="h5">
+            <strong>{t('date_from')}:</strong> {date_from}
+          </Heading>
+          <Heading tag="h5">
+            <strong>{t('date_to')}:</strong> {date_to}
+          </Heading>
+        </Box>
         <Box margin={{ vertical: 'small' }}>
           <Heading tag="h5">
             <strong>{t('numbers')}:</strong>

@@ -13,6 +13,7 @@ import NumberList from './NumberList'
 import Work from './Work'
 import UsersList from './UsersList'
 import Settings from './Settings'
+import ScheduleForm from './ScheduleForm'
 
 export {
   App,
@@ -30,4 +31,5 @@ export {
   Work,
   UsersList,
   Settings,
+  ScheduleForm,
 }

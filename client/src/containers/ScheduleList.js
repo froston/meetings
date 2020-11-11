@@ -7,7 +7,7 @@ import { FormTrashIcon, ScheduleIcon, DocumentExcelIcon, DocumentTextIcon } from
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import moment from 'moment'
-import { ScheduleForm, Undo, Loader } from '../components'
+import { Undo, Loader } from '../components'
 import { api } from '../utils'
 import Empty from '../images/Empty'
 
@@ -17,7 +17,6 @@ class ScheduleList extends React.Component {
     loading: false,
     schedules: [],
     toRemove: [],
-    scheduleForm: true,
     year: String(moment().year()),
   }
 
@@ -55,7 +54,7 @@ class ScheduleList extends React.Component {
   }
 
   handleAdd = () => {
-    this.handleForm()
+    this.props.history.push(`/schedules/new`)
   }
 
   handleSelect = (e, id) => {
@@ -137,10 +136,6 @@ class ScheduleList extends React.Component {
     }
   }
 
-  handleForm = () => {
-    this.setState({ scheduleForm: !this.state.scheduleForm })
-  }
-
   handleYearChange = (e) => {
     this.setState({ year: e.target.value })
   }
@@ -151,25 +146,9 @@ class ScheduleList extends React.Component {
     }
   }
 
-  handleSubmit = (data, cb) => {
-    this.setState({ loading: true })
-    api.post('/schedules', data).then(() => {
-      this.setState({ scheduleForm: true })
-      toast(this.props.t('newMessage'))
-      this.loadData()
-      cb()
-    })
-  }
-
-  checkScheduleExists = (month, year, cb) => {
-    api.get(`/schedules?month=${month}&year=${year}`).then((res) => {
-      cb(res.length > 0)
-    })
-  }
-
   render() {
     const { t } = this.props
-    const { online, schedules, toRemove, scheduleForm, loading, year } = this.state
+    const { online, schedules, toRemove, loading, year } = this.state
     const scheduleArr = schedules.filter((s) => !toRemove.includes(s.id))
     return (
       <Section>
@@ -210,6 +189,7 @@ class ScheduleList extends React.Component {
               responsive={false}
               onClick={(e) => this.handleSelect(e, schedule.id)}
               separator={index === 0 ? 'horizontal' : 'bottom'}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
             >
               <Box>
                 <strong>{`${moment(schedule.month, 'MM').format('MMMM')} ${schedule.year}`}</strong>
@@ -244,12 +224,6 @@ class ScheduleList extends React.Component {
           )}
           <Empty show={!scheduleArr.length && !loading} text={t('common:emptyResult')} />
         </List>
-        <ScheduleForm
-          hidden={scheduleForm}
-          checkScheduleExists={this.checkScheduleExists}
-          handleSubmit={this.handleSubmit}
-          handleClose={this.handleForm}
-        />
       </Section>
     )
   }

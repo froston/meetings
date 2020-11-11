@@ -158,30 +158,14 @@ const workTerritory = async (id, data) => {
     await db.query('UPDATE territories_hist SET ? WHERE id = ?', [terHist, data.history_id])
 
     await data.numbers.forEachAsync(async (num) => {
-      const history = await numberModel.getNumberHist(num.id)
-      const prevHist = history[0]
-
-      if (prevHist.status !== num.status) {
-        await numberModel.createHistory(num)
-      } else {
-        num.history_id = prevHist.id
-        await numberModel.updateHistory(num)
-      }
+      await numberModel.createHistory(num)
     })
   } else {
     terHist.territory_id = id
     await db.query('INSERT INTO territories_hist SET ?', terHist)
 
     await data.numbers.forEachAsync(async (num) => {
-      const history = await numberModel.getNumberHist(num.id)
-      const prevHist = history[0]
-
-      if (!prevHist || (prevHist && prevHist.status !== num.status)) {
-        await numberModel.createHistory(num)
-      } else {
-        num.history_id = prevHist.id
-        await numberModel.updateHistory(num)
-      }
+      await numberModel.createHistory(num)
     })
   }
 }
