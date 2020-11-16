@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withTranslation } from 'react-i18next'
-import { Form, FormField, Footer, Button, Select, DateTime } from 'grommet'
+import { Form, FormField, Footer, Button, Select, DateTime, Paragraph } from 'grommet'
 import moment from 'moment'
 import { consts } from '../utils'
 
@@ -26,9 +26,11 @@ class TaskForm extends React.PureComponent {
   validate = (cb) => {
     const { t } = this.props
     const { task, hall, date, helper } = this.state
+    const dateValid = moment(date, consts.DATE_FORMAT).isValid()
     let errors = {}
     if (!task.value) errors.task = t('common:required')
     if (!hall.value) errors.hall = t('common:required')
+    if (!dateValid) errors.date = t('common:dateNotValid')
     if (!date) errors.date = t('common:required')
     if (this.hasHelper(task.value) && !helper) {
       errors.helper = t('common:required')
@@ -43,7 +45,7 @@ class TaskForm extends React.PureComponent {
   }
 
   getTaskDate = (date) => {
-    const dateObj = moment(date)
+    const dateObj = moment(date, consts.DATE_FORMAT)
     return {
       week: String(Math.ceil(dateObj.date() / 7)),
       month: dateObj.format('M'),
@@ -91,16 +93,18 @@ class TaskForm extends React.PureComponent {
     const { t, student } = this.props
     const { task, hall, date, helper, errors, helpers } = this.state
     const helpersArr = student ? helpers.filter((h) => h.id !== student.id) : helpers
+    const opts = student && student.gender === consts.GENDER_SISTER ? consts.sisScheduleOptions : consts.scheduleOptions
     return (
       <div>
         <Form pad="medium" onSubmit={this.handleSubmit}>
+          <Paragraph margin="small">{t('taskDateInfo')}</Paragraph>
           <FormField label={t('common:date')} error={errors.date}>
-            <DateTime format="M/D/YYYY" value={date} onChange={(value) => this.handleChange('date', value)} />
+            <DateTime format={consts.DATE_FORMAT} value={date} onChange={(value) => this.handleChange('date', value)} />
           </FormField>
           <FormField label={t('common:talk')} error={errors.task}>
             <Select
               placeHolder={t('common:talk')}
-              options={consts.scheduleOptions.map((av) => ({ value: av, label: t(`common:${av}`) }))}
+              options={opts.map((av) => ({ value: av, label: t(`common:${av}`) }))}
               value={task}
               onChange={({ value }) => this.handleChange('task', value)}
             />

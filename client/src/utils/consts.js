@@ -30,6 +30,12 @@ export const scheduleOptions = [
   AVAILABLE_BIBLE_STUDY,
   AVAILABLE_TALK,
 ]
+export const sisScheduleOptions = [
+  AVAILABLE_INITIAL_CALL,
+  AVAILABLE_RETURN_VISIT_1,
+  AVAILABLE_RETURN_VISIT_2,
+  AVAILABLE_BIBLE_STUDY,
+]
 
 export const hallsOptions = [HALLS_ALL, HALLS_A, HALLS_B]
 export const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]

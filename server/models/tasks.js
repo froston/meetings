@@ -95,12 +95,12 @@ exports.removeBySchedule = async (month, year) => {
   return await db.query('DELETE FROM tasks WHERE month = ? && year = ?', [month, year])
 }
 
-exports.hasDuplicate = async (studentId, helperId) => {
+exports.hasDuplicate = async (studentId, helperId, year) => {
   const res = await db.query(
     `
     SELECT COUNT(*) as dupCount
     FROM tasks
-    WHERE (student_id = ? AND helper_id = ?) OR (helper_id = ? AND student_id = ?) 
+    WHERE (student_id = ? AND helper_id = ?) OR (helper_id = ? AND student_id = ?) AND year >= ${year - 1}
   `,
     [studentId, helperId, studentId, helperId]
   )

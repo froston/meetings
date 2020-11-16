@@ -20,6 +20,7 @@ import {
   Columns,
   Box,
   Anchor,
+  Paragraph,
 } from 'grommet'
 import { toast } from 'react-toastify'
 import { FormTrashIcon } from 'grommet/components/icons/base'
@@ -205,6 +206,7 @@ class ScheduleForm extends React.PureComponent {
               <FormField label={t('common:weekNum')} error={errors.weeks}>
                 <NumberInput value={weeks} onChange={(e) => this.handleChange('weeks', e.target.value)} />
               </FormField>
+              <Paragraph margin="small">{t('scheduleWeekInfo', { month: month.label, year })}</Paragraph>
               <Footer pad={{ vertical: 'medium' }}>
                 <Button label={t('common:generate')} onClick={!submitting ? this.handleSubmit : null} primary />
                 <Anchor href="#" onClick={this.handleClose} style={{ marginLeft: 20 }}>

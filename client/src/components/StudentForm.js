@@ -162,8 +162,21 @@ class StudentForm extends React.PureComponent {
             </FormField>
             <Footer pad={{ vertical: 'medium' }}>
               <Box direction="row" align="center" pad={{ between: 'medium' }} responsive={false} wrap>
-                <Button label={t('common:submit')} onClick={!loading && online ? this.handleSubmit : null} primary />
-                {student && <Anchor icon={<CatalogIcon />} label={t(`tasks`)} onClick={handleTasks} primary />}
+                <Button
+                  label={t('common:submit')}
+                  onClick={!loading && online ? this.handleSubmit : null}
+                  primary
+                  style={{ marginBottom: 15 }}
+                />
+                {student && (
+                  <Anchor
+                    icon={<CatalogIcon />}
+                    label={t(`tasks`)}
+                    onClick={handleTasks}
+                    primary
+                    style={{ marginBottom: 15 }}
+                  />
+                )}
               </Box>
             </Footer>
           </Form>

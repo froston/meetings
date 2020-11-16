@@ -6,7 +6,7 @@
   "scheduleRemoved": "Rozvrh byl odstraněn.",
   "xlsMessage": "Generuje se rozvrh ...",
   "pdfMessage": "Generují se zadání ...",
-  "confirmRemove": "Opravdu smazat rozvrh?",
+  "confirmRemove": "Opravdu smazat rozvrh? Všechny ůkoly v tomto měsíci budou smazány.",
   "remove": "Smazat Rozvrh",
   "report": "Vygenerovat rozvrh",
   "reportPdf": "Vygenerovat zadání",
@@ -21,5 +21,6 @@
   "scheduleWarn": " {{name}} se objevuje více než jednou ve stejném měsíci",
   "scheduleDup": "{{student_name}} a {{helper_name}} už spolu v minulosti měli úkol.",
   "scheduleGender": "Partner pro {{task}} by měl být stejného pohlaví (km 5/97 str. 2).",
-  "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:"
+  "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:",
+  "scheduleWeekInfo": "Zadejte počet měsíců podle pracovního sešitu pro {{month}} {{year}}."
 }

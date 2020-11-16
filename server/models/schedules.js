@@ -26,7 +26,7 @@ const getById = async (id) => {
   await tasks.mapAsync(async (task) => {
     let dup = false
     if (task.student_id > 0 && task.helper_id > 0) {
-      dup = await taskModel.hasDuplicate(task.student_id, task.helper_id)
+      dup = await taskModel.hasDuplicate(task.student_id, task.helper_id, task.year)
     }
     return { dup, ...task }
   })

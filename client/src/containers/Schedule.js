@@ -176,6 +176,7 @@ class Schedule extends React.Component {
             status="warning"
           />
         )}
+        <br />
         <Tabs justify="start">{this.renderWeeks()}</Tabs>
         <Available
           hidden={availableList}

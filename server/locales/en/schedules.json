@@ -6,7 +6,7 @@
   "scheduleRemoved": "The schedule was removed.",
   "xlsMessage": "The schedule is being generated ...",
   "pdfMessage": "The assignments are being generated ...",
-  "confirmRemove": "Sure to remove the schedule?",
+  "confirmRemove": "Sure to remove the schedule? All tasks of this month will be also removed.",
   "remove": "Remove Schedule",
   "report": "Generate schedule",
   "reportPdf": "Generate assignments",
@@ -21,5 +21,6 @@
   "scheduleWarn": " {{name}} appears more then once in the month",
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
   "scheduleGender": "The assistant for {{task}} should not be someone of the opposite sex. (km 5/97 p. 2).",
-  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:"
+  "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
+  "scheduleWeekInfo": "Select the amount of weeks according to the {{month}} {{year}} meeting workbook."
 }

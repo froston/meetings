@@ -2,5 +2,6 @@
   "title": "Asignaciones:",
   "confirmRemove": "Seguro de eliminar la asignación?",
   "add": "Crear Asignación",
-  "remove": "Eliminar Asignación"
+  "remove": "Eliminar Asignación",
+  "taskDateInfo": "Seleccione el primer día de la semana de la reunión."
 }

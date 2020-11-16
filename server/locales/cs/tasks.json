@@ -2,5 +2,6 @@
   "title": "Úkoly:",
   "confirmRemove": "Opravdu odstranit úkol?",
   "add": "Přidat Úkol",
-  "remove": "Odstranit Úkol"
+  "remove": "Odstranit Úkol",
+  "taskDateInfo": "Zadejte první den v týdnu shromáždění."
 }

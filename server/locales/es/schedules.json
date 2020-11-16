@@ -6,7 +6,7 @@
   "scheduleRemoved": "El programa fue eliminado.",
   "xlsMessage": "Se está generando el programa ...",
   "pdfMessage": "Se están generando las asignaciones...",
-  "confirmRemove": "Seguro de eliminar el programa?",
+  "confirmRemove": "Seguro de eliminar el programa? También se eliminarán todas las asignaciones de este mes.",
   "new": "Nuevo Programa",
   "remove": "Eliminar Programa",
   "report": "Generar programa",
@@ -21,5 +21,6 @@
   "scheduleWarn": " {{name}} aparece más que una vez en el mes",
   "scheduleDup": "{{student_name}} y {{helper_name}} ya han tenido asignación juntos en el pasado.",
   "scheduleGender": "El ayudante para {{task}} debe ser una persona del mismo sexo (km 5/97 2).",
-  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asignaciones:"
+  "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asignaciones:",
+  "scheduleWeekInfo": "Ponga la cantidad de semanas de la guía de actividades para el mes de {{month}} {{year}}."
 }

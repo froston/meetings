@@ -114,9 +114,17 @@
 }
 
 .grommet .week-tab a,
-.grommet .tasks-list a,
+.grommet .tasks-list + div > a,
 .grommetux-menu__drop .grommetux-anchor {
   color: #0a64a0 !important;
+}
+
+.grommet .tasks-list .grommetux-table__table {
+  margin-bottom: 12px;
+}
+.grommet .tasks-list .grommetux-table__table .grommetux-table-row > td {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 a.grommetux-button {

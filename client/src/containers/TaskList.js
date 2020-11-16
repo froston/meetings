@@ -24,7 +24,7 @@ class TaskList extends React.PureComponent {
   loadData = () => {
     this.setState({ loading: true })
     api.get(`/tasks/${this.props.student.id}`).then((tasks) => {
-      const latestTasks = tasks.filter((t) => t.year === moment().year())
+      const latestTasks = tasks.filter((t) => t.year >= moment().year())
       this.setState({ allTasks: tasks, tasks: latestTasks, loading: false })
     })
     api.get(`/students`).then((helpers) => {
@@ -72,10 +72,10 @@ class TaskList extends React.PureComponent {
             <Table responsive={false} scrollable>
               <thead>
                 <tr>
-                  <th>{t('common:task')}</th>
-                  <th>{t('common:date')}</th>
+                  <th style={{ minWidth: 200 }}>{t('common:task')}</th>
+                  <th style={{ minWidth: 120 }}>{t('common:date')}</th>
                   <th>{t('common:hall')}</th>
-                  <th>{t('common:helper')}</th>
+                  <th style={{ minWidth: 120 }}>{t('common:helper')}</th>
                   {showForm && <th />}
                 </tr>
               </thead>
@@ -98,7 +98,7 @@ class TaskList extends React.PureComponent {
                           <td>
                             <Box direction="row">
                               <Button
-                                icon={<FormTrashIcon size="medium" />}
+                                icon={<FormTrashIcon size="small" />}
                                 onClick={(e) => this.handleRemove(e, task.id)}
                                 a11yTitle={t('remove')}
                               />
@@ -110,14 +110,14 @@ class TaskList extends React.PureComponent {
                   })}
               </tbody>
             </Table>
-            {tasks.length < this.state.allTasks.length && (
-              <Box align="center" pad="medium">
-                <a href="#all" onClick={this.seeAll}>
-                  Ver todo
-                </a>
-              </Box>
-            )}
           </div>
+          {tasks.length < this.state.allTasks.length && (
+            <Box align="center" pad="medium" style={{ paddingTop: 0 }}>
+              <a href="#all" onClick={this.seeAll}>
+                Ver todo
+              </a>
+            </Box>
+          )}
         </Layer>
       </div>
     )
