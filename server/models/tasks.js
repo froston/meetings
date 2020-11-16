@@ -12,7 +12,9 @@ exports.getBySchedule = async (month, year) => {
     FROM tasks 
     LEFT JOIN students students ON students.id = tasks.student_id
     LEFT JOIN students helpers ON helpers.id = tasks.helper_id
-    WHERE month = ? AND year = ?`,
+    WHERE month = ? AND year = ?
+    ORDER BY FIELD(tasks.task, 'Reading', 'Initial Call', 'Return Visit', 'Bible Study', 'Talk')
+    `,
     [month, year]
   )
 }
