@@ -83,19 +83,21 @@ const getAvailableStudents = async (taskName, hall) => {
     [hall]
   )
 
-  await students.mapAsync(async (student) => {
-    const tasks = await taskModel.getStudentTasks(student.id)
+  // FIX IT: to limit amount of queries, performance overhead
+  let tasks = await taskModel.getAllTasksEver()
 
+  students.map((student) => {
+    let studentTasks = tasks.filter((t) => t.student_id === student.id)
     // keep all together for sorting
-    student.allTasks = tasks
+    student.allTasks = studentTasks
 
     // distinguish reading task from other tasks
     if (taskName === 'Reading') {
-      student.tasks = tasks.filter((t) => t.task === 'Reading')
+      student.tasks = studentTasks.filter((t) => t.task === 'Reading')
     } else {
-      student.tasks = tasks.filter((t) => t.task !== 'Reading')
+      student.tasks = studentTasks.filter((t) => t.task !== 'Reading')
     }
-    student.helpTasks = await taskModel.getHelpTasks(student.id)
+    student.helpTasks = tasks.filter((t) => t.helper_id === student.id)
 
     return student
   })
@@ -107,10 +109,12 @@ const getAvailableHelpers = async (gender, hall) => {
   const where = `WHERE (hall = "All" OR hall = ?) AND participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
   const students = await db.query(`SELECT * FROM students ${where}`, [hall])
 
-  await students.mapAsync(async (student) => {
-    student.tasks = await taskModel.getStudentTasks(student.id)
-    student.helpTasks = await taskModel.getHelpTasks(student.id)
+  // FIX IT: to limit amount of queries, performance overhead
+  let tasks = await taskModel.getAllTasksEver()
 
+  students.map((student) => {
+    student.tasks = tasks.filter((t) => t.student_id === student.id)
+    student.helpTasks = tasks.filter((t) => t.helper_id === student.id)
     return student
   })
 

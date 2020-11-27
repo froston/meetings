@@ -36,33 +36,17 @@ exports.getAllTasks = async (studentId) => {
   )
 }
 
-exports.getStudentTasks = async (studentId) => {
+exports.getAllTasksEver = async () => {
   return await db.query(
-    `
-    SELECT 
+    `SELECT 
       tasks.*,
-      students.name as student_name
+      students.name as student_name,
+      helpers.name as helper_name
     FROM tasks 
-    LEFT JOIN students ON students.id = tasks.student_id
-    WHERE student_id = ?
+    LEFT JOIN students students ON students.id = tasks.student_id
+    LEFT JOIN students helpers ON helpers.id = tasks.helper_id
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-  `,
-    [studentId]
-  )
-}
-
-exports.getHelpTasks = async (helperId) => {
-  return await db.query(
-    `
-    SELECT 
-      tasks.*,
-      students.name as helper_name
-    FROM tasks 
-    LEFT JOIN students ON students.id = tasks.helper_id
-    WHERE helper_id = ?
-    ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-  `,
-    [helperId]
+  `
   )
 }
 
