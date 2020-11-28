@@ -5,7 +5,7 @@ const appConfig = require('../appConfig.json')
 
 const router = express.Router()
 
-const appConfigPath = path.resolve(`${__dirname}/appConfig.json`)
+const appConfigPath = path.resolve(`${__dirname}/../appConfig.json`)
 
 router.get('/', (req, res, next) => {
   fs.readFile(appConfigPath, 'utf8', function (err, data) {
