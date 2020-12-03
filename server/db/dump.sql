@@ -75,10 +75,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `numbers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `territory` (`territory`);
 
 ALTER TABLE `numbers_hist`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `number_id` (`number_id`);
 
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`);
@@ -93,10 +95,12 @@ ALTER TABLE `tasks`
   ADD KEY `schedule_id` (`schedule_id`);
 
 ALTER TABLE `territories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `number` (`number`);
 
 ALTER TABLE `territories_hist`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `territory_id` (`territory_id`);
 
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);

@@ -1,6 +1,10 @@
 import moment from 'moment'
 import { consts } from './'
 
+export const formatDate = (date) => {
+  return date ? moment(date).format(consts.DATE_FORMAT) : ''
+}
+
 export const formatDateValue = (date) => {
   return date ? moment(date).format(consts.DATETIME_FORMAT) : ''
 }

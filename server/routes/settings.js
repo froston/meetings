@@ -5,7 +5,7 @@ const appConfig = require('../appConfig.json')
 
 const router = express.Router()
 
-const appConfigPath = path.resolve(`${__dirname}/appConfig.json`)
+const appConfigPath = path.resolve(`${__dirname}/../appConfig.json`)
 
 router.get('/', (req, res, next) => {
   fs.readFile(appConfigPath, 'utf8', function (err, data) {
@@ -30,6 +30,24 @@ router.post('/', (req, res, next) => {
     }
     res.status(200).end()
   })
+})
+
+router.post('/migration/importNumbersCSV', async (req, res, next) => {
+  try {
+    //await migrationModel.importNumbersCSV();
+    res.status(404).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/migration/reduceTerritories', async (req, res, next) => {
+  try {
+    //await migrationModel.reduceTerritories();
+    res.status(404).end()
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = router

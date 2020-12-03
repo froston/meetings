@@ -254,7 +254,7 @@ class TerritoryList extends React.Component {
               style={{ paddingTop: 0, paddingBottom: 0 }}
             >
               <Box direction="row" align="start" justify="start">
-                <div>
+                <div title={`${t('numbers')} ${ter.numbers.length}`}>
                   <strong style={{ marginRight: 8 }}>
                     <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
                     {`  ${t('territory')} ${ter.number}`}
