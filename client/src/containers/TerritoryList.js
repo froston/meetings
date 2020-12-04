@@ -2,7 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
-import { Section, Box, Heading, Paragraph, Label, List, ListItem, Button, Select, Search, CheckBox } from 'grommet'
+import {
+  Section,
+  Box,
+  Heading,
+  Paragraph,
+  Label,
+  List,
+  ListItem,
+  Button,
+  Select,
+  Search,
+  CheckBox,
+  Anchor,
+} from 'grommet'
 import {
   AddIcon,
   UserExpertIcon,
@@ -10,10 +23,12 @@ import {
   StopFillIcon,
   SettingsOptionIcon,
   HistoryIcon,
+  DocumentPdfIcon,
 } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
+import { saveAs } from 'file-saver'
 import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader, Badge } from '../components'
 import { api, consts, functions } from '../utils'
 import { AppContext } from '../utils/context'
@@ -189,16 +204,35 @@ class TerritoryList extends React.Component {
     this.setState({ assignForm: false, territory })
   }
 
+  handlePdfExport = () => {
+    this.setState({ loading: true })
+    const { t } = this.props
+    toast(t('pdfMessage'))
+    const lang = this.props.i18n.language
+    api.downloadFile(`/territories/downloadPdf?lang=${lang}`).then((blob) => {
+      saveAs(blob, `${t('formName')}.pdf`)
+      this.setState({ loading: false })
+    })
+  }
+
   render() {
     const { t } = this.props
     const { settings } = this.context
     const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     const territoriesArr = territories.filter((t) => !toRemove.includes(t.id))
     return (
-      <Section>
+      <Section style={{ position: 'relative' }}>
         <Loader loading={loading} />
         <Heading tag="h1" margin="small">
           {t('title')}
+          <Anchor
+            icon={<DocumentPdfIcon />}
+            href={online ? '#' : undefined}
+            onClick={online ? this.handlePdfExport : undefined}
+            disabled={!online}
+            title={t('formName')}
+            a11yTitle={t('formName')}
+          />
         </Heading>
         <Paragraph margin="small">{t('desc')}</Paragraph>
         <Box pad={{ vertical: 'small' }}>
@@ -254,7 +288,7 @@ class TerritoryList extends React.Component {
               style={{ paddingTop: 0, paddingBottom: 0 }}
             >
               <Box direction="row" align="start" justify="start">
-                <div>
+                <div title={`${t('numbers')} ${ter.numbers.length}`}>
                   <strong style={{ marginRight: 8 }}>
                     <StopFillIcon size="xsmall" colorIndex={functions.getTerritoryStatusColor(ter, settings)} />
                     {`  ${t('territory')} ${ter.number}`}

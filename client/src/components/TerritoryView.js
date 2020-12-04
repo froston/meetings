@@ -42,6 +42,7 @@ class TerritoryView extends React.PureComponent {
                 <tr>
                   <th width="150">{t('number2')}</th>
                   <th width="200">{t('status')}</th>
+                  <th width="120">{t('changedDate')}</th>
                   <th>{t('details')}</th>
                 </tr>
               </thead>
@@ -56,6 +57,7 @@ class TerritoryView extends React.PureComponent {
                           <span style={{ paddingLeft: 5 }}>{num.number}</span>
                         </td>
                         <td style={{ padding: 5 }}>{t(`common:status${num.status}`)}</td>
+                        <td style={{ padding: 5 }}>{functions.formatDate(num.changed_date)}</td>
                         <td style={{ padding: 5 }}>{num.details}</td>
                       </TableRow>
                     )

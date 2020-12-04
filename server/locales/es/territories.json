@@ -38,5 +38,7 @@
   "territoryNotAssigned": "No tiene asignado este territorio",
   "workConfirm": "Confirmación",
   "workConfirmText": "Confirme por favor que todos los datos ingresados están bien.",
-  "workNoNumbers": "No anotó ningunos números."
+  "workNoNumbers": "No anotó ningunos números.",
+  "pdfMessage": "Se está generando el formulario ...",
+  "formName": "Registro de asignacion de territorio"
 }

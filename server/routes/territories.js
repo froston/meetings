@@ -21,6 +21,17 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/downloadPdf', async (req, res, next) => {
+  const lang = req.query.lang
+  req.i18n.changeLanguage(lang)
+  model.generatePdfs(lang, (err, file) => {
+    if (err) {
+      return next(err)
+    }
+    res.download(file)
+  })
+})
+
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id
   try {

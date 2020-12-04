@@ -32,4 +32,22 @@ router.post('/', (req, res, next) => {
   })
 })
 
+router.post('/migration/importNumbersCSV', async (req, res, next) => {
+  try {
+    //await migrationModel.importNumbersCSV();
+    res.status(404).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/migration/reduceTerritories', async (req, res, next) => {
+  try {
+    //await migrationModel.reduceTerritories();
+    res.status(404).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
