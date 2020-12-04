@@ -38,5 +38,7 @@
   "territoryNotAssigned": "This territory has not been assigned to you",
   "workConfirm": "Confirmation",
   "workConfirmText": "Please confirm all entered data are correct.",
-  "workNoNumbers": "No numbers written down."
+  "workNoNumbers": "No numbers written down.",
+  "pdfMessage": "The form is being generated ...",
+  "formName": "Territory Assignment Record"
 }

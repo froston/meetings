@@ -38,5 +38,7 @@
   "territoryNotAssigned": "Tento obvod nebyl přidělen",
   "workConfirm": "Potvrzení",
   "workConfirmText": "Potvďte prosím uvedené data.",
-  "workNoNumbers": "Nebylo uvedeno žádné číslo."
+  "workNoNumbers": "Nebylo uvedeno žádné číslo.",
+  "pdfMessage": "Generuje se formulář ...",
+  "formName": "Territory Assignment Record"
 }

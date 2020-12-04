@@ -13,6 +13,7 @@
     "btoa": "^1.2.1",
     "cors": "^2.8.5",
     "csv-parser": "^2.3.3",
+    "easy-pdf-merge": "^0.2.5",
     "excel4node": "^1.7.2",
     "express": "^4.17.1",
     "firebase-admin": "^9.3.0",

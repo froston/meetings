@@ -1,6 +1,7 @@
 const db = require('../db')
 const numberModel = require('./numbers')
 const consts = require('../helpers/consts')
+const pdf = require('../helpers/pdf/pdf')
 
 const getAll = async (filters) => {
   const query = filters.q ? filters.q.trim() : null
@@ -170,8 +171,8 @@ const workTerritory = async (id, data) => {
   }
 }
 
-const getTerritoryHist = async (id) => {
-  return await db.query('SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC', id)
+const getTerritoryHist = async (id, order = 'DESC') => {
+  return await db.query(`SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id ${order}`, id)
 }
 
 const removeHistory = async (id, history_id) => {
@@ -207,6 +208,15 @@ const territoryExists = async (number, id = null) => {
   return ters && ters[0] ? true : false
 }
 
+const generatePdfs = async (lang, cb) => {
+  const territories = await getAll({})
+  await territories.mapAsync(async (t) => {
+    t.history = await getTerritoryHist(t.id, 'ASC')
+    return t
+  })
+  pdf.generateS13(territories, lang, cb)
+}
+
 module.exports = {
   getAll,
   getById,
@@ -222,4 +232,5 @@ module.exports = {
   workTerritory,
   getSuggestions,
   territoryExists,
+  generatePdfs,
 }
