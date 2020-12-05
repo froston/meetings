@@ -165,6 +165,10 @@ exports.generateS13 = (territories, lang, cb) => {
     terCount++
   })
 
+  if (terCount > 1) {
+    formsArr.push(data)
+  }
+
   let pdfFiles = []
   let outputPdf = path.join(os.tmpdir(), 'output.pdf')
 
