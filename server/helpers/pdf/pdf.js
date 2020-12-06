@@ -74,13 +74,12 @@ exports.generatePdfs = (schedule, firstDay = 1, lang, t, res) => {
       [fields.date]: date.format(getDateFormat(lang)),
       [fields.reading]: task.task === 'Reading' ? true : false,
       [fields.initialCall]: task.task === 'Initial Call' ? true : false,
-      [fields.firstRv]: task.task === 'Return Visit' && (task.rv === null || task.rv === 1) ? true : false,
-      [fields.secondRv]: task.task === 'Return Visit' && task.rv === 2 ? true : false,
+      [fields.returnVisit]: task.task.includes('Return Visit') ? true : false,
       [fields.bibleStudy]: task.task === 'Bible Study' ? true : false,
       [fields.talk]: task.task === 'Talk' ? true : false,
       [fields.mainHall]: task.hall === 'A' ? true : false,
-      [fields.aucilliaryHall1]: task.hall === 'B' ? true : false,
-      [fields.aucilliaryHall2]: task.hall === 'C' ? true : false,
+      [fields.auxilliaryHall1]: task.hall === 'B' ? true : false,
+      [fields.auxilliaryHall2]: task.hall === 'C' ? true : false,
     }
     fillForm(writer, data, {
       defaultTextOptions: {

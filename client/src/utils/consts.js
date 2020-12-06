@@ -27,17 +27,11 @@ export const availableOptions = [
 export const scheduleOptions = [
   AVAILABLE_READING,
   AVAILABLE_INITIAL_CALL,
-  AVAILABLE_RETURN_VISIT_1,
-  AVAILABLE_RETURN_VISIT_2,
+  AVAILABLE_RETURN_VISIT,
   AVAILABLE_BIBLE_STUDY,
   AVAILABLE_TALK,
 ]
-export const sisScheduleOptions = [
-  AVAILABLE_INITIAL_CALL,
-  AVAILABLE_RETURN_VISIT_1,
-  AVAILABLE_RETURN_VISIT_2,
-  AVAILABLE_BIBLE_STUDY,
-]
+export const sisScheduleOptions = [AVAILABLE_INITIAL_CALL, AVAILABLE_RETURN_VISIT, AVAILABLE_BIBLE_STUDY]
 
 export const hallsOptions = [HALLS_ALL, HALLS_A, HALLS_B, HALLS_C]
 export const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
