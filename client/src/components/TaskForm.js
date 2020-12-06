@@ -112,7 +112,10 @@ class TaskForm extends React.PureComponent {
           <FormField label={t('common:hall')} error={errors.hall}>
             <Select
               placeHolder={t('common:hall')}
-              options={[consts.HALLS_A, consts.HALLS_B].map((hl) => ({ value: hl, label: t(`common:hall${hl}`) }))}
+              options={[consts.HALLS_A, consts.HALLS_B, consts.HALLS_C].map((hl) => ({
+                value: hl,
+                label: t(`common:hall${hl}`),
+              }))}
               value={hall}
               onChange={({ value }) => this.handleChange('hall', value)}
             />

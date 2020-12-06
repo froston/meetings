@@ -73,14 +73,18 @@ const getSortedAvailables = async (type, options) => {
 }
 
 const getAvailableStudents = async (taskName, hall) => {
+  let halls = [hall]
+  if (hall === 'B' || hall === 'C') {
+    halls = ['B', 'C']
+  }
   let students = await db.query(
     `
     SELECT * FROM students 
     WHERE ${consts.getAvailableName(taskName)} IS TRUE AND 
-    (hall = "All" OR hall = ?) AND
+    (hall = "All" OR hall IN (?)) AND
     participate IS TRUE
   `,
-    [hall]
+    [halls]
   )
 
   // FIX IT: to limit amount of queries, performance overhead
@@ -106,8 +110,15 @@ const getAvailableStudents = async (taskName, hall) => {
 }
 
 const getAvailableHelpers = async (gender, hall) => {
-  const where = `WHERE (hall = "All" OR hall = ?) AND participate IS TRUE ${gender ? `AND gender = '${gender}'` : ''} `
-  const students = await db.query(`SELECT * FROM students ${where}`, [hall])
+  let halls = [hall]
+  if (hall === 'B' || hall === 'C') {
+    halls = ['B', 'C']
+  }
+
+  const where = `WHERE (hall = "All" OR hall IN (?)) AND participate IS TRUE ${
+    gender ? `AND gender = '${gender}'` : ''
+  } `
+  const students = await db.query(`SELECT * FROM students ${where}`, [halls])
 
   // FIX IT: to limit amount of queries, performance overhead
   let tasks = await taskModel.getAllTasksEver()

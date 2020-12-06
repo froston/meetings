@@ -46,7 +46,7 @@ const createSchedule = async (newSchedule) => {
   const scheduleTasks = newSchedule.tasks
   const scheduleMonth = scheduleToInsert.month
   const scheduleYear = scheduleToInsert.year
-  const scheduleHalls = newSchedule.hall === 'All' ? ['A', 'B'] : [newSchedule.hall]
+  const scheduleHalls = newSchedule.halls
   // create new schedule
   const { insertId } = await db.query('INSERT INTO schedules SET ?', scheduleToInsert)
   newSchedule.id = insertId
@@ -64,8 +64,7 @@ const createSchedule = async (newSchedule) => {
         }
         await scheduleHalls.forEachAsync(async (hall) => {
           // dont generate reading if 'reading only in main' checked
-          const onlyMain =
-            taskName === 'Reading' && hall === 'B' && newSchedule.hall === 'All' && newSchedule.readingMain
+          const onlyMain = taskName === 'Reading' && hall !== 'A' && newSchedule.readingMain
           if (!onlyMain) {
             // sorting and query options
             const sortingOpt = {

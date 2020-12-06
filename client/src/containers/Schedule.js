@@ -123,9 +123,10 @@ class Schedule extends React.Component {
     for (let week = 1; week <= schedule.weeks; week++) {
       const tasksA = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_A)
       const tasksB = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_B)
+      const tasksC = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_C)
       weeks.push(
         <Tab key={week} title={`${t('common:week')} ${week}`}>
-          <Accordion openMulti={true} active={[0, 1]}>
+          <Accordion openMulti={true} active={[0, 1, 2]}>
             {tasksA.length && (
               <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_A}`)}`}>
                 <WeekTab
@@ -141,6 +142,16 @@ class Schedule extends React.Component {
                 <WeekTab
                   online={online}
                   tasks={tasksB}
+                  handleChangeTask={this.handleChangeTask}
+                  handleChangeHelper={this.handleChangeHelper}
+                />
+              </AccordionPanel>
+            )}
+            {tasksC.length && (
+              <AccordionPanel heading={`${t(`common:hall`)}  ${t(`common:hall${consts.HALLS_C}`)}`}>
+                <WeekTab
+                  online={online}
+                  tasks={tasksC}
                   handleChangeTask={this.handleChangeTask}
                   handleChangeHelper={this.handleChangeHelper}
                 />

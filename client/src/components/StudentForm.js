@@ -19,6 +19,8 @@ import {
 import { CatalogIcon } from 'grommet/components/icons/base'
 import { consts } from '../utils'
 
+const hallsOptions = [consts.HALLS_ALL, consts.HALLS_A, consts.HALLS_B]
+
 const initState = {
   name: '',
   participate: true,
@@ -145,7 +147,7 @@ class StudentForm extends React.PureComponent {
             <FormField label={t('common:halls')} error={errors.hall}>
               <Select
                 placeHolder={t('common:halls')}
-                options={consts.hallsOptions.map((hl) => ({ value: hl, label: t(`common:hall${hl}`) }))}
+                options={hallsOptions.map((hl) => ({ value: hl, label: t(`common:hall${hl}`) }))}
                 value={hall}
                 onChange={({ value }) => this.handleChange('hall', value)}
               />

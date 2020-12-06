@@ -28,7 +28,7 @@ import moment from 'moment'
 import { Loader } from '../components'
 import { api, consts } from '../utils'
 
-const availableHalls = [consts.HALLS_ALL, consts.HALLS_A]
+const availableHalls = [consts.HALLS_A, consts.HALLS_AB, consts.HALLS_ALL]
 
 class ScheduleForm extends React.PureComponent {
   getState = () => ({
@@ -40,8 +40,8 @@ class ScheduleForm extends React.PureComponent {
     weeks: 1,
     tasks: { 1: [], 2: [], 3: [], 4: [], 5: [] },
     hall: {
-      value: consts.HALLS_ALL,
-      label: this.props.t(`common:hall${consts.HALLS_ALL}`),
+      value: consts.HALLS_A,
+      label: this.props.t(`common:hall${consts.HALLS_A}`),
     },
     readingMain: false,
     submitting: false,
@@ -74,6 +74,28 @@ class ScheduleForm extends React.PureComponent {
     })
   }
 
+  getHalls() {
+    let halls = []
+    switch (this.state.hall.value) {
+      case consts.HALLS_A: {
+        halls.push(consts.HALLS_A)
+        break
+      }
+      case consts.HALLS_AB: {
+        halls.push(consts.HALLS_A)
+        halls.push(consts.HALLS_B)
+        break
+      }
+      case consts.HALLS_ALL: {
+        halls.push(consts.HALLS_A)
+        halls.push(consts.HALLS_B)
+        halls.push(consts.HALLS_C)
+        break
+      }
+    }
+    return halls
+  }
+
   handleChange = (name, value) => {
     this.setState({ [name]: value, errors: {} })
   }
@@ -85,7 +107,7 @@ class ScheduleForm extends React.PureComponent {
       const values = {
         ...this.state,
         month: this.state.month.value,
-        hall: this.state.hall.value,
+        halls: this.getHalls(),
       }
 
       api.post('/schedules', values).then(() => {
@@ -194,7 +216,7 @@ class ScheduleForm extends React.PureComponent {
                   onChange={({ value }) => this.handleChange('hall', value)}
                 />
               </FormField>
-              {hall.value === consts.HALLS_ALL && (
+              {hall.value !== consts.HALLS_A && (
                 <FormField label={t('common:Reading')} error={errors.hall}>
                   <CheckBox
                     label={t('common:readingMain')}
