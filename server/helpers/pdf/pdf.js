@@ -132,36 +132,38 @@ exports.generateS13 = (territories, lang, cb) => {
   let dateIndexCount = 1
 
   territories.forEach((ter) => {
-    data[`Terr_${terCount}`] = String(ter.number)
+    if (!!ter.history.length) {
+      data[`Terr_${terCount}`] = String(ter.number)
 
-    indexCount = terCount
-    dateIndexCount = terCount * 2 - 1
+      indexCount = terCount
+      dateIndexCount = terCount * 2 - 1
 
-    if (terCount > 5) {
-      indexCount = indexCount + 120
-      dateIndexCount = dateIndexCount + 240
+      if (terCount > 5) {
+        indexCount = indexCount + 120
+        dateIndexCount = dateIndexCount + 240
+      }
+
+      ter.history.forEach((h) => {
+        let index = String(indexCount).padStart(3, 0)
+        let dateIndex1 = String(dateIndexCount).padStart(3, 0)
+        dateIndexCount++
+        let dateIndex2 = String(dateIndexCount).padStart(3, 0)
+        data[`Name_${index}`] = h.assigned
+        data[`Date_${dateIndex1}`] = moment(h.date_from).format(getDateFormat(lang))
+        data[`Date_${dateIndex2}`] = h.date_to && moment(h.date_to).format(getDateFormat(lang))
+
+        indexCount = indexCount + 5
+        dateIndexCount = dateIndexCount + 9
+      })
+
+      if (terCount === 10) {
+        terCount = 0
+        formsArr.push(data)
+        data = {}
+      }
+
+      terCount++
     }
-
-    ter.history.forEach((h) => {
-      let index = String(indexCount).padStart(3, 0)
-      let dateIndex1 = String(dateIndexCount).padStart(3, 0)
-      dateIndexCount++
-      let dateIndex2 = String(dateIndexCount).padStart(3, 0)
-      data[`Name_${index}`] = h.assigned
-      data[`Date_${dateIndex1}`] = moment(h.date_from).format(getDateFormat(lang))
-      data[`Date_${dateIndex2}`] = h.date_to && moment(h.date_to).format(getDateFormat(lang))
-
-      indexCount = indexCount + 5
-      dateIndexCount = dateIndexCount + 9
-    })
-
-    if (terCount === 10) {
-      terCount = 0
-      formsArr.push(data)
-      data = {}
-    }
-
-    terCount++
   })
 
   if (terCount > 1) {
@@ -169,10 +171,10 @@ exports.generateS13 = (territories, lang, cb) => {
   }
 
   let pdfFiles = []
-  let outputPdf = path.join(os.tmpdir(), 'output.pdf')
+  let outputPdf = path.join(os.tmpdir(), `output_${moment().unix()}.pdf`)
 
   formsArr.forEach((data, idx) => {
-    const pdfFilePath = path.join(os.tmpdir(), `temps13_${idx}.pdf`)
+    const pdfFilePath = path.join(os.tmpdir(), `temps13_${idx}_${moment().unix()}.pdf`)
 
     const writer = hummus.createWriterToModify(input, {
       modifiedFilePath: pdfFilePath,

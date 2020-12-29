@@ -209,7 +209,8 @@ class TerritoryList extends React.Component {
     const { t } = this.props
     toast(t('pdfMessage'))
     const lang = this.props.i18n.language
-    api.downloadFile(`/territories/downloadPdf?lang=${lang}`).then((blob) => {
+    const date = '' // TODO: ui for date or months
+    api.downloadFile(`/territories/downloadPdf?lang=${lang}&date=${date}`).then((blob) => {
       saveAs(blob, `${t('formName')}.pdf`)
       this.setState({ loading: false })
     })

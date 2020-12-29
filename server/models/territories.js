@@ -171,8 +171,14 @@ const workTerritory = async (id, data) => {
   }
 }
 
-const getTerritoryHist = async (id, order = 'DESC') => {
-  return await db.query(`SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id ${order}`, id)
+const getTerritoryHist = async (id) => {
+  return await db.query(`SELECT * FROM territories_hist WHERE territory_id = ? ORDER BY id DESC`, id)
+}
+
+const getAllTerritoryHistByDate = async (date) => {
+  return await db.query(
+    `SELECT * FROM territories_hist WHERE date_from >= "${consts.formatDateTime(date)}" ORDER BY id ASC`
+  )
 }
 
 const removeHistory = async (id, history_id) => {
@@ -208,13 +214,18 @@ const territoryExists = async (number, id = null) => {
   return ters && ters[0] ? true : false
 }
 
-const generatePdfs = async (lang, cb) => {
+const generatePdfs = async (date, lang, cb) => {
   const territories = await getAll({})
-  await territories.mapAsync(async (t) => {
-    t.history = await getTerritoryHist(t.id, 'ASC')
+  const hists = await getAllTerritoryHistByDate(date)
+  territories.map((t) => {
+    t.history = hists.filter((h) => h.territory_id === t.id)
     return t
   })
-  pdf.generateS13(territories, lang, cb)
+  try {
+    pdf.generateS13(territories, lang, cb)
+  } catch (err) {
+    cb(err)
+  }
 }
 
 module.exports = {
@@ -229,6 +240,7 @@ module.exports = {
   getTerritoryNumbers,
   removeHistory,
   getTerritoryHist,
+  getAllTerritoryHistByDate,
   workTerritory,
   getSuggestions,
   territoryExists,
