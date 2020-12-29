@@ -17,6 +17,8 @@
   "requiredStatus": "Select status",
   "requiredRV": "Who will call?",
   "requiredX": "Give a reason",
+  "dateNotValid": "Invalid date",
+  "dateNotMonday": "First day of the meeting week.",
   "gender": "Gender",
   "available": "Available",
   "notes": "Notes",

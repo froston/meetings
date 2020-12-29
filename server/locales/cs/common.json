@@ -17,6 +17,8 @@
   "requiredStatus": "Vyberte status",
   "requiredRV": "Kdo navštíví?",
   "requiredX": "Napište důvod",
+  "dateNotValid": "Špatné datum",
+  "dateNotMonday": "První den v týdnu shromáždění.",
   "gender": "Pohlaví",
   "available": "K dispozici",
   "notes": "Poznámky",

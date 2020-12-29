@@ -18,6 +18,7 @@
   "requiredRV": "Indique de quien es la revisita",
   "requiredX": "Indique la razón",
   "dateNotValid": "Fecha inválida",
+  "dateNotMonday": "Primer día de la semana de la reunión.",
   "gender": "Genero",
   "available": "Disponible",
   "notes": "Notas",

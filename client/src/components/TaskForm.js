@@ -26,11 +26,14 @@ class TaskForm extends React.PureComponent {
   validate = (cb) => {
     const { t } = this.props
     const { task, hall, date, helper } = this.state
-    const dateValid = moment(date, consts.DATE_FORMAT).isValid()
+    const taskDate = moment(date, consts.DATE_FORMAT)
+    const dateValid = taskDate.isValid()
+    const dateIsMonday = taskDate.day() === 1
     let errors = {}
     if (!task.value) errors.task = t('common:required')
     if (!hall.value) errors.hall = t('common:required')
     if (!dateValid) errors.date = t('common:dateNotValid')
+    if (!dateIsMonday) errors.date = t('common:dateNotMonday')
     if (!date) errors.date = t('common:required')
     if (this.hasHelper(task.value) && !helper) {
       errors.helper = t('common:required')
