@@ -12,6 +12,7 @@
   "reportPdf": "Vygenerovat zadání",
   "name": "Rozvrh",
   "reassigned": "Úkol byl předán ",
+  "taskRemoved": "Úkol {{task}} byl smazán.",
   "change": "Změnit Zadání",
   "changeHelper": "Změnit Pomocníka",
   "changePoint": "Změnit Bod",

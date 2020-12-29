@@ -12,6 +12,7 @@
   "reportPdf": "Generate assignments",
   "name": "Schedule",
   "reassigned": "The task was reassigned to ",
+  "taskRemoved": "The {{task}} task was removed.",
   "change": "Change Task",
   "changeHelper": "Change Helper",
   "changePoint": "Change Point",

@@ -159,6 +159,7 @@ class Layout extends React.PureComponent {
             draggable
             pauseOnHover
             closeButton={<CloseIcon colorIndex="light-1" style={{ margin: 15 }} />}
+            autoClose={3000}
           />
         </AppContext.Provider>
       </div>

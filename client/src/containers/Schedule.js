@@ -13,6 +13,7 @@ class Schedule extends React.Component {
     availables: [],
     noParticipate: [],
     taskToChange: {},
+    toRemove: [],
     availableList: true,
     helpers: false,
     warnings: [],
@@ -71,10 +72,41 @@ class Schedule extends React.Component {
       })
   }
 
+  handleRemoveTask = (task) => {
+    const { t } = this.props
+    if (window.confirm(t('confirmRemove'))) {
+      const schedule = { ...this.state.schedule }
+      schedule.tasks = schedule.tasks.filter((t) => t.id !== task.id)
+      this.setState({ schedule, toRemove: this.state.toRemove.concat(task.id) })
+      toast(
+        <Undo
+          data={task.id}
+          text={`${t('taskRemoved', {
+            task: t(`common:${task.task}`),
+          })}`}
+          undo={this.handleUndoRemove}
+        />,
+        {
+          onClose: this.cleanTasks,
+        }
+      )
+    }
+  }
+
+  cleanTasks = () => {
+    this.state.toRemove.forEach((id) => api.remove(`/tasks`, id))
+    this.setState({ toRemove: [] })
+  }
+
   handleUndo = () => {
     const { oldTask } = this.state
     const task = { helper_id: oldTask.helper_id, student_id: oldTask.student_id }
     api.patch(`/tasks`, oldTask.id, task).then(this.loadData)
+  }
+
+  handleUndoRemove = (id) => {
+    const { toRemove } = this.state
+    this.setState({ toRemove: toRemove.filter((t) => t !== id) }, this.loadData)
   }
 
   handleSelectNew = (student) => {
@@ -133,7 +165,7 @@ class Schedule extends React.Component {
                   online={online}
                   tasks={tasksA}
                   handleChangeTask={this.handleChangeTask}
-                  handleChangeHelper={this.handleChangeHelper}
+                  handleRemoveTask={this.handleRemoveTask}
                 />
               </AccordionPanel>
             )}
@@ -143,7 +175,7 @@ class Schedule extends React.Component {
                   online={online}
                   tasks={tasksB}
                   handleChangeTask={this.handleChangeTask}
-                  handleChangeHelper={this.handleChangeHelper}
+                  handleRemoveTask={this.handleRemoveTask}
                 />
               </AccordionPanel>
             )}
@@ -153,7 +185,7 @@ class Schedule extends React.Component {
                   online={online}
                   tasks={tasksC}
                   handleChangeTask={this.handleChangeTask}
-                  handleChangeHelper={this.handleChangeHelper}
+                  handleRemoveTask={this.handleRemoveTask}
                 />
               </AccordionPanel>
             )}
@@ -202,4 +234,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default withTranslation(['schedules', 'common'])(Schedule)
+export default withTranslation(['schedules', 'tasks', 'common'])(Schedule)

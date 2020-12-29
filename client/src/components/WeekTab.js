@@ -19,7 +19,7 @@ class WeekTab extends React.PureComponent {
   }
 
   render() {
-    const { t, tasks, handleChangeTask, online } = this.props
+    const { t, tasks, handleChangeTask, handleRemoveTask, online } = this.props
     return (
       <Tiles fill flush selectable className="week-tab">
         {tasks.map((task) => {
@@ -73,6 +73,9 @@ class WeekTab extends React.PureComponent {
                       {t('changeHelper')}
                     </Anchor>
                   )}
+                  <Anchor href="#" onClick={() => handleRemoveTask(task)} disabled={!online}>
+                    {t('tasks:remove')}
+                  </Anchor>
                 </Menu>
               </Tile>
             )
@@ -95,7 +98,7 @@ WeekTab.propTypes = {
   online: PropTypes.bool,
   tasks: PropTypes.array,
   handleChangeTask: PropTypes.func,
-  handleChangeHelper: PropTypes.func,
+  handleRemoveTask: PropTypes.func,
 }
 
-export default withTranslation(['schedules', 'common'])(WeekTab)
+export default withTranslation(['schedules', 'tasks', 'common'])(WeekTab)
