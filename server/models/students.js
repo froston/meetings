@@ -62,17 +62,17 @@ const getSortedAvailables = async (type, options) => {
   const year = options.year
   switch (type) {
     case 'student':
-      const students = await getAvailableStudents(taskName, hall)
+      const students = await getAvailableStudents(taskName, hall, year)
       return students.sort(sorting.sortStudents(taskName, hall, month, year))
     case 'helper':
-      const helpers = await getAvailableHelpers(gender, hall)
+      const helpers = await getAvailableHelpers(gender, hall, year)
       return helpers.sort(sorting.sortHelpers(taskName, month, year))
     default:
       return []
   }
 }
 
-const getAvailableStudents = async (taskName, hall) => {
+const getAvailableStudents = async (taskName, hall, year) => {
   let halls = [hall]
   if (hall === 'B' || hall === 'C') {
     halls = ['B', 'C']
@@ -88,7 +88,7 @@ const getAvailableStudents = async (taskName, hall) => {
   )
 
   // FIX IT: to limit amount of queries, performance overhead
-  let tasks = await taskModel.getAllTasksEver()
+  let tasks = await taskModel.getAllTasksEver(year)
 
   students.map((student) => {
     let studentTasks = tasks.filter((t) => t.student_id === student.id)
@@ -109,7 +109,7 @@ const getAvailableStudents = async (taskName, hall) => {
   return students
 }
 
-const getAvailableHelpers = async (gender, hall) => {
+const getAvailableHelpers = async (gender, hall, year) => {
   let halls = [hall]
   if (hall === 'B' || hall === 'C') {
     halls = ['B', 'C']
@@ -121,7 +121,7 @@ const getAvailableHelpers = async (gender, hall) => {
   const students = await db.query(`SELECT * FROM students ${where}`, [halls])
 
   // FIX IT: to limit amount of queries, performance overhead
-  let tasks = await taskModel.getAllTasksEver()
+  let tasks = await taskModel.getAllTasksEver(year)
 
   students.map((student) => {
     student.tasks = tasks.filter((t) => t.student_id === student.id)

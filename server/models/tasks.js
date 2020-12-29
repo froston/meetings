@@ -36,7 +36,7 @@ exports.getAllTasks = async (studentId) => {
   )
 }
 
-exports.getAllTasksEver = async () => {
+exports.getAllTasksEver = async (year) => {
   return await db.query(
     `SELECT 
       tasks.*,
@@ -45,8 +45,10 @@ exports.getAllTasksEver = async () => {
     FROM tasks 
     LEFT JOIN students students ON students.id = tasks.student_id
     LEFT JOIN students helpers ON helpers.id = tasks.helper_id
+    WHERE tasks.year = ? OR tasks.year = ?
     ORDER BY tasks.year DESC, tasks.month DESC, tasks.week DESC
-  `
+  `,
+    [year, year - 1]
   )
 }
 
