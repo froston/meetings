@@ -25,7 +25,7 @@ class Available extends React.PureComponent {
           }}
         >
           {availables.map((student, index) => {
-            const lastTask = helpers ? student.helpTasks[0] : student.tasks[0]
+            const lastTask = helpers ? student.helpTasks[0] : student.allTasks[0]
             return (
               <ListItem
                 key={student.id}
