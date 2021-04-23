@@ -99,7 +99,7 @@ export const hasAccess = (meta, access) => {
 
 export const hasNoAccess = (meta) => {
   if (!meta) return true
-  if (Object(meta).keys === 0) return true
+  if (Object.keys(meta).length === 0) return true
   return (
     meta.admin === 0 &&
     meta.lifeministry === 0 &&

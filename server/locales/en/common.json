@@ -84,5 +84,7 @@
   "isCompany": "Companies",
   "emptyResult": "No results",
   "confirm": "Confirm",
-  "return": "Return"
+  "return": "Return",
+  "online": "You are now back online.",
+  "offline": "You are offline."
 }

@@ -92,6 +92,8 @@ class ScheduleForm extends React.PureComponent {
         halls.push(consts.HALLS_C)
         break
       }
+      default:
+        break
     }
     return halls
   }

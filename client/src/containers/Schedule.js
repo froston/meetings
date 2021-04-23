@@ -4,11 +4,10 @@ import { Section, Tabs, Tab, Heading, Accordion, AccordionPanel, Notification } 
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import { WeekTab, Available, Undo, Loader } from '../components'
-import { api, consts } from '../utils'
+import { api, consts, withConnection } from '../utils'
 
 class Schedule extends React.Component {
   state = {
-    online: navigator.onLine,
     schedule: {},
     availables: [],
     noParticipate: [],
@@ -23,24 +22,6 @@ class Schedule extends React.Component {
 
   componentDidMount() {
     this.loadData()
-    window.addEventListener('online', this.handleConnection)
-    window.addEventListener('offline', this.handleConnection)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleConnection)
-    window.removeEventListener('offline', this.handleConnection)
-  }
-
-  handleConnection = (e) => {
-    if (e.type === 'offline') {
-      toast('You are offline.')
-      this.setState({ online: false })
-    }
-    if (e.type === 'online') {
-      toast('You are now back online.')
-      this.setState({ online: true })
-    }
   }
 
   loadData = () => {
@@ -149,8 +130,8 @@ class Schedule extends React.Component {
   }
 
   renderWeeks = () => {
-    const { t } = this.props
-    const { schedule, online } = this.state
+    const { t, online } = this.props
+    const { schedule } = this.state
     let weeks = []
     for (let week = 1; week <= schedule.weeks; week++) {
       const tasksA = schedule.tasks.filter((a) => a.week === week && a.hall === consts.HALLS_A)
@@ -234,4 +215,4 @@ class Schedule extends React.Component {
   }
 }
 
-export default withTranslation(['schedules', 'tasks', 'common'])(Schedule)
+export default withTranslation(['schedules', 'tasks', 'common'])(withConnection(Schedule))

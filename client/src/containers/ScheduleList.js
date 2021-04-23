@@ -8,12 +8,11 @@ import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import moment from 'moment'
 import { Undo, Loader } from '../components'
-import { api } from '../utils'
+import { api, withConnection } from '../utils'
 import Empty from '../images/Empty'
 
 class ScheduleList extends React.Component {
   state = {
-    online: navigator.onLine,
     loading: false,
     schedules: [],
     toRemove: [],
@@ -22,24 +21,6 @@ class ScheduleList extends React.Component {
 
   componentDidMount() {
     this.loadData()
-    window.addEventListener('online', this.handleConnection)
-    window.addEventListener('offline', this.handleConnection)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleConnection)
-    window.removeEventListener('offline', this.handleConnection)
-  }
-
-  handleConnection = (e) => {
-    if (e.type === 'offline') {
-      toast('You are offline.')
-      this.setState({ online: false })
-    }
-    if (e.type === 'online') {
-      toast('You are now back online.')
-      this.setState({ online: true })
-    }
   }
 
   loadData = (showLoading = true, cb) => {
@@ -147,8 +128,8 @@ class ScheduleList extends React.Component {
   }
 
   render() {
-    const { t } = this.props
-    const { online, schedules, toRemove, loading, year } = this.state
+    const { t, online } = this.props
+    const { schedules, toRemove, loading, year } = this.state
     const scheduleArr = schedules.filter((s) => !toRemove.includes(s.id))
     return (
       <Section>
@@ -229,4 +210,4 @@ class ScheduleList extends React.Component {
   }
 }
 
-export default withRouter(withTranslation('schedules')(ScheduleList))
+export default withRouter(withTranslation('schedules')(withConnection(ScheduleList)))
