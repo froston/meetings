@@ -36,8 +36,6 @@ class StudentMetrics extends React.PureComponent {
       selected.push(student)
     }
 
-    console.log(student, selected)
-
     api.get('/students').then((students) => {
       this.loadData(selected).then((data) => {
         this.setState({ data, selected, students, loading: false })
@@ -134,7 +132,7 @@ class StudentMetrics extends React.PureComponent {
       let { reading, initalCall, returnVisit, bibleStudy, talk } = this.getTasks(tasks)
 
       datasets.push({
-        label: tasks[0].student_name,
+        label: tasks[0]?.student_name,
         data: [reading.length, initalCall.length, returnVisit.length, bibleStudy.length, talk.length],
         backgroundColor: ['#ff7d28', '#00cceb', '#dc2878', '#0a64a0', '#49516f'],
       })
@@ -175,13 +173,13 @@ class StudentMetrics extends React.PureComponent {
       const helpTasks = filteredTasks.filter((v) => v.helper_id === Number(id))
 
       datasets.push({
-        label: tasks[0].student_name,
+        label: tasks[0]?.student_name,
         data: years.map((year) => tasks.filter((t) => t.year === year).length),
         borderColor: colors[i],
         backgroundColor: colors[i],
       })
       datasets.push({
-        label: `${t('common:helper')}: ${tasks[0].student_name}`,
+        label: `${t('common:helper')}: ${tasks[0]?.student_name}`,
         data: years.map((year) => helpTasks.filter((t) => t.year === year).length),
         borderColor: colors[i],
         borderDash: [5, 5],
@@ -217,11 +215,11 @@ class StudentMetrics extends React.PureComponent {
 
       taskTypes.forEach((type, i) => {
         datasets.push({
-          label: `${t(`common:${type.name}`)}: ${tasks[0].student_name}`,
+          label: `${t(`common:${type.name}`)}: ${tasks[0]?.student_name}`,
           data: years.map((year) => type.data.filter((t) => t.year === year && t.task === type.name).length),
           borderColor: type.color,
           backgroundColor: type.color,
-          stack: tasks[0].student_name,
+          stack: tasks[0]?.student_name,
           order: i,
         })
       })
