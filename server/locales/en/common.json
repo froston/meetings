@@ -86,5 +86,8 @@
   "confirm": "Confirm",
   "return": "Return",
   "online": "You are now back online.",
-  "offline": "You are offline."
+  "offline": "You are offline.",
+  "filterTimeAlways": "Always",
+  "filterTimeLastYear": "Last year",
+  "filterTimeLastYears": "Last 3 years"
 }

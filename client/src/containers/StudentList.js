@@ -1,7 +1,8 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
-import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
+import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon, LineChartIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
 import { toast } from 'react-toastify'
 import { TaskList } from './'
@@ -63,6 +64,12 @@ class StudentList extends React.Component {
     e.preventDefault()
     e.stopPropagation()
     this.setState({ taskForm: false, studentForm: true, student })
+  }
+
+  handleGoToCharts = (e, student) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.history.push('/students/charts', { student })
   }
 
   handleUndo = (id) => {
@@ -194,6 +201,12 @@ class StudentList extends React.Component {
               </Box>
               <Box direction="row" responsive={false}>
                 <Button
+                  icon={<LineChartIcon size="medium" />}
+                  onClick={(e) => this.handleGoToCharts(e, student)}
+                  a11yTitle={t('charts')}
+                  title={t('charts')}
+                />
+                <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={(e) => this.handleTasks(e, student)}
                   a11yTitle={t('tasks')}
@@ -234,4 +247,4 @@ class StudentList extends React.Component {
   }
 }
 
-export default withTranslation('students')(withConnection(StudentList))
+export default withTranslation('students')(withConnection(withRouter(StudentList)))

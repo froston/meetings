@@ -23,5 +23,14 @@
   "scheduleDup": "{{student_name}} a {{helper_name}} už spolu v minulosti měli úkol.",
   "scheduleGender": "Partner pro {{task}} by měl být stejného pohlaví (km 5/97 str. 2).",
   "pdfReportPrompt": "Zadejte den prvního shromáždění za {{date}} pro správný výpočet datumů v zadáních:",
-  "scheduleWeekInfo": "Zadejte počet měsíců podle pracovního sešitu pro {{month}} {{year}}."
+  "scheduleWeekInfo": "Zadejte počet měsíců podle pracovního sešitu pro {{month}} {{year}}.",
+  "metrics": "Statistiky",
+  "metricsDesc": "Prohlížejte a porovnávejte statistiky úkolů studentů",
+  "metricFilters": "Filtry",
+  "selectedStudents": "Vybraní studenti",
+  "assignationTypeMetrics": "Typ úkolů",
+  "assignationAmountMetrics": "Počet úkolů",
+  "assignationAmountTypeMetrics": "Počet a typ úkolů",
+  "selectStudents": "Vybrat studenty",
+  "noData": "Žádná data. Nejdříve vyberte studenty."
 }

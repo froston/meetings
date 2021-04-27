@@ -23,5 +23,14 @@
   "scheduleDup": "{{student_name}} and {{helper_name}} have already had task together in the past.",
   "scheduleGender": "The assistant for {{task}} should not be someone of the opposite sex. (km 5/97 p. 2).",
   "pdfReportPrompt": "Enter the first meeting's day of {{date}} to calculate correct dates in the assigments:",
-  "scheduleWeekInfo": "Select the amount of weeks according to the {{month}} {{year}} meeting workbook."
+  "scheduleWeekInfo": "Select the amount of weeks according to the {{month}} {{year}} meeting workbook.",
+  "metrics": "Statistics",
+  "metricsDesc": "See and compare assignment statistics for different students.",
+  "metricFilters": "Filters",
+  "selectedStudents": "Selected students",
+  "assignationTypeMetrics": "Assignment type",
+  "assignationAmountMetrics": "Assignment amount",
+  "assignationAmountTypeMetrics": "Assignment type and amount",
+  "selectStudents": "Select students",
+  "noData": "No data. First select students."
 }

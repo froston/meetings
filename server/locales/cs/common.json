@@ -81,5 +81,8 @@
   "confirm": "Potvrdit",
   "return": "Zpět",
   "online": "Jste zpět online.",
-  "offline": "Jste offline."
+  "offline": "Jste offline.",
+  "filterTimeAlways": "Vše",
+  "filterTimeLastYear": "Poslední rok",
+  "filterTimeLastYears": "Poslední 3 roky"
 }
