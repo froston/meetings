@@ -6,7 +6,7 @@ import { FormTrashIcon, StopFillIcon, AddIcon, HistoryIcon } from 'grommet/compo
 import { toast } from 'react-toastify'
 import Spinning from 'grommet/components/icons/Spinning'
 import { Undo, NumberForm, NumberHistory, Loader } from '../components'
-import { api, functions, consts } from '../utils'
+import { api, functions, consts, withConnection } from '../utils'
 import { AppContext } from '../utils/context'
 import Empty from '../images/Empty'
 
@@ -14,7 +14,6 @@ class NumberList extends React.Component {
   static contextType = AppContext
 
   state = {
-    online: navigator.onLine,
     loading: false,
     suggestions: [],
     numbers: [],
@@ -34,26 +33,7 @@ class NumberList extends React.Component {
     } else {
       this.loadData()
     }
-    window.addEventListener('online', this.handleConnection)
-    window.addEventListener('offline', this.handleConnection)
-
     this.debounceSearch = functions.debounce(this.loadData, 500)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleConnection)
-    window.removeEventListener('offline', this.handleConnection)
-  }
-
-  handleConnection = (e) => {
-    if (e.type === 'offline') {
-      toast('You are offline.')
-      this.setState({ online: false })
-    }
-    if (e.type === 'online') {
-      toast('You are now back online.')
-      this.setState({ online: true })
-    }
   }
 
   handleSearch = (searchTerm) => {
@@ -167,8 +147,8 @@ class NumberList extends React.Component {
   }
 
   render() {
-    const { t } = this.props
-    const { numbers, online, loading, toRemove, searchTerm, status, territory, suggestions } = this.state
+    const { t, online } = this.props
+    const { numbers, loading, toRemove, searchTerm, status, territory, suggestions } = this.state
     const statusOptions = ['', ...consts.statusOptions]
     const numbersArr = numbers.filter((t) => !toRemove.includes(t.id))
     return (
@@ -286,4 +266,4 @@ class NumberList extends React.Component {
   }
 }
 
-export default withRouter(withTranslation('numbers')(NumberList))
+export default withRouter(withTranslation('numbers')(withConnection(NumberList)))

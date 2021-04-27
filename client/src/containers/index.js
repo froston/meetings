@@ -14,6 +14,7 @@ import Work from './Work'
 import UsersList from './UsersList'
 import Settings from './Settings'
 import ScheduleForm from './ScheduleForm'
+import StudentMetrics from './StudentMetrics'
 
 export {
   App,
@@ -32,4 +33,5 @@ export {
   UsersList,
   Settings,
   ScheduleForm,
+  StudentMetrics,
 }

@@ -18,6 +18,7 @@ import {
   UsersList,
   Settings,
   ScheduleForm,
+  StudentMetrics,
 } from './'
 import { Nav, Worked } from '../components'
 import { api, withAuth } from '../utils'
@@ -134,6 +135,13 @@ class Layout extends React.PureComponent {
                   <Switch>
                     <Route exact path="/" render={(props) => <Dashboard {...props} meta={meta} />} />
                     <AuthRoute exact path="/students" component={StudentList} meta={meta} access="lifeministry" />
+                    <AuthRoute
+                      exact
+                      path="/students/charts"
+                      component={StudentMetrics}
+                      meta={meta}
+                      access="lifeministry"
+                    />
                     <AuthRoute exact path="/schedules" component={ScheduleList} meta={meta} access="lifeministry" />
                     <AuthRoute exact path="/schedules/new" component={ScheduleForm} meta={meta} access="lifeministry" />
                     <AuthRoute exact path="/schedules/:id" component={Schedule} meta={meta} access="lifeministry" />

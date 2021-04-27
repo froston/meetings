@@ -1,17 +1,17 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { Section, Box, Heading, Paragraph, List, ListItem, Button, Search } from 'grommet'
-import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon } from 'grommet/components/icons/base'
+import { AddIcon, CatalogIcon, FormTrashIcon, StopFillIcon, LineChartIcon } from 'grommet/components/icons/base'
 import Spinning from 'grommet/components/icons/Spinning'
 import { toast } from 'react-toastify'
 import { TaskList } from './'
 import { StudentForm, StudentFilters, Undo, Loader } from '../components'
-import { api, consts, functions } from '../utils'
+import { api, consts, functions, withConnection } from '../utils'
 import Empty from '../images/Empty'
 
 class StudentList extends React.Component {
   state = {
-    online: navigator.onLine,
     loading: false,
     students: [],
     toRemove: [],
@@ -30,26 +30,8 @@ class StudentList extends React.Component {
     } else {
       this.loadData()
     }
-    window.addEventListener('online', this.handleConnection)
-    window.addEventListener('offline', this.handleConnection)
 
     this.debounceSearch = functions.debounce(this.loadData, 500)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleConnection)
-    window.removeEventListener('offline', this.handleConnection)
-  }
-
-  handleConnection = (e) => {
-    if (e.type === 'offline') {
-      toast('You are offline.')
-      this.setState({ online: false })
-    }
-    if (e.type === 'online') {
-      toast('You are now back online.')
-      this.setState({ online: true })
-    }
   }
 
   loadData = (showLoading = true, cb) => {
@@ -82,6 +64,12 @@ class StudentList extends React.Component {
     e.preventDefault()
     e.stopPropagation()
     this.setState({ taskForm: false, studentForm: true, student })
+  }
+
+  handleGoToCharts = (e, student) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.history.push('/students/charts', { student })
   }
 
   handleUndo = (id) => {
@@ -148,8 +136,8 @@ class StudentList extends React.Component {
   }
 
   render() {
-    const { t } = this.props
-    const { online, students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
+    const { t, online } = this.props
+    const { students, toRemove, searchTerm, loading, noParticipate, gender } = this.state
     const studentsArr = students.filter((s) => !toRemove.includes(s.id))
     return (
       <Section>
@@ -213,6 +201,12 @@ class StudentList extends React.Component {
               </Box>
               <Box direction="row" responsive={false}>
                 <Button
+                  icon={<LineChartIcon size="medium" />}
+                  onClick={(e) => this.handleGoToCharts(e, student)}
+                  a11yTitle={t('charts')}
+                  title={t('charts')}
+                />
+                <Button
                   icon={<CatalogIcon size="medium" />}
                   onClick={(e) => this.handleTasks(e, student)}
                   a11yTitle={t('tasks')}
@@ -253,4 +247,4 @@ class StudentList extends React.Component {
   }
 }
 
-export default withTranslation('students')(StudentList)
+export default withTranslation('students')(withConnection(withRouter(StudentList)))

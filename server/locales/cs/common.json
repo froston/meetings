@@ -79,5 +79,10 @@
   "isCompany": "Firmy",
   "emptyResult": "Žádné výsledky",
   "confirm": "Potvrdit",
-  "return": "Zpět"
+  "return": "Zpět",
+  "online": "Jste zpět online.",
+  "offline": "Jste offline.",
+  "filterTimeAlways": "Vše",
+  "filterTimeLastYear": "Poslední rok",
+  "filterTimeLastYears": "Poslední 3 roky"
 }

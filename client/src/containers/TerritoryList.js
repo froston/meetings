@@ -30,7 +30,7 @@ import Spinning from 'grommet/components/icons/Spinning'
 import moment from 'moment'
 import { saveAs } from 'file-saver'
 import { Undo, TerritoryForm, AssignForm, TerritoryHistory, TerritoryView, Loader, Badge } from '../components'
-import { api, consts, functions } from '../utils'
+import { api, consts, functions, withConnection } from '../utils'
 import { AppContext } from '../utils/context'
 import Empty from '../images/Empty'
 
@@ -38,7 +38,6 @@ class TerritoryList extends React.Component {
   static contextType = AppContext
 
   state = {
-    online: navigator.onLine,
     loading: false,
     territories: [],
     toRemove: [],
@@ -59,26 +58,7 @@ class TerritoryList extends React.Component {
     } else {
       this.loadData()
     }
-    window.addEventListener('online', this.handleConnection)
-    window.addEventListener('offline', this.handleConnection)
-
     this.debounceSearch = functions.debounce(this.loadData, 500)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('online', this.handleConnection)
-    window.removeEventListener('offline', this.handleConnection)
-  }
-
-  handleConnection = (e) => {
-    if (e.type === 'offline') {
-      toast('You are offline.')
-      this.setState({ online: false })
-    }
-    if (e.type === 'online') {
-      toast('You are now back online.')
-      this.setState({ online: true })
-    }
   }
 
   loadData = (showLoading = true, cb) => {
@@ -217,9 +197,9 @@ class TerritoryList extends React.Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, online } = this.props
     const { settings } = this.context
-    const { territories, online, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
+    const { territories, loading, toRemove, searchTerm, orderBy, noAssigned } = this.state
     const territoriesArr = territories.filter((t) => !toRemove.includes(t.id))
     return (
       <Section style={{ position: 'relative' }}>
@@ -379,4 +359,4 @@ TerritoryList.propTypes = {
   history: PropTypes.object,
 }
 
-export default withRouter(withTranslation('territories')(TerritoryList))
+export default withRouter(withTranslation('territories')(withConnection(TerritoryList)))

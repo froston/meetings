@@ -22,7 +22,7 @@ import {
 import { ViewIcon, StopFillIcon } from 'grommet/components/icons/base'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { consts, api, functions, withAuth } from '../utils'
+import { consts, api, functions, withAuth, withConnection } from '../utils'
 import { TerritoryView, Loader, ColorOption, Badge, ConfirmWork } from '../components'
 import { AppContext } from '../utils/context'
 
@@ -192,7 +192,7 @@ class Work extends React.Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, online } = this.props
     const { territory, assigned, date_from, date_to, errors, loading, suggestions } = this.state
     return (
       <Section>
@@ -254,7 +254,12 @@ class Work extends React.Component {
           )}
           <Footer pad={{ vertical: 'medium' }}>
             <Box direction="row" align="center">
-              <Button onClick={!loading ? this.handleSubmit : null} label={t('submit')} primary />
+              <Button
+                onClick={!loading && online ? this.handleSubmit : null}
+                label={t('submit')}
+                primary
+                disabled={!online}
+              />
               {territory && (
                 <Box margin={{ horizontal: 'medium' }}>
                   <Anchor icon={<ViewIcon />} label={t('territoryView')} href="#" onClick={this.handleView} />
@@ -345,4 +350,4 @@ Work.propTypes = {
   history: PropTypes.object,
 }
 
-export default withTranslation(['territories', 'numbers', 'common'])(withAuth(Work))
+export default withTranslation(['territories', 'numbers', 'common'])(withAuth(withConnection(Work)))

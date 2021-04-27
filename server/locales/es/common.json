@@ -85,5 +85,10 @@
   "isCompany": "Empresas",
   "emptyResult": "No hay resultados",
   "confirm": "Confirmar",
-  "return": "Volver"
+  "return": "Volver",
+  "online": "Está online de vuelta.",
+  "offline": "Está offline.",
+  "filterTimeAlways": "Siempre",
+  "filterTimeLastYear": "Último año",
+  "filterTimeLastYears": "Últimos 3 años"
 }

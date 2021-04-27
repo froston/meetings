@@ -23,5 +23,14 @@
   "scheduleDup": "{{student_name}} y {{helper_name}} ya han tenido asignación juntos en el pasado.",
   "scheduleGender": "El ayudante para {{task}} debe ser una persona del mismo sexo (km 5/97 2).",
   "pdfReportPrompt": "Ingrese el día de la primera reunión del {{date}} para calcular fechas correctas en las asignaciones:",
-  "scheduleWeekInfo": "Ponga la cantidad de semanas de la guía de actividades para el mes de {{month}} {{year}}."
+  "scheduleWeekInfo": "Ponga la cantidad de semanas de la guía de actividades para el mes de {{month}} {{year}}.",
+  "metrics": "Estadísticas",
+  "metricsDesc": "Vea y compare estadísticas de asignaciones para diferentes estudiantes.",
+  "metricFilters": "Filtrar",
+  "selectedStudents": "Estudiantes seleccionados",
+  "assignationTypeMetrics": "Tipo de temas",
+  "assignationAmountMetrics": "Cantidad de temas",
+  "assignationAmountTypeMetrics": "Tipo y cantidad de temas",
+  "selectStudents": "Seleccionar estudiantes",
+  "noData": "No hay datos. Primero seleccione los estudiantes."
 }
